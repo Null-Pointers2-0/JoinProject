@@ -12,15 +12,15 @@ jobs:
         python-version: [3.12]
 
     steps:
+    - name: checkout
+      uses: actions/checkout@v4
     - name: Get JSON
       env:
         GH_TOKEN: ${{ secrets.GITHUB_TOKEN}}
       run: |
 
         gh issue list --state open --json title,body,labels > issues.json
-
-        
-    - uses: actions/checkout@v4
+    
     - name: Set up Python ${{ matrix.python-version }}
       uses: actions/setup-python@v3
       with:
