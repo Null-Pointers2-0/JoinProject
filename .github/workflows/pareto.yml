@@ -2,6 +2,10 @@ name: Pareto Diagram
 on:
   workflow_dispatch:
 
+permissions: 
+  issues: read
+  contents: read
+
 jobs:
   build:
   
@@ -19,7 +23,7 @@ jobs:
         GH_TOKEN: ${{ secrets.GITHUB_TOKEN}}
       run: |
 
-        gh issue list --state open --json title,body,labels > issues.json
+        gh issue list --state open --json title,body,labels > issues_data.json
     
     - name: Set up Python ${{ matrix.python-version }}
       uses: actions/setup-python@v3
@@ -28,7 +32,7 @@ jobs:
     - name: Install Dependencies
       run: |
         python -m pip install --upgrade pip
-        pip install pandas json 
+        pip install pandas json matplotlib
     - name: get graphics
       run: |
         python .github/scripts/chart.py
