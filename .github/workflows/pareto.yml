@@ -17,7 +17,7 @@ jobs:
         GH_TOKEN: ${{ secrets.GITHUB_TOKEN}}
       run: |
 
-        gh issues list --state open --json title,body,labels > issues.json
+        gh issue list --state open --json title,body,labels > issues.json
 
         
     - uses: actions/checkout@v4
@@ -31,4 +31,4 @@ jobs:
         pip install pandas json 
     - name: get graphics
       run: |
-        python .github/scripts/name.py
+        python .github/scripts/chart.py
