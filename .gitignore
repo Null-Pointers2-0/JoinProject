@@ -6,5 +6,7 @@ __pycache__/
 .venv/
 venv/
 env/
-
 venv-join/
+migrations/
+*.sqlite3
+
