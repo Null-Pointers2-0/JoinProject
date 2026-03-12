@@ -35,4 +35,4 @@ jobs:
         pip install pandas matplotlib
     - name: get graphics
       run: |
-        python ./.github/scripts/chart.py
+        python chart.py
