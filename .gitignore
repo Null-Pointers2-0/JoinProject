@@ -7,7 +7,11 @@ __pycache__/
 venv/
 env/
 venv-join/
+
 migrations/
 *.sqlite3
+
+.venv*/
+
 env/
 
