@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="py-5 d-flex justify-content-center">
+    <div class="col-12 col-md-8 col-lg-6">
+        <h2 class="text-center mb-4">Crear compte</h2>
+
+        <form method="post" class="auth-card p-4 p-md-5">
+            {% csrf_token %}
+            {% for field in form %}
+            <div class="mb-3">
+                <label for="{{ field.id_for_label }}" class="form-label">{{ field.label }}</label>
+                {{ field }}
+                {% if field.help_text %}
+                <small class="text-white-50 d-block mt-1">{{ field.help_text|safe }}</small>
+                {% endif %}
+                {% for error in field.errors %}
+                <small class="text-danger d-block">{{ error }}</small>
+                {% endfor %}
+            </div>
+            {% endfor %}
+            <button type="submit" class="btn btn-emerald w-100">Registra't</button>
+        </form>
+
+        <p class="text-center mt-3 mb-0">
+            Ja tens compte?
+            <a href="{% url 'login' %}" class="auth-link">Inicia sessió</a>
+        </p>
+    </div>
+</div>
+{% endblock %}
