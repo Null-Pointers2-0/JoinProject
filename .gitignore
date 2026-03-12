@@ -6,6 +6,10 @@ __pycache__/
 
 venv*/
 .venv/
+venv/
+env/
+
+venv-join/
 .venv*/
 env/
 
