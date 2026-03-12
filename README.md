@@ -1,24 +1,27 @@
 # JoinProject
 
-Aquest projecte és una aplicació web feta amb **Django** tracta de fer una web centralitzant les plataformes de streaming per a que els usuaris puguin mirar diferents continguts sense haver de canviar de plataforma.
+This project is a web application made with **Django** tries to make a web centralizing streaming platforms for users to look at different content without having to change platform.
 
-## Com engegar el projecte amb Docker
+## How to start the project with Docker
 
-El projecte està totalment containeritzat. Només necessites tenir **Docker** i **Docker Compose** instal·lats a la teva màquina.
+The project is fully containerized. You just need to have **Docker** and **Docker Compose** installed on your machine.
 
-### 1. Preparació inicial
-Clona el repositori i crea el fitxer de variables d'entorn:
+### 1. Initial preparation
+Clone the repository and create the environment variable file:
 ```bash
-git clone <URL_DEL_TEU_REPOSITORI>
-cd <NOM_DEL_PROJECTE>
+git clone <URL_OF_THE_REPOSITORY>
+cd <PROJECT_NAME>
 
-# Crea el fitxer .env
+# Create the file .env
 gedit .env
-# O copial del teu ja existent 
-cp /el_teu_direcori/.env .env
+# Or copy it from yours that already exists
+cp /your_directory/.env .env
 ```
-### 2. Iniciar la web
+### 2. Start the website
 ```bash
 docker compose up
 ```
-aquesta web estara corrent en **127.0.0.1:8000**
+This web is running on **127.0.0.1:8000**
+
+
+At this moment the web is running in an open server [URL of the web](https://joinproject-23y7.onrender.com)
