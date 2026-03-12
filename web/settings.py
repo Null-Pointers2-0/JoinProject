@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-#hm@y9!i7z7nglcx+hivdx0j127mo2tw@1&*-esq62(o454t(y
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['joinproject-23y7.onrender.com']
+ALLOWED_HOSTS = ['joinproject-23y7.onrender.com','127.0.0.1']
 
 
 # Application definition
@@ -37,7 +37,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'web',
+    'web_app',
+    
 ]
 
 MIDDLEWARE = [
@@ -128,3 +129,5 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 LOGIN_REDIRECT_URL = 'home'
 LOGOUT_REDIRECT_URL = 'home'
+
+AUTH_USER_MODEL = 'web_app.CustomUser'
