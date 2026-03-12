@@ -36,3 +36,8 @@ jobs:
     - name: get graphics
       run: |
         python chart.py
+    - name: Upload chart
+      uses: actions/upload-artifact@v4
+      with:
+        name: pareto-chart
+        path: pareto_report.png
