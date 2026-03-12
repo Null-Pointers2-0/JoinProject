@@ -1,0 +1,84 @@
+
+.content {
+    background: rgba(255, 255, 255, 0.2);
+    /* Color blanc amb 20% d'opacitat */
+    backdrop-filter: blur(10px);
+    /* L'efecte de desenfocament */
+    -webkit-backdrop-filter: blur(10px);
+    /* Suport per a Safari */
+    border-radius: 15px;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    /* Una vora suau ajuda al realisme */
+    color: white;
+    margin-top: 0%;
+    margin-bottom: 0%;
+}
+
+/* Navbar Styles */
+.header-pers {
+    background: rgba(23, 80, 49, 0.4) !important;
+    /* Emerald-900 amb opacitat */
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    transition: all 0.3s ease;
+}
+
+.brand-emerald {
+    color: var(--emerald-400);
+}
+
+.nav-link {
+    font-weight: 500;
+    transition: color 0.3s ease;
+}
+
+.nav-link:hover {
+    color: var(--emerald-300) !important;
+}
+
+.btn-emerald {
+    background-color: var(--emerald-500);
+    color: white;
+    font-weight: 600;
+    border: none;
+    transition: all 0.3s ease;
+}
+
+.btn-emerald:hover {
+    background-color: var(--emerald-600);
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(46, 204, 113, 0.3);
+}
+
+.navbar-toggler {
+    filter: invert(1);
+}
+
+.auth-card {
+    background: rgba(23, 80, 49, 0.45);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 14px;
+}
+
+.form-control {
+    background: rgba(255, 255, 255, 0.92);
+    border: 1px solid rgba(23, 80, 49, 0.35);
+}
+
+.form-control:focus {
+    border-color: var(--emerald-500);
+    box-shadow: 0 0 0 0.2rem rgba(46, 204, 113, 0.25);
+}
+
+.auth-link {
+    color: var(--emerald-200);
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.auth-link:hover {
+    color: var(--emerald-100);
+    text-decoration: underline;
+}

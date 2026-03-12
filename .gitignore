@@ -3,13 +3,15 @@ __pycache__/
 *.pyc
 *.pyo
 *.pyd
-
-venv*/
 .venv/
 venv/
 env/
+venv-join/
+
 migrations/
 *.sqlite3
+
 .venv*/
+
 env/
 
