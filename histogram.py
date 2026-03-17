@@ -6,7 +6,7 @@ import matplotlib.pyplot as plt
 from matplotlib.ticker import MaxNLocator
 
 # ── Configuración ──────────────────────────────────────────────────────────────
-REPO   = "JoinProject/JoinProject"
+REPO   = "Bogdan2005-19/JoinProject"
 TOKEN  = config("HISTOGRAM_TOKEN")
 OWNER, REPO_NAME = REPO.split("/")
 
