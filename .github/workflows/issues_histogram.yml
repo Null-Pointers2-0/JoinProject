@@ -24,7 +24,7 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install requests matplotlib
+          pip install requests matplotlib decouple
 
       - name: Run issues histogram script
         env:
