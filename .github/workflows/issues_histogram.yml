@@ -36,4 +36,4 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: issues-per-week-graph
-          path: issues_per_week.png
+          path: issues_histogram.png
