@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from web_app.forms import CustomUserCreationForm
 
 def home(request):
-    return render(request, "home.html")
+    return render(request, "home/home.html")
 
 def register_view(request):
     form = CustomUserCreationForm(request.POST or None)
