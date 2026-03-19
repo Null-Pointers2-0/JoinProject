@@ -42,6 +42,6 @@ jobs:
       - name: Upload histogram artifact
         uses: actions/upload-artifact@v4
         with:
-          name: issues-per-week-graph
-          path: issues_histogram.png
+          name: runchart-img
+          path: issue_runchart.png
   
