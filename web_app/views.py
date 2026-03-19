@@ -9,4 +9,4 @@ def register_view(request):
     if form.is_valid():
         form.save()
         return redirect('login')
-    return render(request, 'register.html', {'form': form})
+    return render(request, 'identify/register.html', {'form': form})

@@ -1,4 +1,5 @@
 {% load static %}
+{% load i18n %}
 <!DOCTYPE html>
 <html lang="en">
 
@@ -12,10 +13,10 @@
 </head>
 
 <body>
-    <nav class="navbar navbar-expand-lg header-pers sticky-top">
+    <!--<nav class="navbar navbar-expand-lg header-pers sticky-top">
         <div class="container">
             <a class="navbar-brand fw-bold text-white" href="/">
-                <span class="brand-emerald">StreamSync</span> 
+                <span class="brand-emerald">StreamSync</span>
             </a>
             <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <span class="navbar-toggler-icon"></span>
@@ -23,35 +24,145 @@
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item">
-                        <a class="nav-link text-white px-3" href="{% url 'home' %}">Inici</a>
+                        <a class="nav-link text-white px-3" href="{% url 'home' %}">{% trans "Home" %}</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link text-white px-3" href="#">Sobre nosaltres</a>
+                        <a class="nav-link text-white px-3" href="#">{% trans "About us" %}</a>
                     </li>
-                    
+                    {% if user.is_authenticated %}
+
+                    <li class="nav-item mt-2 mt-lg-0">
+                        <a class="btn btn-emerald rounded-pill text-white px-4">{% trans "Welcome " %} <b> {{
+                                user.username }} </b>
+                        </a>
+                    </li>
                     <li class="nav-item ms-lg-3">
-                        <a class="btn btn-outline-light rounded-pill px-4 me-2" href="#">Registre</a>
+                        <form action="{% url 'logout' %}" method="post" class="m-0">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-emerald rounded-pill text-white px-4">{% trans "Logout"
+                                %}</button>
+                        </form>
+                    </li>
+
+                    {% else %}
+
+                    <li class="nav-item ms-lg-3">
+                        <a class="btn btn-outline-light rounded-pill px-4 me-2" href=" {%url 'register'%} ">{% trans
+                            "Register" %}</a>
                     </li>
                     <li class="nav-item mt-2 mt-lg-0">
-                        <a class="btn btn-emerald rounded-pill text-white px-4" href="#">Iniciar sessió</a>
+                        <a class="btn btn-emerald rounded-pill text-white px-4" href=" {%url 'login'%} ">{% trans
+                            "Login" %}</a>
                     </li>
-                    
+
+                    {% endif %}
+
                 </ul>
+            </div>
+        </div>
+    </nav>-->
+
+    <nav class="navbar navbar-dark bg-dark fixed-top">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="{% url 'home' %}">StreamSync</a>
+            {% if user.is_authenticated %}
+            <h3 class="offcanvas-title text-white">{% trans "Welcome " %} {{ user.username }}</h3>
+            {% endif %}
+            <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas"
+                data-bs-target="#offcanvasDarkNavbar" aria-controls="offcanvasDarkNavbar"
+                aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="offcanvas offcanvas-end text-bg-dark" tabindex="-1" id="offcanvasDarkNavbar"
+                aria-labelledby="offcanvasDarkNavbarLabel">
+                <div class="offcanvas-header">
+                    <h5 class="offcanvas-title" id="offcanvasDarkNavbarLabel">Dark offcanvas</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas"
+                        aria-label="Close"></button>
+                </div>
+                <div class="offcanvas-body">
+                    <ul class="navbar-nav justify-content-end flex-grow-1 pe-3">
+                        <li class="nav-item">
+                            <a class="nav-link active" aria-current="page" href="{% url 'home' %}">{% trans "Home"%}</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">{% trans "About us" %}</a>
+                        </li>
+
+                        <form action="{% url 'set_language' %}" method="post" class="nav-item dropdown">
+                            {% csrf_token %}
+                            <input name="next" type="hidden" value="{{ redirect_to }}">
+                            <select name="language">
+                                {% get_current_language as LANGUAGE_CODE %}
+                                {% get_available_languages as LANGUAGES %}
+                                {% get_language_info_list for LANGUAGES as languages %}
+                                {% for language in languages %}
+                                <option value="{{ language.code }}" {% if language.code == LANGUAGE_CODE %}selected{% endif %}>
+                                    {{ language.name_local }} ({{ language.code }})
+                                </option>
+                                {% endfor %}
+                            </select>
+                            <input type="submit" value="Go">
+                        </form>
+
+                        {% if user.is_authenticated %}
+                        <!-- Dropdown -->
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
+                                aria-expanded="false">
+                                {% trans "Account" %}
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-dark">
+                                <li><a class="dropdown-item" href="#">{% trans "Profile" %}</a></li>
+                                <li><a class="dropdown-item" href="#">{% trans "Settings" %}</a></li>
+                                <li>
+                                    <hr class="dropdown-divider">
+                                </li>
+                                <li>
+                                    <form action="{% url 'logout' %}" method="post" class="m-0">
+                                        {% csrf_token %}
+                                        <button type="submit"
+                                            class="btn btn-emerald rounded-pill text-white px-4">{%trans "Logout"%}
+                                        </button>
+                                    </form>
+                                </li>
+                            </ul>
+                        </li>
+                        {% else %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'login' %}">{% trans "Login" %}</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'register' %}">{% trans "Register" %}</a>
+                        </li>
+                        {% endif %}
+                    </ul>
+                    <form class="d-flex mt-3" role="search">
+                        <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" />
+                        <button class="btn btn-success" type="submit">{% trans "Search" %}</button>
+                    </form>
+                </div>
             </div>
         </div>
     </nav>
 
     <div class="container content col-9 align-self-center">
-        
+
+    </div>
+    <div>
+        {% block content %}
+
+        {% endblock %}
     </div>
 
-    {% block content %}
-
-    {% endblock %}
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
         crossorigin="anonymous"></script>
+
+    <footer>
+
+    </footer>
 
 </body>
 
