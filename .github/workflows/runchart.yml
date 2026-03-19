@@ -16,7 +16,7 @@ jobs:
   
     steps:
       - name: Cechout repo
-        uses: actions/checkout@v5
+        uses: actions/checkout@v4
         with:
           ref: ${{ github.head_ref }}
           persist-credentials: true
@@ -28,7 +28,7 @@ jobs:
           gh issue list --state all --limit 10000 --json createdAt > issues.json
 
       - name: Setup python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v3
         with:
           python-version: "3.12"
           
