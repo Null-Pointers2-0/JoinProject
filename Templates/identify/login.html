@@ -1,83 +1,62 @@
 {% extends 'base.html' %}
-<head>
-    <link rel="stylesheet" href="{% static 'css/identify.css'%}">
-    
-</head>
+{% load static %}
+{% load i18n %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/login.css' %}">
+{% endblock %}
+
 {% block content %}
-<!--<div class="py-5 d-flex justify-content-center">
-    <div class="col-12 col-md-8 col-lg-6">
-        <h2 class="text-center mb-4">Inici de sessió</h2>
 
-        <form method="post" class="auth-card p-4 p-md-5">
-            {% csrf_token %}
-            {% for error in form.non_field_errors %}
-            <small class="text-danger d-block mb-2">{{ error }}</small>
-            {% endfor %}
-            <div class="mb-3">
-                <label for="{{ form.username.id_for_label }}" class="form-label">Username</label>
-                {{ form.username }}
-            </div>
-            <div class="mb-3">
-                <label for="{{ form.password.id_for_label }}" class="form-label">Password</label>
-                {{ form.password }}
-            </div>
-            {% if next %}
-            <input type="hidden" name="next" value="{{ next }}">
-            {% endif %}
-            <button type="submit" class="btn btn-emerald w-100">Iniciar sessió</button>
-        </form>
+  <div class="login-card">
+    <h1>{% trans "Sign In" %}</h1>
 
-        <p class="text-center mt-3 mb-0">
-            No tens compte?
-            <a href="{% url 'register' %}" class="auth-link">Registra't</a>
-        </p>
-    </div>
-</div>--->
+    <form id="loginForm" method="post" action="{% url 'login' %}">
+      {% csrf_token %}
 
-<section class="vh-100 gradient-custom">
-  <div class="container py-5 h-100">
-    <div class="row d-flex justify-content-center align-items-center h-100">
-      <div class="col-12 col-md-8 col-lg-6 col-xl-5">
-        <div class="card bg-dark text-white" style="border-radius: 1rem;">
-          <div class="card-body p-5 text-center">
+      {% for error in form.non_field_errors %}
+      <p style="color: #e50914; font-size: 14px; margin-bottom: 10px;">{{ error }}</p>
+      {% endfor %}
 
-            <div class="mb-md-5 mt-md-4 pb-5">
+      <div class="form-group">
+        <input type="text" name="username" id="email" placeholder="{% trans 'Email address or username' %}" required>
+      </div>
 
-              <h2 class="fw-bold mb-2 text-uppercase">Login</h2>
-              <p class="text-white-50 mb-5">Please enter your login and password!</p>
-
-              <div data-mdb-input-init class="form-outline form-white mb-4">
-                <input type="email" id="typeEmailX" class="form-control form-control-lg" />
-                <label class="form-label" for="typeEmailX">Email</label>
-              </div>
-
-              <div data-mdb-input-init class="form-outline form-white mb-4">
-                <input type="password" id="typePasswordX" class="form-control form-control-lg" />
-                <label class="form-label" for="typePasswordX">Password</label>
-              </div>
-
-              <p class="small mb-5 pb-lg-2"><a class="text-white-50" href="#!">Forgot password?</a></p>
-
-              <button data-mdb-button-init data-mdb-ripple-init class="btn btn-outline-light btn-lg px-5" type="submit">Login</button>
-
-              <div class="d-flex justify-content-center text-center mt-4 pt-1">
-                <a href="#!" class="text-white"><i class="fab fa-facebook-f fa-lg"></i></a>
-                <a href="#!" class="text-white"><i class="fab fa-twitter fa-lg mx-4 px-2"></i></a>
-                <a href="#!" class="text-white"><i class="fab fa-google fa-lg"></i></a>
-              </div>
-
-            </div>
-
-            <div>
-              <p class="mb-0">Don't have an account? <a href="#!" class="text-white-50 fw-bold">Sign Up</a>
-              </p>
-            </div>
-
-          </div>
+      <div class="form-group">
+        <div class="password-container">
+          <input type="password" name="password" id="password" placeholder="{% trans 'Password' %}" required>
+          <button type="button" class="password-toggle" onclick="togglePassword()">{% trans "Show" %}</button>
         </div>
       </div>
+
+      {% if next %}
+      <input type="hidden" name="next" value="{{ next }}">
+      {% endif %}
+
+      <button type="submit" class="submit-btn">{% trans "Sign In" %}</button>
+
+    </form>
+
+    <div class="signup-section">
+      {% trans "New to Streamflix?" %} <a href="{% url 'register' %}">{% trans "Sign up now" %}</a>
     </div>
+
   </div>
-</section>
+
+
+<script>
+  function togglePassword() {
+    const passwordInput = document.getElementById('password');
+    const toggleBtn = document.querySelector('.password-toggle');
+
+    if (passwordInput.type === 'password') {
+      passwordInput.type = 'text';
+      toggleBtn.textContent = 'Hide';
+    } else {
+      passwordInput.type = 'password';
+      toggleBtn.textContent = 'Show';
+    }
+  }
+</script>
 
 {% endblock %}
