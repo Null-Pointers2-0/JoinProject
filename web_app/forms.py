@@ -11,6 +11,11 @@ class CustomUserCreationForm(forms.ModelForm):
         max_length=150,
         help_text=''
     )
+    email = forms.EmailField(
+        label='Correo electrónico',
+        required=True,
+        help_text=''
+    )
     password = forms.CharField(
         label='Contraseña',
         widget=forms.PasswordInput,
@@ -24,7 +29,7 @@ class CustomUserCreationForm(forms.ModelForm):
 
     class Meta:
         model = CustomUser
-        fields = ('username', 'password', 'password2')
+        fields = ('username', 'email', 'password', 'password2')
 
     def clean_password2(self):
         password = self.cleaned_data.get('password')
