@@ -33,15 +33,15 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 20px 50px;
+    padding: 12px 24px;
 }
 
 .logo {
-    font-size: 32px;
-    font-weight: bold;
+    font-size: 18px;
+    font-weight: 600;
     color: #fff;
     text-decoration: none;
-    letter-spacing: -1px;
+    letter-spacing: 0;
 }
 
 /* Main Container */
