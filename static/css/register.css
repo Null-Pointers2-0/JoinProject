@@ -5,12 +5,9 @@
 
 /* Register Card */
 .register-card {
-    background: rgba(0, 0, 0, 0.75);
     border-radius: 8px;
-    padding: 60px 68px 40px;
+    padding: 60px;
     width: 100%;
-    max-width: 450px;
-    backdrop-filter: blur(10px);
 }
 
 .register-card h1 {

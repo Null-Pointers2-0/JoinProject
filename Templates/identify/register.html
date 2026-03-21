@@ -1,92 +1,92 @@
 {% extends 'base.html' %}
 {% load static %}
-{% load i18n %}
-
+{% load i18n%}
+{% block content_class %}auth-container{% endblock %}
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'css/register.css' %}">
 {% endblock %}
 
 {% block content %}
 
-    <div class="register-card">
-        <h1>{% trans "Create Account" %}</h1>
-        <p class="subtitle">{% trans "Join millions of viewers worldwide" %}</p>
+<div class="register-card">
+    <h1>{% trans "Create Account" %}</h1>
+    <p class="subtitle">{% trans "Join millions of viewers worldwide" %}</p>
 
-        <form id="registerForm" method="post" action="{% url 'register' %}">
-            {% csrf_token %}
+    <form id="registerForm" method="post" action="{% url 'register' %}">
+        {% csrf_token %}
 
-            {% for error in form.non_field_errors %}
-            <p style="color: #e50914; font-size: 14px; margin-bottom: 10px;">{{ error }}</p>
+        {% for error in form.non_field_errors %}
+        <p style="color: #e50914; font-size: 14px; margin-bottom: 10px;">{{ error }}</p>
+        {% endfor %}
+
+        <div class="form-group">
+            <input type="text" name="username" id="fullName" placeholder="{% trans 'Username' %}" required>
+            {% for error in form.username.errors %}
+            <small style="color: #e50914; font-size: 12px;">{{ error }}</small>
             {% endfor %}
-
-            <div class="form-group">
-                <input type="text" name="username" id="fullName" placeholder="{% trans 'Username' %}" required>
-                {% for error in form.username.errors %}
-                <small style="color: #e50914; font-size: 12px;">{{ error }}</small>
-                {% endfor %}
-            </div>
-
-            <div class="form-group">
-                <input type="email" name="email" id="email" placeholder="{% trans 'Email address' %}" required>
-                {% for error in form.email.errors %}
-                <small style="color: #e50914; font-size: 12px;">{{ error }}</small>
-                {% endfor %}
-            </div>
-
-            <div class="form-group">
-                <div class="password-container">
-                    <input type="password" name="password" id="password" placeholder="{% trans 'Create password' %}"
-                        required oninput="checkPasswordStrength()">
-                    <button type="button" class="password-toggle" onclick="togglePassword('password')">{% trans "Show"
-                        %}</button>
-                </div>
-                {% for error in form.password.errors %}
-                <small style="color: #e50914; font-size: 12px;">{{ error }}</small>
-                {% endfor %}
-
-                <div class="password-strength">
-                    <div class="strength-bar">
-                        <div class="strength-fill" id="strengthFill"></div>
-                    </div>
-                    <span class="strength-text" id="strengthText"></span>
-                </div>
-
-                <div class="password-requirements">
-                    <div class="requirement" id="req-length">
-                        <span class="requirement-icon">○</span>
-                        <span>{% trans "At least 8 characters" %}</span>
-                    </div>
-                    <div class="requirement" id="req-uppercase">
-                        <span class="requirement-icon">○</span>
-                        <span>{% trans "One uppercase letter" %}</span>
-                    </div>
-                    <div class="requirement" id="req-number">
-                        <span class="requirement-icon">○</span>
-                        <span>{% trans "One number" %}</span>
-                    </div>
-                </div>
-            </div>
-
-            <div class="form-group">
-                <div class="password-container">
-                    <input type="password" name="password2" id="confirmPassword"
-                        placeholder="{% trans 'Confirm password' %}" required>
-                    <button type="button" class="password-toggle" onclick="togglePassword('confirmPassword')">{% trans
-                        "Show" %}</button>
-                </div>
-                {% for error in form.password2.errors %}
-                <small style="color: #e50914; font-size: 12px;">{{ error }}</small>
-                {% endfor %}
-            </div>
-
-            <button type="submit" class="submit-btn">{% trans "Create Account" %}</button>
-        </form>
-
-        <div class="signin-section">
-            {% trans "Already have an account?" %} <a href="{% url 'login' %}">{% trans "Sign in" %}</a>
         </div>
 
+        <div class="form-group">
+            <input type="email" name="email" id="email" placeholder="{% trans 'Email address' %}" required>
+            {% for error in form.email.errors %}
+            <small style="color: #e50914; font-size: 12px;">{{ error }}</small>
+            {% endfor %}
+        </div>
+
+        <div class="form-group">
+            <div class="password-container">
+                <input type="password" name="password" id="password" placeholder="{% trans 'Create password' %}"
+                    required oninput="checkPasswordStrength()">
+                <button type="button" class="password-toggle" onclick="togglePassword('password')">{% trans "Show"
+                    %}</button>
+            </div>
+            {% for error in form.password.errors %}
+            <small style="color: #e50914; font-size: 12px;">{{ error }}</small>
+            {% endfor %}
+
+            <div class="password-strength">
+                <div class="strength-bar">
+                    <div class="strength-fill" id="strengthFill"></div>
+                </div>
+                <span class="strength-text" id="strengthText"></span>
+            </div>
+
+            <div class="password-requirements">
+                <div class="requirement" id="req-length">
+                    <span class="requirement-icon">○</span>
+                    <span>{% trans "At least 8 characters" %}</span>
+                </div>
+                <div class="requirement" id="req-uppercase">
+                    <span class="requirement-icon">○</span>
+                    <span>{% trans "One uppercase letter" %}</span>
+                </div>
+                <div class="requirement" id="req-number">
+                    <span class="requirement-icon">○</span>
+                    <span>{% trans "One number" %}</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="password-container">
+                <input type="password" name="password2" id="confirmPassword"
+                    placeholder="{% trans 'Confirm password' %}" required>
+                <button type="button" class="password-toggle" onclick="togglePassword('confirmPassword')">{% trans
+                    "Show" %}</button>
+            </div>
+            {% for error in form.password2.errors %}
+            <small style="color: #e50914; font-size: 12px;">{{ error }}</small>
+            {% endfor %}
+        </div>
+
+        <button type="submit" class="submit-btn">{% trans "Create Account" %}</button>
+    </form>
+
+    <div class="signin-section">
+        {% trans "Already have an account?" %} <a href="{% url 'login' %}">{% trans "Sign in" %}</a>
     </div>
+
+</div>
 
 
 <script>

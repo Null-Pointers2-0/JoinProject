@@ -280,8 +280,9 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    min-height: 100vh;
-    padding: 80px 20px 20px 20px;
+    margin-top: 60px; /* Clearance for fixed header */
+    min-height: calc(100vh - 60px);
+    padding: 20px;
 }
 
 /* Form Styles */
@@ -400,6 +401,27 @@ body {
     border-color: #fff;
     background: rgba(255, 255, 255, 0.05);
 }
+
+.content-div {
+    background: transparent;
+    background-color: rgba(84, 81, 81, 0.5);
+    backdrop-filter: blur(10px);
+    border: 1px solid gray;
+    border-radius: 8px;
+    margin-top: 10px;
+    margin-bottom: 100px;
+}
+
+.auth-container {
+    max-width: 450px;
+    width: 100% !important;
+    min-height: 80vh;
+    display: grid;
+    place-items: center;
+    margin-top: 20px !important;
+    margin-bottom: 20px !important;
+}
+
 
 /* Footer */
 .footer {
