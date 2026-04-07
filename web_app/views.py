@@ -12,4 +12,6 @@ def register_view(request):
     return render(request, 'identify/register.html', {'form': form})
 
 def user_setting(request):
+    if not request.user.is_authenticated:
+        return redirect('login')
     return render(request, 'User/user_setting.html')
