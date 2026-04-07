@@ -1,4 +1,7 @@
 {% extends 'base.html' %}
+{%block extra_css%}
+<link rel="stylesheet" href="{{ url 'static' 'css/user_setting.css' }}">
+{% endblock %}
 {% block content %}
 <h1>Hello {{ user.username }}</h1>
 {% endblock %}
