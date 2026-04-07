@@ -214,13 +214,16 @@
 
         {% if user.is_authenticated %}
         <div class="menu-user">
-            <div class="user-info">
-                <div class="user-avatar">{{ user.username|first|upper }}</div>
-                <div class="user-details">
-                    <div class="user-name">{{ user.username }}</div>
-                    <div class="user-email">{{ user.email }}</div>
+            <a href="{% url 'user_setting' %}">
+                <div class="user-info">
+
+                    <div class="user-avatar">{{ user.username|first|upper }}</div>
+                    <div class="user-details">
+                        <div class="user-name">{{ user.username }}</div>
+                        <div class="user-email">{{ user.email }}</div>
+                    </div>
                 </div>
-            </div>
+            </a>
         </div>
         {% endif %}
 
