@@ -10,3 +10,6 @@ def register_view(request):
         form.save()
         return redirect('login')
     return render(request, 'identify/register.html', {'form': form})
+
+def profile(request):
+    return render(request, 'profile/profile.html')
