@@ -117,6 +117,7 @@
     </nav>-->
     <!-- Navbar -->
     <header class="header">
+        
         <div class="header-left">
             <button class="menu-toggle" id="menuToggle" aria-label="Toggle menu">
                 <span></span>
@@ -270,13 +271,51 @@
     </script>
 
 
+
+    <footer class="footer mt-auto">
+        <link rel="stylesheet" href="{% static 'css/base.css' %}">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4 mb-4">
+                    <h5>StreamSync</h5>
+                    <p>From surveys to real-time insights. We unify global catalogs and leverage in-app data to track market trends without the need for traditional polling. </p>
+                </div>
+
+                <div class="col-md-2 mb-4">
+                    <h5>{% trans "Navigation" %}</h5>
+                    <ul class="list-unstyled">
+                        <li><a href="{% url 'home' %}">{% trans "Home" %}</a></li>
+                        <li><a href="">{% trans "About us" %}</a></li>
+                        <li><a href="">{% trans "Contact us" %}</a></li>
+                    </ul>
+                </div>
+
+                <div class="col-md-3 mb-4">
+                    <h5>Legal</h5>
+                    <ul class="list-unstyled">
+                        <li><a href="#">{% trans "Privacy Policy" %}</a></li>
+                        <li><a href="#">{% trans "Terms of Use" %}</a></li>
+                    </ul>
+                </div>
+
+                <div class="col-md-3 mb-4">
+                    <h5>Contact</h5>
+                    <p>info@StreamSync.com</p>
+                    <p>+34 600 000 000</p>
+                </div>
+            </div>
+            <hr>
+            <div class="row">
+                <div class="col-12 text-center footer-bottom">
+                    &copy; {% now "Y" %} StreamSync. All rights reserved.
+                </div>
+            </div>
+       </div>
+    </footer>
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
         crossorigin="anonymous"></script>
-
-    <footer>
-
-    </footer>
 
 </body>
 
