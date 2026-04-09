@@ -5,39 +5,64 @@ from django.db import models
 from django.contrib.auth.models import AbstractUser
 
 class Movie(models.Model):
-    title = models.CharField(max_length=255, unique=True)
-    synopsis = models.TextField()
-    year = models.IntegerField()
-    genre_id = models.IntegerField()
-    director_id = models.IntegerField()
-    rating = models.FloatField()
-    language_id = models.IntegerField()
-    country_id = models.IntegerField()
-    age_rating_id = models.IntegerField()
-    expires_at = models.DateTimeField()
+    movie_id = models.IntegerField()
+    age_rating = models.ForeignKey('AgeRating', on_delete=models.SET_NULL, blank=True, null=True)
+    director = models.ForeignKey('Director', on_delete=models.SET_NULL, blank=True, null=True)
+    genre = models.ForeignKey('Genre', on_delete=models.SET_NULL, blank=True, null=True)
+    api = models.ForeignKey('API', blank=True, null=True, on_delete=models.SET_NULL)
+    
+    title = models.CharField(max_length=255)
+    synopsis = models.TextField(blank=True, null=True)
+    year = models.IntegerField(blank=True, null=True)
+    rating = models.FloatField(blank=True, null=True)
+    expires_at = models.DateTimeField(blank=True, null=True)
+
+    class Meta:
+        unique_together = ('movie_id', 'api')
+        
     def __str__(self):
         return self.title
 
-class Series(models.Model):
-    ...
+class API(models.Model):
+    port = models.IntegerField(unique=True)
+    def __str__(self):
+        return f"API on port {self.port}"
 
 class Director(models.Model):
-    name = models.CharField(max_length=255, unique=True)
-    birth_date = models.DateField()
+    director_id = models.IntegerField()
+    api = models.ForeignKey(API, on_delete=models.CASCADE, related_name='directors')
+    name = models.CharField(max_length=255)
+    birth_date = models.DateTimeField()
     country = models.CharField(max_length=255)
+
+    class Meta:
+        unique_together = ('director_id', 'api')
+
     def __str__(self):
         return self.name
 
 class Genre(models.Model):
-    genre = models.CharField(max_length=255, unique=True)
+    genre_id = models.IntegerField()
+    api = models.ForeignKey(API, on_delete=models.CASCADE, related_name='genres')
+    name = models.CharField(max_length=255)
+    description = models.TextField(blank=True, null=True)
+
+    class Meta:
+        unique_together = ('genre_id', 'api')
+
     def __str__(self):
-        return self.genre
+        return self.name
 
 class AgeRating(models.Model):
-    age_rating = models.CharField(max_length=255, unique=True)
+    age_rating_id = models.IntegerField()
+    api = models.ForeignKey(API, on_delete=models.CASCADE, related_name='age_ratings')
+    description = models.CharField(max_length=255)
     age = models.IntegerField()
+
+    class Meta:
+        unique_together = ('age_rating_id', 'api')
     def __str__(self):
-        return self.age_rating
+        return self.description
 
 class CustomUser(AbstractUser):
     favorite_movies = models.ManyToManyField(Movie, blank=True)
