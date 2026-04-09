@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-09 09:50+0200\n"
+"POT-Creation-Date: 2026-04-09 10:16+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -20,10 +20,20 @@ msgstr ""
 "1 : 2;\n"
 
 #: Templates/User/user_setting.html:7
-#, fuzzy
-#| msgid "Settings"
 msgid "Settings"
 msgstr "Configuración"
+
+#: Templates/User/user_types/user_client.html:6
+msgid "Profile"
+msgstr "Perfil"
+
+#: Templates/User/user_types/user_client.html:9
+msgid "History"
+msgstr "Historial"
+
+#: Templates/User/user_types/user_client.html:12
+msgid "Subscriptions"
+msgstr "Suscripciones"
 
 #: Templates/base.html:49
 msgid "Welcome"
@@ -1400,9 +1410,6 @@ msgstr ""
 
 #~ msgid "Account"
 #~ msgstr "Cuenta"
-
-#~ msgid "Profile"
-#~ msgstr "Perfil"
 
 #~ msgid "Search"
 #~ msgstr "Buscar"
