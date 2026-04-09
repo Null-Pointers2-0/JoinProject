@@ -1,0 +1,7 @@
+.home-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding-top: 2rem;
+    min-height: calc(100vh - 120px);
+}

@@ -1,4 +1,31 @@
 {% extends 'base.html' %}
+{% load i18n %}
+{% load static %}
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/home/home.css' %}">
+{% endblock %}
+{% block search-menu %}
+<div class="menu-search">
+    <div class="search-input-container search-principal-container">
+        <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+            stroke-width="2">
+            <circle cx="11" cy="11" r="8" />
+            <line x1="21" y1="21" x2="16.65" y2="16.65" />
+        </svg>
+        <input type="text" class="search-input" placeholder="{% trans 'Search...' %}">
+    </div>
+</div>
+{% endblock %}
 {% block content %}
-<h1 class="display-4 fw-bold">Hello world</h1>
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="home-container">
+                <div class="home-container-left">
+                    <h1>hello</h1>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock %}
