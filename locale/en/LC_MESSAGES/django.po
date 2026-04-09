@@ -8,7 +8,11 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
+<<<<<<< HEAD
 "POT-Creation-Date: 2026-04-09 09:35+0200\n"
+=======
+"POT-Creation-Date: 2026-04-09 10:16+0200\n"
+>>>>>>> origin/43-featuser-implement-user-profile-management-and-personalized-activity-dashboard
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,6 +22,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
+<<<<<<< HEAD
 #: Templates/base.html:39
 msgid "Welcome "
 msgstr "Welcome "
@@ -100,6 +105,48 @@ msgstr "Contact"
 msgid "All rights reserved"
 msgstr "All rights reserved"
 
+=======
+#: Templates/User/user_setting.html:7
+msgid "Settings"
+msgstr "Settings"
+
+#: Templates/User/user_types/user_client.html:6
+msgid "Profile"
+msgstr "Profile"
+
+#: Templates/User/user_types/user_client.html:9
+msgid "History"
+msgstr "History"
+
+#: Templates/User/user_types/user_client.html:12
+msgid "Subscriptions"
+msgstr "Subscriptions"
+
+#: Templates/base.html:49
+msgid "Welcome"
+msgstr "Welcome"
+
+#: Templates/base.html:84
+msgid "Home"
+msgstr "Home"
+
+#: Templates/base.html:98
+msgid "Login"
+msgstr "Login"
+
+#: Templates/base.html:109
+msgid "Register"
+msgstr "Register"
+
+#: Templates/base.html:124
+msgid "Logout"
+msgstr "Logout"
+
+#: Templates/base.html:154
+msgid "Search..."
+msgstr "Search..."
+
+>>>>>>> origin/43-featuser-implement-user-profile-management-and-personalized-activity-dashboard
 #: Templates/identify/login.html:12 Templates/identify/login.html:36
 msgid "Sign In"
 msgstr "Sign In"
@@ -137,6 +184,10 @@ msgid "Username"
 msgstr "Username"
 
 #: Templates/identify/register.html:30
+<<<<<<< HEAD
+=======
+#: venv-join/lib/python3.12/site-packages/django/db/models/fields/__init__.py:1920
+>>>>>>> origin/43-featuser-implement-user-profile-management-and-personalized-activity-dashboard
 msgid "Email address"
 msgstr "Email address"
 
@@ -207,6 +258,18 @@ msgstr "Strong password"
 #~| msgid "Search"
 #~ msgctxt "alt. month"
 #~ msgid "March"
+#~ msgstr "Search"
+
+#~ msgid "Welcome "
+#~ msgstr "Welcome "
+
+#~ msgid "About us"
+#~ msgstr "About us"
+
+#~ msgid "Account"
+#~ msgstr "Account"
+
+#~ msgid "Search"
 #~ msgstr "Search"
 
 #~ msgid "Please enter your login and password!"

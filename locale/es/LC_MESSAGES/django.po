@@ -8,7 +8,11 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
+<<<<<<< HEAD
 "POT-Creation-Date: 2026-04-09 09:35+0200\n"
+=======
+"POT-Creation-Date: 2026-04-09 10:16+0200\n"
+>>>>>>> origin/43-featuser-implement-user-profile-management-and-personalized-activity-dashboard
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -19,6 +23,7 @@ msgstr ""
 "Plural-Forms: nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? "
 "1 : 2;\n"
 
+<<<<<<< HEAD
 #: Templates/base.html:39
 msgid "Welcome "
 msgstr "Bienvenido "
@@ -101,6 +106,48 @@ msgstr "Contacto"
 msgid "All rights reserved"
 msgstr "Todos los derechos reservados"
 
+=======
+#: Templates/User/user_setting.html:7
+msgid "Settings"
+msgstr "Configuración"
+
+#: Templates/User/user_types/user_client.html:6
+msgid "Profile"
+msgstr "Perfil"
+
+#: Templates/User/user_types/user_client.html:9
+msgid "History"
+msgstr "Historial"
+
+#: Templates/User/user_types/user_client.html:12
+msgid "Subscriptions"
+msgstr "Suscripciones"
+
+#: Templates/base.html:49
+msgid "Welcome"
+msgstr "Bienvenido"
+
+#: Templates/base.html:84
+msgid "Home"
+msgstr "Inicio"
+
+#: Templates/base.html:98
+msgid "Login"
+msgstr "Iniciar sesión"
+
+#: Templates/base.html:109
+msgid "Register"
+msgstr "Registrarse"
+
+#: Templates/base.html:124
+msgid "Logout"
+msgstr "Cerrar sesión"
+
+#: Templates/base.html:154
+msgid "Search..."
+msgstr "Buscar..."
+
+>>>>>>> origin/43-featuser-implement-user-profile-management-and-personalized-activity-dashboard
 #: Templates/identify/login.html:12 Templates/identify/login.html:36
 msgid "Sign In"
 msgstr "Iniciar sesión"
@@ -138,6 +185,10 @@ msgid "Username"
 msgstr "Nombre de usuario"
 
 #: Templates/identify/register.html:30
+<<<<<<< HEAD
+=======
+#: venv-join/lib/python3.12/site-packages/django/db/models/fields/__init__.py:1920
+>>>>>>> origin/43-featuser-implement-user-profile-management-and-personalized-activity-dashboard
 msgid "Email address"
 msgstr "Correo electrónico"
 
@@ -208,6 +259,18 @@ msgstr "Contraseña fuerte"
 #~| msgid "Search"
 #~ msgctxt "alt. month"
 #~ msgid "March"
+#~ msgstr "Buscar"
+
+#~ msgid "Welcome "
+#~ msgstr "Bienvenido "
+
+#~ msgid "About us"
+#~ msgstr "Sobre nosotros"
+
+#~ msgid "Account"
+#~ msgstr "Cuenta"
+
+#~ msgid "Search"
 #~ msgstr "Buscar"
 
 #~ msgid "Please enter your login and password!"
