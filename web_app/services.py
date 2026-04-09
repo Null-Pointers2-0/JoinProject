@@ -7,18 +7,15 @@ from .models import SyncLog
 load_dotenv()
 
 def download_catalog_data():
-    """
-    Recorre las 3 APIs de streaming, descarga los catálogos y registra el resumen.
-    """
     log = SyncLog.objects.create(
         status="Running",
         summary="Iniciando sincronización múltiple..."
     )
 
     platforms = [
-        {"name": "API_8080", "url": "http://localhost:8080/catalog", "key": os.getenv("API_KEY_8080")},
-        {"name": "API_8081", "url": "http://localhost:8081/catalog", "key": os.getenv("API_KEY_8081")},
-        {"name": "API_8082", "url": "http://localhost:8082/catalog", "key": os.getenv("API_KEY_8082")},
+        {"name": "API_8080", "url": "http://localhost:8080/directors", "key": os.getenv("API_KEY_8080")},
+        {"name": "API_8081", "url": "http://localhost:8081/directors", "key": os.getenv("API_KEY_8081")},
+        {"name": "API_8082", "url": "http://localhost:8082/directors", "key": os.getenv("API_KEY_8082")},
     ]
 
     resumen_final = []
@@ -31,11 +28,17 @@ def download_catalog_data():
             continue
 
         try:
-            headers = {'Authorization': f'Bearer {plat["key"]}'}
+            headers = {
+                'accept': '*/*',
+                'X-API-KEY': plat["key"]
+            }
+
             response = requests.get(plat["url"], headers=headers, timeout=10)
             response.raise_for_status()
 
             data = response.json()
+            print(f"Datos recibidos de {plat['name']}: {len(data)} registros encontrados.")
+
             resumen_final.append(f"🟢 {plat['name']}: OK")
 
         except requests.exceptions.RequestException as e:
