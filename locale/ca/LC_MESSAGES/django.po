@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-03-19 17:18+0000\n"
+"POT-Creation-Date: 2026-04-09 10:16+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,132 +18,124 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: Templates/base.html:24
-msgid "Welcome "
-msgstr "Benvingut "
-
-#: Templates/base.html:41 Templates/base.html:142
-msgid "Home"
-msgstr "Inici"
-
-#: Templates/base.html:44
-msgid "About us"
-msgstr "Sobre nosaltres"
-
-#: Templates/base.html:68
-msgid "Account"
-msgstr "Compte"
-
-#: Templates/base.html:71
-msgid "Profile"
-msgstr "Perfil"
-
-#: Templates/base.html:72
+#: Templates/User/user_setting.html:7
 msgid "Settings"
 msgstr "Configuració"
 
-#: Templates/base.html:80 Templates/base.html:181
-msgid "Logout"
-msgstr "Tancar sessió"
+#: Templates/User/user_types/user_client.html:6
+msgid "Profile"
+msgstr "Perfil"
 
-#: Templates/base.html:88 Templates/base.html:156
-msgid "Login"
-msgstr "Iniciar sessió"
+#: Templates/User/user_types/user_client.html:9
+msgid "History"
+msgstr "Historial"
 
-#: Templates/base.html:91 Templates/base.html:167
-msgid "Register"
-msgstr "Registrar-se"
+#: Templates/User/user_types/user_client.html:12
+msgid "Subscriptions"
+msgstr "Subscripcions"
 
-#: Templates/base.html:97
-msgid "Search"
-msgstr "Cercar"
-
-#: Templates/base.html:110
+#: Templates/base.html:49
 msgid "Welcome"
 msgstr "Benvingut"
 
-#: Templates/base.html:131
+#: Templates/base.html:84
+msgid "Home"
+msgstr "Inici"
+
+#: Templates/base.html:98
+msgid "Login"
+msgstr "Iniciar sessió"
+
+#: Templates/base.html:109
+msgid "Register"
+msgstr "Registrar-se"
+
+#: Templates/base.html:124
+msgid "Logout"
+msgstr "Tancar sessió"
+
+#: Templates/base.html:154
 msgid "Search..."
 msgstr "Cercar..."
 
-#: Templates/identify/login.html:13 Templates/identify/login.html:37
+#: Templates/identify/login.html:12 Templates/identify/login.html:36
 msgid "Sign In"
 msgstr "Inicia sessió"
 
-#: Templates/identify/login.html:23
+#: Templates/identify/login.html:22
 msgid "Email address or username"
 msgstr "Correu electrònic o usuari"
 
-#: Templates/identify/login.html:28
+#: Templates/identify/login.html:27
 msgid "Password"
 msgstr "Contrasenya"
 
-#: Templates/identify/login.html:29
+#: Templates/identify/login.html:28
 msgid "Show"
 msgstr "Mostra"
 
-#: Templates/identify/login.html:42
+#: Templates/identify/login.html:41
 msgid "New to Streamflix?"
 msgstr "Ets nou a Streamflix?"
 
-#: Templates/identify/login.html:42
+#: Templates/identify/login.html:41
 msgid "Sign up now"
 msgstr "Registra't ara"
 
-#: Templates/identify/register.html:13 Templates/identify/register.html:83
+#: Templates/identify/register.html:12 Templates/identify/register.html:82
 msgid "Create Account"
 msgstr "Crea un compte"
 
-#: Templates/identify/register.html:14
+#: Templates/identify/register.html:13
 msgid "Join millions of viewers worldwide"
 msgstr "Uneix-te a milions d'espectadors a tot el món"
 
-#: Templates/identify/register.html:24
+#: Templates/identify/register.html:23
 msgid "Username"
 msgstr "Nom d'usuari"
 
-#: Templates/identify/register.html:31
+#: Templates/identify/register.html:30
 #: venv-join/lib/python3.12/site-packages/django/db/models/fields/__init__.py:1920
 msgid "Email address"
 msgstr "Correu electrònic"
 
-#: Templates/identify/register.html:39
+#: Templates/identify/register.html:38
 msgid "Create password"
 msgstr "Crea una contrasenya"
 
-#: Templates/identify/register.html:58
+#: Templates/identify/register.html:57
 msgid "At least 8 characters"
 msgstr "Almenys 8 caràcters"
 
-#: Templates/identify/register.html:62
+#: Templates/identify/register.html:61
 msgid "One uppercase letter"
 msgstr "Una lletra majúscula"
 
-#: Templates/identify/register.html:66
+#: Templates/identify/register.html:65
 msgid "One number"
 msgstr "Un número"
 
-#: Templates/identify/register.html:74
+#: Templates/identify/register.html:73
 msgid "Confirm password"
 msgstr "Confirma la contrasenya"
 
-#: Templates/identify/register.html:87
+#: Templates/identify/register.html:86
 msgid "Already have an account?"
 msgstr "Ja tens un compte?"
 
-#: Templates/identify/register.html:87
+#: Templates/identify/register.html:86
 msgid "Sign in"
 msgstr "Inicia sessió"
 
-#: Templates/identify/register.html:134
+#: Templates/identify/register.html:133
 msgid "Weak password"
 msgstr "Contrasenya feble"
 
-#: Templates/identify/register.html:138
+#: Templates/identify/register.html:137
 msgid "Medium password"
 msgstr "Contrasenya mitjana"
 
-#: Templates/identify/register.html:142
+#: Templates/identify/register.html:141
 msgid "Strong password"
 msgstr "Contrasenya forta"
 
@@ -1393,6 +1385,18 @@ msgstr ""
 #: venv-join/lib/python3.12/site-packages/django/views/templates/default_urlconf.html:236
 msgid "Connect, get help, or contribute"
 msgstr ""
+
+#~ msgid "Welcome "
+#~ msgstr "Benvingut "
+
+#~ msgid "About us"
+#~ msgstr "Sobre nosaltres"
+
+#~ msgid "Account"
+#~ msgstr "Compte"
+
+#~ msgid "Search"
+#~ msgstr "Cercar"
 
 #~ msgid "Please enter your login and password!"
 #~ msgstr "Si us plau, introdueix el teu usuari i contrasenya!"
