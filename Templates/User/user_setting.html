@@ -1,7 +1,14 @@
 {% extends 'base.html' %}
-{%block extra_css%}
-<link rel="stylesheet" href="{{ url 'static' 'css/user_setting.css' }}">
+{% load i18n %}
+{% block extra_css %}
+<!--<link rel="stylesheet" href="">-->
 {% endblock %}
 {% block content %}
-<h1>Hello {{ user.username }}</h1>
+<h1>{% trans 'Settings' %}: {{ user.username }}</h1>
+
+<div class="row">
+    <div class="col-md-6">
+
+    </div>
+</div>
 {% endblock %}

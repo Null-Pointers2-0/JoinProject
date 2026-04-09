@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-03-19 17:18+0000\n"
+"POT-Creation-Date: 2026-04-09 09:50+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -19,132 +19,114 @@ msgstr ""
 "Plural-Forms: nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? "
 "1 : 2;\n"
 
-#: Templates/base.html:24
-msgid "Welcome "
-msgstr "Bienvenido "
-
-#: Templates/base.html:41 Templates/base.html:142
-msgid "Home"
-msgstr "Inicio"
-
-#: Templates/base.html:44
-msgid "About us"
-msgstr "Sobre nosotros"
-
-#: Templates/base.html:68
-msgid "Account"
-msgstr "Cuenta"
-
-#: Templates/base.html:71
-msgid "Profile"
-msgstr "Perfil"
-
-#: Templates/base.html:72
+#: Templates/User/user_setting.html:7
+#, fuzzy
+#| msgid "Settings"
 msgid "Settings"
 msgstr "Configuración"
 
-#: Templates/base.html:80 Templates/base.html:181
-msgid "Logout"
-msgstr "Cerrar sesión"
-
-#: Templates/base.html:88 Templates/base.html:156
-msgid "Login"
-msgstr "Iniciar sesión"
-
-#: Templates/base.html:91 Templates/base.html:167
-msgid "Register"
-msgstr "Registrarse"
-
-#: Templates/base.html:97
-msgid "Search"
-msgstr "Buscar"
-
-#: Templates/base.html:110
+#: Templates/base.html:49
 msgid "Welcome"
 msgstr "Bienvenido"
 
-#: Templates/base.html:131
+#: Templates/base.html:84
+msgid "Home"
+msgstr "Inicio"
+
+#: Templates/base.html:98
+msgid "Login"
+msgstr "Iniciar sesión"
+
+#: Templates/base.html:109
+msgid "Register"
+msgstr "Registrarse"
+
+#: Templates/base.html:124
+msgid "Logout"
+msgstr "Cerrar sesión"
+
+#: Templates/base.html:154
 msgid "Search..."
 msgstr "Buscar..."
 
-#: Templates/identify/login.html:13 Templates/identify/login.html:37
+#: Templates/identify/login.html:12 Templates/identify/login.html:36
 msgid "Sign In"
 msgstr "Iniciar sesión"
 
-#: Templates/identify/login.html:23
+#: Templates/identify/login.html:22
 msgid "Email address or username"
 msgstr "Correo electrónico o usuario"
 
-#: Templates/identify/login.html:28
+#: Templates/identify/login.html:27
 msgid "Password"
 msgstr "Contraseña"
 
-#: Templates/identify/login.html:29
+#: Templates/identify/login.html:28
 msgid "Show"
 msgstr "Mostrar"
 
-#: Templates/identify/login.html:42
+#: Templates/identify/login.html:41
 msgid "New to Streamflix?"
 msgstr "¿Eres nuevo en Streamflix?"
 
-#: Templates/identify/login.html:42
+#: Templates/identify/login.html:41
 msgid "Sign up now"
 msgstr "Regístrate ahora"
 
-#: Templates/identify/register.html:13 Templates/identify/register.html:83
+#: Templates/identify/register.html:12 Templates/identify/register.html:82
 msgid "Create Account"
 msgstr "Crear cuenta"
 
-#: Templates/identify/register.html:14
+#: Templates/identify/register.html:13
 msgid "Join millions of viewers worldwide"
 msgstr "Únete a millones de espectadores en todo el mundo"
 
-#: Templates/identify/register.html:24
+#: Templates/identify/register.html:23
 msgid "Username"
 msgstr "Nombre de usuario"
 
-#: Templates/identify/register.html:31
+#: Templates/identify/register.html:30
 #: venv-join/lib/python3.12/site-packages/django/db/models/fields/__init__.py:1920
 msgid "Email address"
 msgstr "Correo electrónico"
 
-#: Templates/identify/register.html:39
+#: Templates/identify/register.html:38
 msgid "Create password"
 msgstr "Crear contraseña"
 
-#: Templates/identify/register.html:58
+#: Templates/identify/register.html:57
 msgid "At least 8 characters"
 msgstr "Al menos 8 caracteres"
 
-#: Templates/identify/register.html:62
+#: Templates/identify/register.html:61
 msgid "One uppercase letter"
 msgstr "Una letra mayúscula"
 
-#: Templates/identify/register.html:66
+#: Templates/identify/register.html:65
 msgid "One number"
 msgstr "Un número"
 
-#: Templates/identify/register.html:74
+#: Templates/identify/register.html:73
 msgid "Confirm password"
 msgstr "Confirmar contraseña"
 
-#: Templates/identify/register.html:87
+#: Templates/identify/register.html:86
 msgid "Already have an account?"
 msgstr "¿Ya tienes cuenta?"
 
-#: Templates/identify/register.html:87
+#: Templates/identify/register.html:86
 msgid "Sign in"
 msgstr "Iniciar sesión"
 
-#: Templates/identify/register.html:134
+#: Templates/identify/register.html:133
 msgid "Weak password"
 msgstr "Contraseña débil"
 
-#: Templates/identify/register.html:138
+#: Templates/identify/register.html:137
 msgid "Medium password"
 msgstr "Contraseña media"
 
-#: Templates/identify/register.html:142
+#: Templates/identify/register.html:141
 msgid "Strong password"
 msgstr "Contraseña fuerte"
 
@@ -1409,6 +1391,21 @@ msgstr ""
 #: venv-join/lib/python3.12/site-packages/django/views/templates/default_urlconf.html:236
 msgid "Connect, get help, or contribute"
 msgstr ""
+
+#~ msgid "Welcome "
+#~ msgstr "Bienvenido "
+
+#~ msgid "About us"
+#~ msgstr "Sobre nosotros"
+
+#~ msgid "Account"
+#~ msgstr "Cuenta"
+
+#~ msgid "Profile"
+#~ msgstr "Perfil"
+
+#~ msgid "Search"
+#~ msgstr "Buscar"
 
 #~ msgid "Please enter your login and password!"
 #~ msgstr "¡Por favor, introduzca su usuario y contraseña!"
