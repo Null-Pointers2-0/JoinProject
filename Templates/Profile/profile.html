@@ -21,5 +21,9 @@
         <div class="profile-useremail">{{ user.email }}</div>
     </div>
 
-    {% block content_user_setings %} {% endblock %}
+    <div class="user_settings">
+        {% block content_user_setings %}
+        {% endblock %} 
+    </div>
+    
 {% endblock %}
