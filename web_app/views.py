@@ -20,5 +20,5 @@ def profile(request):
         return render(request, 'User/user_types/user_admin.html')
     elif request.user.is_tecnical:
         return render(request, 'User/user_types/user_tecnical.html')'''
-    return render(request, 'profile/profile.html')
+    return render(request, 'Profile/profile.html')
     #return render(request, 'User/user_setting.html')
