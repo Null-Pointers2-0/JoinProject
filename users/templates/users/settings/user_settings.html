@@ -1,9 +1,9 @@
-{% extends 'Profile/profile.html' %}
+{% extends 'users/base_profile.html' %}
 {% load static %}
 {% load i18n %}
 {% block extra_css %}
 {{ block.super }}
-<link rel="stylesheet" href="{% static 'css/user_settings.css' %}">
+<link rel="stylesheet" href="{% static 'users/css/user_settings.css' %}">
 {% endblock %}
 {% block content_user_setings %}
     <div class="row">
