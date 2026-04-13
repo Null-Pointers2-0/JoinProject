@@ -3,13 +3,13 @@
 {% block user_content %}
 <ul class="nav nav-tabs">
     <li class="nav-item">
-        <a class="nav-link active" href="#">{% trans 'Profile' %}</a>
+        <a class="nav-link active" href="{% url 'profile' %}">{% trans 'Profile' %}</a>
     </li>
     <li class="nav-item">
-        <a class="nav-link" href="#">{% trans 'History' %}</a>
+        <a class="nav-link" href="{% url 'profile' %}">{% trans 'History' %}</a>
     </li>
     <li class="nav-item">
-        <a class="nav-link" href="#">{% trans 'Subscriptions' %}</a>
+        <a class="nav-link" href="{% url 'profile' %}">{% trans 'Subscriptions' %}</a>
     </li>
 
 </ul>
