@@ -10,10 +10,15 @@ def profile(request):
         return render(request, 'User/user_types/user_admin.html')
     elif request.user.is_tecnical:
         return render(request, 'User/user_types/user_tecnical.html')'''
-    return render(request, 'User/user_parts/profile.html')
+    return render(request, 'users/profile/profile.html')
     #return render(request, 'User/user_setting.html')
 
 def history(request):
     if not request.user.is_authenticated:
         return redirect('login')
-    return render(request, 'User/user_parts/history.html')
+    return render(request, 'users/parts/history.html')
+
+def subscription(request):
+    if not request.user.is_authenticated:
+        return redirect('login')
+    return render(request, 'users/parts/subscription.html')
