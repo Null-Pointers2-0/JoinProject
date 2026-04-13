@@ -10,7 +10,7 @@ def register_view(request):
         form.save()
         return redirect('login')
     return render(request, 'identify/register.html', {'form': form})
-
+""" 
 def profile(request):
     if not request.user.is_authenticated:
         return redirect('login')
@@ -26,4 +26,5 @@ def profile(request):
 def history(request):
     if not request.user.is_authenticated:
         return redirect('login')
-    return render(request, 'User/user_parts/history.html')
+    return render(request, 'User/user_parts/history.html') 
+"""
