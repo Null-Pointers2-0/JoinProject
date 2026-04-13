@@ -1,0 +1,14 @@
+.row-description {
+    min-height: 300px;
+    border: 1px solid aliceblue;
+}
+
+.row-stats {
+    min-height: 100px;
+    border: 1px solid aliceblue;
+}
+
+.row-location {
+    min-height: 100px;
+    border: 1px solid aliceblue;
+}
