@@ -1,15 +1,31 @@
 {% extends 'Profile/profile.html' %}
-
+{% load static %}
 {% load i18n %}
 {% block extra_css %}
 {{ block.super }}
-<link rel="stylesheet" href="{{ STATIC_URL }}user_settings.css">
+<link rel="stylesheet" href="{% static 'css/user_settings.css' %}">
 {% endblock %}
 {% block content_user_setings %}
     <div class="row">
-        <div class="col-md-12">
+
+        <div class="col-md-2">
+            <div class="row row-description">
+                <p>Whrite a few description of you</p>
+            </div>
+            <div class="row row-stats">
+                <p>Miembro desde: {{ user.date_joined|date:"d/m/Y" }}</p>
+                <p>Último acceso: {{ user.last_login|date:"d/m/Y" }}</p>
+            </div>
+            <div class="row row-location">
+                <p>This show the location</p>
+            </div>
+
+        </div>
+
+        <div class="col-md-10">
             {% block user_content %}
             {% endblock %}
         </div>
     </div>
+        
 {% endblock %}
