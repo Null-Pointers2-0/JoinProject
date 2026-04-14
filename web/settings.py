@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'web_app',
     'django_apscheduler',
+    'users',
 ]
 
 MIDDLEWARE = [

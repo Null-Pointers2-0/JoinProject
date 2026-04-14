@@ -1,8 +1,7 @@
 {% extends 'base.html' %}
 {% load static %}
 {% block extra_css %}
-    <link rel="stylesheet" href="{% static 'css/profile.css' %}">
-    <link rel="stylesheet" href="{% static 'css/profile.css' %}">
+    <link rel="stylesheet" href="{% static 'users/css/base_profile.css' %}">
 {% endblock %}
 
 {% block content %}
@@ -14,7 +13,7 @@
     </div>
 
     <div class="profile-avatar-wrapper">
-        <img src="{% static 'img/Avatar-Exemple.jpeg' %}" alt="Avatar" class="profile-avatar">
+        <img src="{% static 'users/img/Avatar-Exemple.jpeg' %}" alt="Avatar" class="profile-avatar">
     </div>
 
     <div class="profile-info">
