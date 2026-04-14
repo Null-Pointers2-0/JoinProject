@@ -3,14 +3,20 @@
 {% block user_content %}
 <ul class="nav nav-tabs">
     <li class="nav-item">
-        <a class="nav-link active" href="{% url 'profile' %}">{% trans 'Profile' %}</a>
+        <a class="nav-link {% if request.resolver_match.url_name == 'profile' %}active{% endif %}" 
+           href="{% url 'profile' %}">{% trans 'Profile' %}</a>
     </li>
     <li class="nav-item">
-        <a class="nav-link" href="{% url 'history' %}">{% trans 'History' %}</a>
+        <a class="nav-link {% if request.resolver_match.url_name == 'history' %}active{% endif %}" 
+           href="{% url 'history' %}">{% trans 'History' %}</a>
     </li>
     <li class="nav-item">
-        <a class="nav-link" href="{% url 'suscription' %}">{% trans 'Subscriptions' %}</a>
+        <a class="nav-link {% if request.resolver_match.url_name == 'suscription' %}active{% endif %}" 
+           href="{% url 'suscription' %}">{% trans 'Subscriptions' %}</a>
     </li>
-
 </ul>
+
+{% block parts_content %}
+{% endblock %}
+
 {% endblock %}
