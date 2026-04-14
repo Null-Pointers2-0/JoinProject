@@ -4,6 +4,8 @@ from django.contrib.auth.models import AbstractUser
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 
+from web import settings
+
 class Movie(models.Model):
     movie_id = models.IntegerField()
     age_rating = models.ForeignKey('AgeRating', on_delete=models.SET_NULL, blank=True, null=True)
@@ -65,10 +67,20 @@ class AgeRating(models.Model):
         return self.description
 
 class CustomUser(AbstractUser):
-    favorite_movies = models.ManyToManyField(Movie, blank=True)
-
     def __str__(self):
         return self.username
+
+class UserProfile(models.Model):
+    user = models.OneToOneField(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name='profile'
+    )
+    favorite_movies = models.ManyToManyField(Movie, blank=True)
+    bio = models.TextField(blank=True, null=True)
+
+    def __str__(self):
+        return f"Perfil de {self.user.username}"
 
 class SyncLog(models.Model):
     start_time = models.DateTimeField(auto_now_add=True)
