@@ -21,10 +21,6 @@ class Movie(models.Model):
         unique_together = ('movie_id', 'api')
         
     def __str__(self):
-<<<<<<< HEAD
-        return self.username
-
-=======
         return self.title
 
 class API(models.Model):
@@ -79,4 +75,3 @@ class SyncLog(models.Model):
     end_time = models.DateTimeField(null=True, blank=True)
     status = models.CharField(max_length=50)
     summary = models.TextField()
->>>>>>> 22-featsearch-implement-catalog-search-and-filtering-interface

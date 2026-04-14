@@ -11,7 +11,7 @@ def register_view(request):
         form.save()
         return redirect('login')
     return render(request, 'identify/register.html', {'form': form})
-<<<<<<< HEAD
+
 """ 
 def profile(request):
     if not request.user.is_authenticated:
@@ -30,7 +30,6 @@ def history(request):
         return redirect('login')
     return render(request, 'User/user_parts/history.html') 
 """
-=======
 
 def catalog_view(request):
     movies = Movie.objects.all()
@@ -64,4 +63,3 @@ def catalog_view(request):
     }
     
     return render(request, 'catalog/catalog.html', context)
->>>>>>> 22-featsearch-implement-catalog-search-and-filtering-interface
