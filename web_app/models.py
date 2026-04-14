@@ -66,6 +66,7 @@ class AgeRating(models.Model):
 
 class CustomUser(AbstractUser):
     favorite_movies = models.ManyToManyField(Movie, blank=True)
+    avatar = models.ImageField(upload_to='avatars/', null=True, blank=True)
 
     def __str__(self):
         return self.username
