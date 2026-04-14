@@ -1,6 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
-
+from web import settings
 
 class API(models.Model):
     port = models.IntegerField(unique=True)
