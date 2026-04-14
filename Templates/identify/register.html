@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% load static %}
-{% load i18n %}
-
+{% load i18n%}
+{% block content_class %}auth-container{% endblock %}
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'css/register.css' %}">
 {% endblock %}

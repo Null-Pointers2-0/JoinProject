@@ -160,7 +160,11 @@
     <div class="menu-overlay" id="menuOverlay"></div>
 
     <main class="main-container">
-        {% block content %}{% endblock %}
+
+        <div class="content-div {% block content_class %}col-10{% endblock %}">
+            {% block content %}{% endblock %}
+        </div>
+
     </main>
 
     <script>
