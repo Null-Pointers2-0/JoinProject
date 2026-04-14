@@ -1,8 +1,11 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from web_app.forms import CustomUserCreationForm
+from web_app.models import Movie
+
 
 def home(request):
     return render(request, "home/home.html")
+
 
 def register_view(request):
     form = CustomUserCreationForm(request.POST or None)
@@ -11,14 +14,18 @@ def register_view(request):
         return redirect('login')
     return render(request, 'identify/register.html', {'form': form})
 
+
 def user_setting(request):
     if not request.user.is_authenticated:
         return redirect('login')
-    '''if request.user.is_client:
-        return render(request, 'User/user_types/user_client.html')
-    elif request.user.is_admin:
-        return render(request, 'User/user_types/user_admin.html')
-    elif request.user.is_tecnical:
-        return render(request, 'User/user_types/user_tecnical.html')'''
     return render(request, 'User/user_types/user_client.html')
-    #return render(request, 'User/user_setting.html')
+
+
+def movie_detail(request, movie_id):
+    movie = get_object_or_404(Movie, pk=movie_id)
+
+    context = {
+        'movie': movie,
+        'recommendations': movie.get_similar_by_genre(limit=5)
+    }
+    return render(request, 'movie_detail.html', context)
