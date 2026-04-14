@@ -5,4 +5,41 @@
     <link rel="stylesheet" href="{% static 'users/css/profile.css' %}">
 {% endblock %}
 {% block parts_content %}
+
+{% if messages %}
+    {% for message in messages %}
+        <div style="color: #46d369; margin-bottom: 15px;">{{ message }}</div>
+    {% endfor %}
+{% endif %}
+
+<form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+
+    <div class="form-group mb-3">
+        <label>Nombre de usuario</label>
+        {{ form.username }}
+    </div>
+
+    <div class="form-group mb-3">
+        <label>Nombre</label>
+        {{ form.first_name }}
+    </div>
+
+    <div class="form-group mb-3">
+        <label>Apellidos</label>
+        {{ form.last_name }}
+    </div>
+
+    <div class="form-group mb-3">
+        <label>Email</label>
+        {{ form.email }}
+    </div>
+
+    <div class="form-group mb-3">
+        <label>Avatar</label>
+        {{ form.avatar }}
+    </div>
+
+    <button type="submit" class="submit-btn">Guardar Cambios</button>
+</form>
 {% endblock %}
