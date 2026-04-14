@@ -14,7 +14,12 @@
     </div>
 
     <div class="profile-avatar-wrapper">
-        <img src="{% static 'users/img/Avatar-Exemple.jpeg' %}" alt="Avatar" class="profile-avatar">
+        {% if user.avatar %}
+            <img src="{{ user.avatar.url }}" alt="Avatar  de {{ user.username }}" class="profile-avatar">
+           
+        {% else %}
+            <img src="{% static 'users/img/Avatar-Exemple.jpeg' %}" alt="Avatar por defecto" class="profile-avatar">
+        {% endif %}
     </div>
 
     <div class="profile-info">
