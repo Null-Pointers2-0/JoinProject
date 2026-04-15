@@ -107,3 +107,6 @@ def get_movies(params=None):
 
 def get_series(params=None):
     return Call('series', params=params)
+
+if __name__ == '__main__':
+    store_data()

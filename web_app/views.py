@@ -5,7 +5,7 @@ from web_app import utils
 
 def home(request):
     #carreguem les pelicules
-    utils.store_data()
+    #utils.store_data()
     movies = Movie.objects.all()
 
     search_query = request.GET.get('q', '')

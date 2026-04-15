@@ -3,17 +3,64 @@
 {% load static %}
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'css/home/home.css' %}">
+<link rel="stylesheet" href="{% static 'css/home/filter.css' %}">
 {% endblock %}
 {% block search-menu %}
 <div class="menu-search">
-    <div class="search-input-container search-principal-container col-7">
-        <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-            stroke-width="2">
-            <circle cx="11" cy="11" r="8" />
-            <line x1="21" y1="21" x2="16.65" y2="16.65" />
-        </svg>
-        <input type="text" class="search-input" placeholder="{% trans 'Search...' %}">
-    </div>
+    <form method="GET" action="{% url 'home' %}">
+        <div class="search-input-container search-principal-container col-7">
+            <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                stroke-width="2">
+                <circle cx="11" cy="11" r="8" />
+                <line x1="21" y1="21" x2="16.65" y2="16.65" />
+            </svg>
+            <input type="text" id="search" name="q" class="search-input" placeholder="{% trans 'Search...' %}"
+                value="{{ request.GET.q }}">
+        </div>
+        <div class="filter-group">
+            <div class="genre-filter">
+                <label for="genre">{% trans "Genre" %}:</label>
+                <select name="genre" id="genre">
+                    <option value="">{% trans "All" %}</option>
+                    {% for g in genres %}
+                    <option value="{{ g }}" {% if request.GET.genre == g %}selected{% endif %}>
+                        {{ g }}
+                    </option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="director-filter">
+                <label for="director">{% trans "Director" %}:</label>
+                <select name="director" id="director">
+                    <option value="">{% trans "All" %}</option>
+                    {% for d in directors %}
+                    <option value="{{ d }}" {% if request.GET.director == d %}selected{% endif %}>
+                        {{ d }}
+                    </option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="age-rating-filter">
+                <label for="age_rating">{% trans "Age Rating" %}:</label>
+                <select name="age_rating" id="age_rating">
+                    <option value="">{% trans "All" %}</option>
+                    {% for ar in age_ratings %}
+                    <option value="{{ ar }}" {% if request.GET.age_rating == ar %}selected{% endif %}>
+                        {{ ar }}
+                    </option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="filter-buttons">
+                <button type="submit">{% trans "Filter / Search" %}</button>
+                <a href="{% url 'catalog' %}" class="clear-filters">{% trans "Clear filters" %}</a>
+            </div>
+        </div>
+    </form>
+
 </div>
 {% endblock %}
 {% block content %}
@@ -23,55 +70,7 @@
             <div class="home-container">
                 <div class="home-container-left">
                     <div class="filter-container">
-                        <form method="GET" action="{% url 'home' %}">
-
-                            <div class="filter-group">
-                                <label for="search">Buscar:</label>
-                                <input type="text" id="search" name="q" placeholder="Título de la película..."
-                                    value="{{ request.GET.q }}">
-                            </div>
-
-                            <div class="filter-group">
-                                <label for="genre">Género:</label>
-                                <select name="genre" id="genre">
-                                    <option value="">Todos</option>
-                                    {% for g in genres %}
-                                    <option value="{{ g }}" {% if request.GET.genre == g %}selected{% endif %}>
-                                        {{ g }}
-                                    </option>
-                                    {% endfor %}
-                                </select>
-                            </div>
-
-                            <div class="filter-group">
-                                <label for="director">Director:</label>
-                                <select name="director" id="director">
-                                    <option value="">Todos</option>
-                                    {% for d in directors %}
-                                    <option value="{{ d }}" {% if request.GET.director == d %}selected{% endif %}>
-                                        {{ d }}
-                                    </option>
-                                    {% endfor %}
-                                </select>
-                            </div>
-
-                            <div class="filter-group">
-                                <label for="age_rating">Clasificación:</label>
-                                <select name="age_rating" id="age_rating">
-                                    <option value="">Todas</option>
-                                    {% for ar in age_ratings %}
-                                    <option value="{{ ar }}" {% if request.GET.age_rating == ar %}selected{% endif %}>
-                                        {{ ar }}
-                                    </option>
-                                    {% endfor %}
-                                </select>
-                            </div>
-
-                            <div class="filter-group">
-                                <button type="submit">Filtrar / Buscar</button>
-                                <a href="{% url 'catalog' %}" class="clear-filters">Limpiar filtros</a>
-                            </div>
-                        </form>
+                        
                     </div>
 
                     <h2>Resultados</h2>
