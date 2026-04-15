@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-15 13:47+0000\n"
+"POT-Creation-Date: 2026-04-15 13:54+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -82,7 +82,7 @@ msgstr "Contact"
 msgid "All rights reserved"
 msgstr "All rights reserved"
 
-#: Templates/home/home.html:22
+#: Templates/home/home.html:22 Templates/home/home.html:86
 msgid "Genre"
 msgstr "Genre"
 
@@ -91,7 +91,7 @@ msgstr "Genre"
 msgid "All"
 msgstr "All"
 
-#: Templates/home/home.html:34
+#: Templates/home/home.html:34 Templates/home/home.html:87
 msgid "Director"
 msgstr "Director"
 
@@ -106,6 +106,19 @@ msgstr "Filter / Search"
 #: Templates/home/home.html:59
 msgid "Clear filters"
 msgstr "Clear filters"
+
+#: Templates/home/home.html:76
+msgid "Results"
+msgstr "Results"
+
+#: Templates/home/home.html:86 Templates/home/home.html:87
+#: Templates/home/home.html:91 Templates/home/home.html:93
+msgid "N/A"
+msgstr "N/A"
+
+#: Templates/home/home.html:103
+msgid "No movies found matching those filters."
+msgstr "No movies found matching those filters."
 
 #: Templates/identify/login.html:12 Templates/identify/login.html:36
 msgid "Sign In"
