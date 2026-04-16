@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
 from django.contrib import messages
 from web_app.forms import CustomUserChangeForm
+from web_app.models import Movie
 
 # Create your views here.
 def profile(request):
@@ -21,7 +22,9 @@ def profile(request):
 def history(request):
     if not request.user.is_authenticated:
         return redirect('login')
-    return render(request, 'users/parts/history.html')
+    movies = Movie.objects.all()
+    return render(request, 'users/parts/history.html', {'movies': movies})
+
 
 def subscription(request):
     if not request.user.is_authenticated:
