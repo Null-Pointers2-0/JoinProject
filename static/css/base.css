@@ -89,3 +89,36 @@
     color: var(--emerald-100);
     text-decoration: underline;
 }
+/* Footer */
+
+.footer {
+    background-color: #131320;
+    color: #ccc;
+    padding: 2.5rem 0 1rem;
+    font-size: 14px;
+}
+
+.footer h5 {
+    color: #fff;
+    font-weight: 500;
+    margin-bottom: 1rem;
+}
+
+.footer a {
+    color: #aaa;
+    text-decoration: none;
+}
+
+.footer a:hover {
+    color: #fff;
+}
+
+.footer hr {
+    border-color: rgba(255, 255, 255, 0.1);
+}
+
+.footer-bottom {
+    color: #666;
+    font-size: 12px;
+    padding-bottom: 1rem;
+}

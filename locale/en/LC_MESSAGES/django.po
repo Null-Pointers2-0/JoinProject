@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-09 10:16+0200\n"
+"POT-Creation-Date: 2026-04-15 13:54+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,45 +18,107 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: Templates/User/user_setting.html:7
-msgid "Settings"
-msgstr "Settings"
-
-#: Templates/User/user_types/user_client.html:6
-msgid "Profile"
-msgstr "Profile"
-
-#: Templates/User/user_types/user_client.html:9
-msgid "History"
-msgstr "History"
-
-#: Templates/User/user_types/user_client.html:12
-msgid "Subscriptions"
-msgstr "Subscriptions"
-
-#: Templates/base.html:49
+#: Templates/base.html:50
 msgid "Welcome"
 msgstr "Welcome"
 
-#: Templates/base.html:84
+#: Templates/base.html:85 Templates/base.html:212
 msgid "Home"
 msgstr "Home"
 
-#: Templates/base.html:98
+#: Templates/base.html:99
 msgid "Login"
 msgstr "Login"
 
-#: Templates/base.html:109
+#: Templates/base.html:110
 msgid "Register"
 msgstr "Register"
 
-#: Templates/base.html:124
+#: Templates/base.html:125
 msgid "Logout"
 msgstr "Logout"
 
-#: Templates/base.html:154
+#: Templates/base.html:156 Templates/home/home.html:17
 msgid "Search..."
 msgstr "Search..."
+
+#: Templates/base.html:206
+msgid ""
+"From surveys to real-time insights. We unify global catalogs and leverage in-"
+"app data to track market trends without the need for traditional polling."
+msgstr ""
+"From surveys to real-time insights. We unify global catalogs and leverage in-"
+"app data to track market trends without the need for traditional polling."
+
+#: Templates/base.html:210
+msgid "Navigation"
+msgstr "Navigation"
+
+#: Templates/base.html:213
+msgid "About us"
+msgstr "About us"
+
+#: Templates/base.html:214
+msgid "Contact us"
+msgstr "Contact us"
+
+#: Templates/base.html:219
+msgid "Legal"
+msgstr "Legal"
+
+#: Templates/base.html:221
+msgid "Privacy Policy"
+msgstr "Privacy Policy"
+
+#: Templates/base.html:222
+msgid "Terms of Use"
+msgstr "Terms of Use"
+
+#: Templates/base.html:227
+msgid "Contact"
+msgstr "Contact"
+
+#: Templates/base.html:235
+msgid "All rights reserved"
+msgstr "All rights reserved"
+
+#: Templates/home/home.html:22 Templates/home/home.html:86
+msgid "Genre"
+msgstr "Genre"
+
+#: Templates/home/home.html:24 Templates/home/home.html:36
+#: Templates/home/home.html:48
+msgid "All"
+msgstr "All"
+
+#: Templates/home/home.html:34 Templates/home/home.html:87
+msgid "Director"
+msgstr "Director"
+
+#: Templates/home/home.html:46
+msgid "Age Rating"
+msgstr "Age Rating"
+
+#: Templates/home/home.html:58
+msgid "Filter / Search"
+msgstr "Filter / Search"
+
+#: Templates/home/home.html:59
+msgid "Clear filters"
+msgstr "Clear filters"
+
+#: Templates/home/home.html:76
+msgid "Results"
+msgstr "Results"
+
+#: Templates/home/home.html:86 Templates/home/home.html:87
+#: Templates/home/home.html:91 Templates/home/home.html:93
+msgid "N/A"
+msgstr "N/A"
+
+#: Templates/home/home.html:103
+msgid "No movies found matching those filters."
+msgstr "No movies found matching those filters."
 
 #: Templates/identify/login.html:12 Templates/identify/login.html:36
 msgid "Sign In"
@@ -139,6 +201,18 @@ msgstr "Medium password"
 msgid "Strong password"
 msgstr "Strong password"
 
+#: users/templates/users/types/user_client.html:6
+msgid "Profile"
+msgstr "Profile"
+
+#: users/templates/users/types/user_client.html:9
+msgid "History"
+msgstr "History"
+
+#: users/templates/users/types/user_client.html:12
+msgid "Subscriptions"
+msgstr "Subscriptions"
+
 #: venv-join/lib/python3.12/site-packages/django/contrib/messages/apps.py:16
 msgid "Messages"
 msgstr "Messages"
@@ -191,8 +265,10 @@ msgid "Enter a valid integer."
 msgstr ""
 
 #: venv-join/lib/python3.12/site-packages/django/core/validators.py:211
+#, fuzzy
+#| msgid "Email address"
 msgid "Enter a valid email address."
-msgstr ""
+msgstr "Email address"
 
 #. Translators: "letters" means latin letters: a-z and A-Z.
 #: venv-join/lib/python3.12/site-packages/django/core/validators.py:289
@@ -283,8 +359,10 @@ msgstr[1] ""
 #: venv-join/lib/python3.12/site-packages/django/core/validators.py:514
 #: venv-join/lib/python3.12/site-packages/django/forms/fields.py:364
 #: venv-join/lib/python3.12/site-packages/django/forms/fields.py:403
+#, fuzzy
+#| msgid "One number"
 msgid "Enter a number."
-msgstr ""
+msgstr "One number"
 
 #: venv-join/lib/python3.12/site-packages/django/core/validators.py:516
 #, python-format
@@ -436,8 +514,10 @@ msgid "“%(value)s” value must be a decimal number."
 msgstr ""
 
 #: venv-join/lib/python3.12/site-packages/django/db/models/fields/__init__.py:1703
+#, fuzzy
+#| msgid "One number"
 msgid "Decimal number"
-msgstr ""
+msgstr "One number"
 
 #: venv-join/lib/python3.12/site-packages/django/db/models/fields/__init__.py:1864
 #, python-format
@@ -481,12 +561,16 @@ msgid "Small integer"
 msgstr ""
 
 #: venv-join/lib/python3.12/site-packages/django/db/models/fields/__init__.py:2188
+#, fuzzy
+#| msgid "Email address"
 msgid "IPv4 address"
-msgstr ""
+msgstr "Email address"
 
 #: venv-join/lib/python3.12/site-packages/django/db/models/fields/__init__.py:2219
+#, fuzzy
+#| msgid "Email address"
 msgid "IP address"
-msgstr ""
+msgstr "Email address"
 
 #: venv-join/lib/python3.12/site-packages/django/db/models/fields/__init__.py:2310
 #: venv-join/lib/python3.12/site-packages/django/db/models/fields/__init__.py:2311
@@ -1020,8 +1104,10 @@ msgid "sep"
 msgstr ""
 
 #: venv-join/lib/python3.12/site-packages/django/utils/dates.py:48
+#, fuzzy
+#| msgid "Contact"
 msgid "oct"
-msgstr ""
+msgstr "Contact"
 
 #: venv-join/lib/python3.12/site-packages/django/utils/dates.py:49
 msgid "nov"
@@ -1386,14 +1472,84 @@ msgstr ""
 msgid "Connect, get help, or contribute"
 msgstr ""
 
+#: venv-join/lib/python3.12/site-packages/django_apscheduler/admin.py:62
+msgid "Average Duration (sec)"
+msgstr ""
+
+#: venv-join/lib/python3.12/site-packages/django_apscheduler/admin.py:81
+msgid "Could not find job {} in the database! Skipping execution..."
+msgstr ""
+
+#: venv-join/lib/python3.12/site-packages/django_apscheduler/admin.py:105
+msgid ""
+"Maximum runtime of {} seconds exceeded! Not all jobs could be completed "
+"successfully. Pending jobs: {}"
+msgstr ""
+
+#: venv-join/lib/python3.12/site-packages/django_apscheduler/admin.py:124
+msgid "Executed job '{}'!"
+msgstr ""
+
+#: venv-join/lib/python3.12/site-packages/django_apscheduler/admin.py:132
+msgid "Run the selected django jobs"
+msgstr ""
+
+#: venv-join/lib/python3.12/site-packages/django_apscheduler/admin.py:159
+msgid "Status"
+msgstr ""
+
+#: venv-join/lib/python3.12/site-packages/django_apscheduler/admin.py:160
+msgid "Duration (sec)"
+msgstr ""
+
+#: venv-join/lib/python3.12/site-packages/django_apscheduler/models.py:18
+msgid "Unique id for this job."
+msgstr ""
+
+#: venv-join/lib/python3.12/site-packages/django_apscheduler/models.py:26
+msgid "Date and time at which this job is scheduled to be executed next."
+msgstr ""
+
+#: venv-join/lib/python3.12/site-packages/django_apscheduler/models.py:72
+msgid "Unique ID for this job execution."
+msgstr ""
+
+#: venv-join/lib/python3.12/site-packages/django_apscheduler/models.py:78
+msgid "The job that this execution relates to."
+msgstr ""
+
+#: venv-join/lib/python3.12/site-packages/django_apscheduler/models.py:86
+msgid "The current status of this job execution."
+msgstr ""
+
+#: venv-join/lib/python3.12/site-packages/django_apscheduler/models.py:91
+msgid "Date and time at which this job was executed."
+msgstr ""
+
+#: venv-join/lib/python3.12/site-packages/django_apscheduler/models.py:101
+msgid "Total run time of this job (in seconds)."
+msgstr ""
+
+#: venv-join/lib/python3.12/site-packages/django_apscheduler/models.py:109
+msgid "Timestamp at which this job was finished."
+msgstr ""
+
+#: venv-join/lib/python3.12/site-packages/django_apscheduler/models.py:116
+msgid "Details of exception that occurred during job execution (if any)."
+msgstr ""
+
+#: venv-join/lib/python3.12/site-packages/django_apscheduler/models.py:123
+msgid "Traceback of exception that occurred during job execution (if any)."
+msgstr ""
+
 #~ msgid "Welcome "
 #~ msgstr "Welcome "
 
-#~ msgid "About us"
-#~ msgstr "About us"
-
 #~ msgid "Account"
 #~ msgstr "Account"
+
+#~ msgid "Settings"
+#~ msgstr "Settings"
 
 #~ msgid "Search"
 #~ msgstr "Search"

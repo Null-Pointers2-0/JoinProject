@@ -9,7 +9,7 @@
     <title>StreamSync</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <!--<link rel="stylesheet" href="{% static 'css/base.css' %}">-->
-    <link rel="stylesheet" href="{% static 'css/global.css' %}?v=1.0.2">
+    <link rel="stylesheet" href="{% static 'css/global.css' %}?v=1.0.3">
 
     {% block extra_css %}{% endblock %}
     <style>
@@ -34,6 +34,7 @@
 
     <!-- Navbar -->
     <header class="header">
+        
         <div class="header-left">
             <button class="menu-toggle" id="menuToggle" aria-label="Toggle menu">
                 <span></span>
@@ -131,10 +132,11 @@
 
         {% if user.is_authenticated %}
         <div class="menu-user">
-            <a href="{% url 'user_setting' %}">
+            <a href="{% url 'profile' %}">
                 <div class="user-info">
-
+                    
                     <div class="user-avatar">{{ user.username|first|upper }}</div>
+                    
                     <div class="user-details">
                         <div class="user-name">{{ user.username }}</div>
                         <div class="user-email">{{ user.email }}</div>
@@ -159,10 +161,14 @@
     <!-- Overlay -->
     <div class="menu-overlay" id="menuOverlay"></div>
 
+    {% block search-menu %}
+    {% endblock %}
+
     <main class="main-container">
 
         <div class="content-div {% block content_class %}col-10{% endblock %}">
-            {% block content %}{% endblock %}
+            {% block content %}
+            {% endblock %}
         </div>
 
     </main>
@@ -190,13 +196,51 @@
     </script>
 
 
+
+    <footer class="footer mt-auto">
+        <link rel="stylesheet" href="{% static 'css/base.css' %}">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4 mb-4">
+                    <h5>StreamSync</h5>
+                    <p> {% trans "From surveys to real-time insights. We unify global catalogs and leverage in-app data to track market trends without the need for traditional polling." %} </p>
+                </div>
+
+                <div class="col-md-2 mb-4">
+                    <h5>{% trans "Navigation" %}</h5>
+                    <ul class="list-unstyled">
+                        <li><a href="{% url 'home' %}">{% trans "Home" %}</a></li>
+                        <li><a href="">{% trans "About us" %}</a></li>
+                        <li><a href="">{% trans "Contact us" %}</a></li>
+                    </ul>
+                </div>
+
+                <div class="col-md-3 mb-4">
+                    <h5>{% trans "Legal" %}</h5>
+                    <ul class="list-unstyled">
+                        <li><a href="#">{% trans "Privacy Policy" %}</a></li>
+                        <li><a href="#">{% trans "Terms of Use" %}</a></li>
+                    </ul>
+                </div>
+
+                <div class="col-md-3 mb-4">
+                    <h5>{% trans "Contact" %}</h5>
+                    <p>info@StreamSync.com</p>
+                    <p>+34 600 000 000</p>
+                </div>
+            </div>
+            <hr>
+            <div class="row">
+                <div class="col-12 text-center footer-bottom">
+                    &copy; {% now "Y" %} StreamSync. {% trans "All rights reserved" %}.
+                </div>
+            </div>
+       </div>
+    </footer>
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
         crossorigin="anonymous"></script>
-
-    <footer>
-
-    </footer>
 
 </body>
 

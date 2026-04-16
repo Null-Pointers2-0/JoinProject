@@ -168,6 +168,12 @@ body {
     color: #8c8c8c;
 }
 
+.search-principal-container {
+    margin-top: 53px;
+    margin-bottom: 16px;
+    margin-left: 20%;
+}
+
 /* Menu Items */
 .menu-items {
     list-style: none;
@@ -279,8 +285,9 @@ body {
 .main-container {
     display: flex;
     justify-content: center;
-    align-items: center;
-    margin-top: 60px; /* Clearance for fixed header */
+    align-items: flex-start;
+    margin-top: 10px;
+    /* Clearance for fixed header */
     min-height: calc(100vh - 60px);
     padding: 20px;
 }

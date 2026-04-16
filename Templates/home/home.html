@@ -1,5 +1,112 @@
 {% extends 'base.html' %}
 {% load i18n %}
+{% load static %}
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/home/home.css' %}?v=1.1">
+<link rel="stylesheet" href="{% static 'css/home/filter.css' %}?v=1.1">
+{% endblock %}
+{% block search-menu %}
+<div class="menu-search">
+    <form method="GET" action="{% url 'home' %}">
+        <div class="search-input-container search-principal-container col-7">
+            <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                stroke-width="2">
+                <circle cx="11" cy="11" r="8" />
+                <line x1="21" y1="21" x2="16.65" y2="16.65" />
+            </svg>
+            <input type="text" id="search" name="q" class="search-input" placeholder="{% trans 'Search...' %}"
+                value="{{ request.GET.q }}">
+        </div>
+        <div class="filter-group">
+            <div class="genre-filter">
+                <label for="genre">{% trans "Genre" %}:</label>
+                <select name="genre" id="genre">
+                    <option value="">{% trans "All" %}</option>
+                    {% for g in genres %}
+                    <option value="{{ g }}" {% if request.GET.genre == g %}selected{% endif %}>
+                        {{ g }}
+                    </option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="director-filter">
+                <label for="director">{% trans "Director" %}:</label>
+                <select name="director" id="director">
+                    <option value="">{% trans "All" %}</option>
+                    {% for d in directors %}
+                    <option value="{{ d }}" {% if request.GET.director == d %}selected{% endif %}>
+                        {{ d }}
+                    </option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="age-rating-filter">
+                <label for="age_rating">{% trans "Age Rating" %}:</label>
+                <select name="age_rating" id="age_rating">
+                    <option value="">{% trans "All" %}</option>
+                    {% for ar in age_ratings %}
+                    <option value="{{ ar }}" {% if request.GET.age_rating == ar %}selected{% endif %}>
+                        {{ ar }}
+                    </option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="filter-buttons">
+                <button type="submit">{% trans "Filter / Search" %}</button>
+                <a href="{% url 'catalog' %}" class="clear-filters">{% trans "Clear filters" %}</a>
+            </div>
+        </div>
+    </form>
+
+</div>
+{% endblock %}
 {% block content %}
-<h1 class="display-4 fw-bold">Hello world</h1>
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="home-container">
+                <div class="home-container-left">
+                    <div class="filter-container">
+                        
+                    </div>
+
+                    <h2 class="results-title">{% trans "Results" %}</h2>
+
+                    <div class="movie-grid">
+                        {% for movie in movies %}
+                        <div class="movie-card">
+                            <div class="card-header">
+                                <h3 class="movie-title">{{ movie.title }}</h3>
+                                <span class="movie-year">{{ movie.year }}</span>
+                            </div>
+                            <div class="card-body">
+                                <p class="movie-info"><strong>{% trans "Genre" %}:</strong> {{ movie.genre.name|default:_("N/A") }}</p>
+                                <p class="movie-info"><strong>{% trans "Director" %}:</strong> {{ movie.director.name|default:_("N/A") }}</p>
+                                <div class="movie-meta">
+                                    <span class="rating-badge">
+                                        <svg width="14" height="14" viewBox="0 0 24 24" fill="gold"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
+                                        {{ movie.rating|default:_("N/A") }}
+                                    </span>
+                                    <span class="age-badge">{{ movie.age_rating.description|default:_("N/A") }}</span>
+                                </div>
+
+                                {% if movie.synopsis %}
+                                <p class="movie-synopsis">{{ movie.synopsis|truncatewords:20 }}</p>
+                                {% endif %}
+                            </div>
+                        </div>
+                        {% empty %}
+                        <p class="no-results">
+                            {% trans "No movies found matching those filters." %}
+                        </p>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock %}
