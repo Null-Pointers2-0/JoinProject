@@ -2,11 +2,6 @@ import sys
 
 import requests, os, django
 from dotenv import load_dotenv
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-sys.path.append(BASE_DIR)
-
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'web.settings')
-django.setup()
 from web_app.models import Movie, API, Director, Genre, AgeRating, Series
 load_dotenv()
 
