@@ -8,11 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-<<<<<<< HEAD
-"POT-Creation-Date: 2026-04-09 09:35+0200\n"
-=======
-"POT-Creation-Date: 2026-04-09 10:16+0200\n"
->>>>>>> origin/43-featuser-implement-user-profile-management-and-personalized-activity-dashboard
+"POT-Creation-Date: 2026-04-15 09:31+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -23,131 +19,71 @@ msgstr ""
 "Plural-Forms: nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? "
 "1 : 2;\n"
 
-<<<<<<< HEAD
-#: Templates/base.html:39
-msgid "Welcome "
-msgstr "Bienvenido "
-
-#: Templates/base.html:56 Templates/base.html:168 Templates/base.html:287
-msgid "Home"
-msgstr "Inicio"
-
-#: Templates/base.html:59 Templates/base.html:288
-msgid "About us"
-msgstr "Sobre nosotros"
-
-#: Templates/base.html:83
-msgid "Account"
-msgstr "Cuenta"
-
-#: Templates/base.html:86
-msgid "Profile"
-msgstr "Perfil"
-
-#: Templates/base.html:87
-msgid "Settings"
-msgstr "Configuración"
-
-#: Templates/base.html:95 Templates/base.html:208
-msgid "Logout"
-msgstr "Cerrar sesión"
-
-#: Templates/base.html:103 Templates/base.html:182
-msgid "Login"
-msgstr "Iniciar sesión"
-
-#: Templates/base.html:106 Templates/base.html:193
-msgid "Register"
-msgstr "Registrarse"
-
-#: Templates/base.html:112
-msgid "Search"
-msgstr "Buscar"
-
-#: Templates/base.html:133
+#: Templates/base.html:50
 msgid "Welcome"
 msgstr "Bienvenido"
 
-#: Templates/base.html:235
+#: Templates/base.html:85 Templates/base.html:208
+msgid "Home"
+msgstr "Inicio"
+
+#: Templates/base.html:99
+msgid "Login"
+msgstr "Iniciar sesión"
+
+#: Templates/base.html:110
+msgid "Register"
+msgstr "Registrarse"
+
+#: Templates/base.html:125
+msgid "Logout"
+msgstr "Cerrar sesión"
+
+#: Templates/base.html:156
 msgid "Search..."
 msgstr "Buscar..."
 
-#: Templates/base.html:281
+#: Templates/base.html:202
 msgid ""
 "From surveys to real-time insights. We unify global catalogs and leverage in-"
 "app data to track market trends without the need for traditional polling."
-msgstr "De las encuestas a la información en tiempo real. Unificamos catálogos globales y aprovechamos los datos de las aplicaciones para rastrear las tendencias del mercado sin necesidad de los sondeos tradicionales."
+msgstr ""
+"De las encuestas a la información en tiempo real. Unificamos catálogos "
+"globales y aprovechamos los datos de las aplicaciones para rastrear las "
+"tendencias del mercado sin necesidad de los sondeos tradicionales."
 
-#: Templates/base.html:285
+#: Templates/base.html:206
 msgid "Navigation"
 msgstr "Navegación"
 
-#: Templates/base.html:289
+#: Templates/base.html:209
+msgid "About us"
+msgstr "Sobre nosotros"
+
+#: Templates/base.html:210
 msgid "Contact us"
 msgstr "Contáctenos"
 
-#: Templates/base.html:294
+#: Templates/base.html:215
 msgid "Legal"
 msgstr "Legal"
 
-#: Templates/base.html:296
+#: Templates/base.html:217
 msgid "Privacy Policy"
 msgstr "Política de privacidad"
 
-#: Templates/base.html:297
+#: Templates/base.html:218
 msgid "Terms of Use"
 msgstr "Condiciones de uso"
 
-#: Templates/base.html:302
+#: Templates/base.html:223
 msgid "Contact"
 msgstr "Contacto"
 
-#: Templates/base.html:310
+#: Templates/base.html:231
 msgid "All rights reserved"
 msgstr "Todos los derechos reservados"
 
-=======
-#: Templates/User/user_setting.html:7
-msgid "Settings"
-msgstr "Configuración"
-
-#: Templates/User/user_types/user_client.html:6
-msgid "Profile"
-msgstr "Perfil"
-
-#: Templates/User/user_types/user_client.html:9
-msgid "History"
-msgstr "Historial"
-
-#: Templates/User/user_types/user_client.html:12
-msgid "Subscriptions"
-msgstr "Suscripciones"
-
-#: Templates/base.html:49
-msgid "Welcome"
-msgstr "Bienvenido"
-
-#: Templates/base.html:84
-msgid "Home"
-msgstr "Inicio"
-
-#: Templates/base.html:98
-msgid "Login"
-msgstr "Iniciar sesión"
-
-#: Templates/base.html:109
-msgid "Register"
-msgstr "Registrarse"
-
-#: Templates/base.html:124
-msgid "Logout"
-msgstr "Cerrar sesión"
-
-#: Templates/base.html:154
-msgid "Search..."
-msgstr "Buscar..."
-
->>>>>>> origin/43-featuser-implement-user-profile-management-and-personalized-activity-dashboard
 #: Templates/identify/login.html:12 Templates/identify/login.html:36
 msgid "Sign In"
 msgstr "Iniciar sesión"
@@ -180,15 +116,9 @@ msgstr "Crear cuenta"
 msgid "Join millions of viewers worldwide"
 msgstr "Únete a millones de espectadores en todo el mundo"
 
-#: Templates/identify/register.html:23
-msgid "Username"
-msgstr "Nombre de usuario"
+
 
 #: Templates/identify/register.html:30
-<<<<<<< HEAD
-=======
-#: venv-join/lib/python3.12/site-packages/django/db/models/fields/__init__.py:1920
->>>>>>> origin/43-featuser-implement-user-profile-management-and-personalized-activity-dashboard
 msgid "Email address"
 msgstr "Correo electrónico"
 
@@ -232,6 +162,46 @@ msgstr "Contraseña media"
 msgid "Strong password"
 msgstr "Contraseña fuerte"
 
+#: users/templates/users/profile/profile.html:24
+msgid "Name"
+msgstr "Nombre"
+
+#: users/templates/users/profile/profile.html:29
+msgid "Last name"
+msgstr "Apellidos"
+
+#: users/templates/users/profile/profile.html:34
+msgid "Email"
+msgstr "Email"
+
+#: users/templates/users/profile/profile.html:39
+msgid "Avatar"
+msgstr "Avatar"
+
+#: users/templates/users/types/user_client.html:7
+msgid "Profile"
+msgstr "Perfil"
+
+#: users/templates/users/types/user_client.html:11
+msgid "History"
+msgstr "Historial"
+
+#: users/templates/users/types/user_client.html:15
+msgid "Subscriptions"
+msgstr "Subscripciones"
+
+#~ msgid "Welcome "
+#~ msgstr "Bienvenido "
+
+#~ msgid "Account"
+#~ msgstr "Cuenta"
+
+#~ msgid "Settings"
+#~ msgstr "Configuración"
+
+#~ msgid "Search"
+#~ msgstr "Buscar"
+
 #~ msgid "Messages"
 #~ msgstr "Mensajes"
 
@@ -259,18 +229,6 @@ msgstr "Contraseña fuerte"
 #~| msgid "Search"
 #~ msgctxt "alt. month"
 #~ msgid "March"
-#~ msgstr "Buscar"
-
-#~ msgid "Welcome "
-#~ msgstr "Bienvenido "
-
-#~ msgid "About us"
-#~ msgstr "Sobre nosotros"
-
-#~ msgid "Account"
-#~ msgstr "Cuenta"
-
-#~ msgid "Search"
 #~ msgstr "Buscar"
 
 #~ msgid "Please enter your login and password!"
