@@ -99,3 +99,8 @@ class SyncLog(models.Model):
     end_time = models.DateTimeField(null=True, blank=True)
     status = models.CharField(max_length=50)
     summary = models.TextField()
+    records_created = models.IntegerField(default=0)
+    records_updated = models.IntegerField(default=0)
+
+    def __str__(self):
+        return f"Sync {self.start_time.strftime('%Y-%m-%d %H:%M')} - {self.status}"
