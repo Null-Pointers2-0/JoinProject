@@ -1,4 +1,5 @@
 {% extends 'users/types/user_client.html' %}
+{% load i18n %}
 {% load static %}
 {% block extra_css %}
 {{ block.super }}
@@ -16,27 +17,27 @@
     {% csrf_token %}
 
     <div class="form-group mb-3">
-        <label>Nombre de usuario</label>
+        <label>{% trans 'Username' %}</label>
         {{ form.username }}
     </div>
 
     <div class="form-group mb-3">
-        <label>Nombre</label>
+        <label>{% trans 'Name' %}</label>
         {{ form.first_name }}
     </div>
 
     <div class="form-group mb-3">
-        <label>Apellidos</label>
+        <label>{% trans 'Last name' %}</label>
         {{ form.last_name }}
     </div>
 
     <div class="form-group mb-3">
-        <label>Email</label>
+        <label>{% trans 'Email' %}</label>
         {{ form.email }}
     </div>
 
     <div class="form-group mb-3">
-        <label>Avatar</label>
+        <label>{% trans 'Avatar' %}</label>
         {{ form.avatar }}
     </div>
 
