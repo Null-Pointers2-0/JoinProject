@@ -21,21 +21,16 @@ def store_api(port):
 
 def Call(endpoint, params=None):
     result = {'8080': None, '8081': None, '8082': None}
-    urls = [
-        os.getenv('API_MOVIES_URL'),
-        os.getenv('API_MOVIES_2_URL'),
-        os.getenv('API_MOVIES_3_URL')
-    ]
-    APIs = [(urls[0], os.getenv('API_KEY_8080')), (urls[1], os.getenv('API_KEY_8081')), (urls[2], os.getenv('API_KEY_8082'))]
+    APIs = [('8080', os.getenv('API_KEY_8080')), ('8081', os.getenv('API_KEY_8081')), ('8082', os.getenv('API_KEY_8082'))]
 
     print(f"Calling endpoint '{endpoint}' with params: {params}")
-    for part_url, api_key in APIs:
-        url = f'{part_url}/{endpoint}'
+    for port, api_key in APIs:
+        url = f'http://localhost:{port}/{endpoint}'
         headers = {'X-API-KEY': api_key}
         r = requests.get(url, headers=headers, params=params)
         if r.status_code == 200:
-            result[8080] = r.json()
-        print(f"Response from port {8080}: {r.status_code} - {r.text[:100]}...")  # Log status and a snippet of the response
+            result[port] = r.json()
+        print(f"Response from port {port}: {r.status_code} - {r.text[:100]}...")  # Log status and a snippet of the response
     return result
 
 def get_directors():
