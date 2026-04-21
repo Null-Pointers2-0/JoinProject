@@ -2,12 +2,7 @@ import sys
 
 import requests, os, django
 from dotenv import load_dotenv
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-sys.path.append(BASE_DIR)
-
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'web.settings')
-django.setup()
-from web_app.models import Movie, API, Director, Genre, AgeRating
+from web_app.models import Movie, API, Director, Genre, AgeRating, Series
 load_dotenv()
 
 def store_data():
@@ -18,20 +13,29 @@ def store_data():
     get_genres()
     get_age_ratings()
     get_movies()
+    get_series()
+
 
 def store_api(port):
     API.objects.get_or_create(port=port)
 
 def Call(endpoint, params=None):
     result = {'8080': None, '8081': None, '8082': None}
-    APIs = [('8080', os.getenv('API_KEY_1')), ('8081', os.getenv('API_KEY_2')), ('8082', os.getenv('API_KEY_3'))]
+    urls = [
+        os.getenv('API_MOVIES_URL'),
+        os.getenv('API_MOVIES_2_URL'),
+        os.getenv('API_MOVIES_3_URL')
+    ]
+    APIs = [(urls[0], os.getenv('API_KEY_8080')), (urls[1], os.getenv('API_KEY_8081')), (urls[2], os.getenv('API_KEY_8082'))]
 
-    for port, api_key in APIs:
-        url = f'http://localhost:{port}/{endpoint}'
+    print(f"Calling endpoint '{endpoint}' with params: {params}")
+    for part_url, api_key in APIs:
+        url = f'{part_url}/{endpoint}'
         headers = {'X-API-KEY': api_key}
         r = requests.get(url, headers=headers, params=params)
         if r.status_code == 200:
-            result[port] = r.json()
+            result[8080] = r.json()
+        print(f"Response from port {8080}: {r.status_code} - {r.text[:100]}...")  # Log status and a snippet of the response
     return result
 
 def get_directors():
@@ -105,5 +109,37 @@ def get_movies(params=None):
             status = "created" if created else "updated"
             print(f"Movie '{movie.title}' {status} from port {port}.")
 
+
 def get_series(params=None):
-    return Call('series', params=params)
+    series_data = Call('series', params=params)
+    for port, data in series_data.items():
+        if not data:
+            continue
+            
+        api_instance = API.objects.get(port=port)
+        
+        for json in data:
+            series, created = Series.objects.update_or_create(
+                series_id=json['id'],
+                api=api_instance,
+                defaults={
+                    'title': json['title'],
+                    'synopsis': json.get('synopsis'),
+                    'start_year': json.get('start_year'),
+                    'end_year': json.get('end_year'),
+                    'total_seasons': json.get('total_seasons'),
+                    'rating': json.get('rating'),
+                    'expires_at': json.get('expires_at'),
+                    'director': Director.objects.filter(director_id=json.get('director_id')).first(),
+                    'genre': Genre.objects.filter(genre_id=json.get('genre_id')).first(),
+                    'age_rating': AgeRating.objects.filter(age_rating_id=json.get('age_rating_id'), api=api_instance).first(),
+                    'country_id': json.get('country_id'),
+                    'language_id': json.get('language_id'),
+                }
+            )
+            
+            status = "created" if created else "updated"
+            print(f"Series '{series.title}' {status} from port {port}.")
+
+if __name__ == '__main__':
+    store_data()

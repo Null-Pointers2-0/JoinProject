@@ -23,6 +23,30 @@ class Movie(models.Model):
     def __str__(self):
         return self.title
 
+class Series(models.Model):
+    series_id = models.IntegerField()
+    age_rating = models.ForeignKey('AgeRating', on_delete=models.SET_NULL, blank=True, null=True)
+    director = models.ForeignKey('Director', on_delete=models.SET_NULL, blank=True, null=True)
+    genre = models.ForeignKey('Genre', on_delete=models.SET_NULL, blank=True, null=True)
+    api = models.ForeignKey('API', blank=True, null=True, on_delete=models.SET_NULL)
+
+    title = models.CharField(max_length=255)
+    synopsis = models.TextField(blank=True, null=True)
+    start_year = models.IntegerField(blank=True, null=True)
+    end_year = models.IntegerField(blank=True, null=True)
+    total_seasons = models.IntegerField(blank=True, null=True)
+    rating = models.FloatField(blank=True, null=True)
+    country_id = models.IntegerField(blank=True, null=True)
+    language_id = models.IntegerField(blank=True, null=True)
+    expires_at = models.DateTimeField(blank=True, null=True)
+
+    class Meta:
+        unique_together = ('series_id', 'api')
+
+    def __str__(self):
+        return self.title
+
+
 class API(models.Model):
     port = models.IntegerField(unique=True)
     def __str__(self):
@@ -76,3 +100,8 @@ class SyncLog(models.Model):
     end_time = models.DateTimeField(null=True, blank=True)
     status = models.CharField(max_length=50)
     summary = models.TextField()
+    records_created = models.IntegerField(default=0)
+    records_updated = models.IntegerField(default=0)
+
+    def __str__(self):
+        return f"Sync {self.start_time.strftime('%Y-%m-%d %H:%M')} - {self.status}"

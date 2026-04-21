@@ -8,6 +8,8 @@ def start():
     if "runserver" not in sys.argv:
         return
 
+    download_catalog_data()
+
     scheduler = BackgroundScheduler(timezone="Europe/Madrid")
     scheduler.add_jobstore(DjangoJobStore(), "default")
 
