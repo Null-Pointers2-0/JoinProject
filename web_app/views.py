@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 from web_app.forms import CustomUserCreationForm
 from web_app.models import AgeRating, Director, Genre, Movie
 from web_app import utils
+from django.core.paginator import Paginator
 
 def home(request):
     #carreguem les pelicules
@@ -29,14 +30,18 @@ def home(request):
     directors = Director.objects.values_list('name', flat=True).distinct()
     age_ratings = AgeRating.objects.values_list('description', flat=True).distinct()
 
+    # Paginació
+    paginator = Paginator(movies, 10)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
     context = {
-        'movies': movies,
+        'movies': page_obj,
         'genres': genres,
         'directors': directors,
         'age_ratings': age_ratings,
-    }
-
-    print(context)
+        'search_query': search_query,
+        }
 
     return render(request, "home/home.html", context)
 
