@@ -5,24 +5,35 @@
 {% block content_user_setings %}
     <div class="row">
 
-        <div class="col-md-2">
-            <div class="row row-description">
-                <p>Whrite a few description of you</p>
+        <!-- Columna izquierda: sidebar con glass cards -->
+        <div class="col-md-3 col-lg-2 profile-sidebar">
+
+            <div class="glass-card">
+                <div class="glass-card-label">{% trans "Bio" %}</div>
+                <p>{% trans "Write a few words about you" %}</p>
             </div>
-            <div class="row row-stats">
-                <p>Miembro desde: {{ user.date_joined|date:"d/m/Y" }}</p>
-                <p>Último acceso: {{ user.last_login|date:"d/m/Y" }}</p>
+
+            <div class="glass-card">
+                <div class="glass-card-label">{% trans "Member since" %}</div>
+                <p>{{ user.date_joined|date:"d/m/Y" }}</p>
             </div>
-            <div class="row row-location">
-                <p>This show the location</p>
+
+            <div class="glass-card">
+                <div class="glass-card-label">{% trans "Last access" %}</div>
+                <p>{{ user.last_login|date:"d/m/Y" }}</p>
+            </div>
+
+            <div class="glass-card">
+                <div class="glass-card-label">{% trans "Location" %}</div>
+                <p>{% trans "Add your location" %}</p>
             </div>
 
         </div>
 
-        <div class="col-md-10">
-            {% block user_content %}
-            {% endblock %}
+        <!-- Columna derecha: contenido principal -->
+        <div class="col-md-9 col-lg-10">
+            {% block user_content %}{% endblock %}
         </div>
+
     </div>
-        
 {% endblock %}
