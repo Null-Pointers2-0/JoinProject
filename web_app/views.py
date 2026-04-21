@@ -2,6 +2,8 @@ from django.shortcuts import render, redirect
 from web_app.forms import CustomUserCreationForm
 from web_app.models import AgeRating, Director, Genre, Movie
 from web_app import utils
+from django.http import JsonResponse
+from django.contrib.auth.decorators import login_required
 
 def home(request):
     #carreguem les pelicules
@@ -98,3 +100,20 @@ def catalog_view(request):
     }
     
     return render(request, 'catalog.html', context)
+
+@login_required(login_url='/login/')
+def api_user_profile(request):
+    user = request.user
+    followed_movie_ids = list(user.favorite_movies.values_list('movie_id', flat=True))
+    response_data = {
+        "personal_info": {
+            "username": user.username,
+            "email": user.email,
+            "first_name": user.first_name,
+            "last_name": user.last_name
+        },
+        "linked_platforms": [],  # Pendiente: crear modelo de plataformas en el futuro
+        "followed_content_ids": followed_movie_ids
+    }
+
+    return JsonResponse(response_data)

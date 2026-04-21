@@ -14,4 +14,6 @@ urlpatterns = [
     #path('user/history', views.history, name='history'),
 
     path("catalog/", views.catalog_view, name="catalog"),
+
+    path("api/user/profile/", views.api_user_profile, name="api_user_profile"),
 ]
