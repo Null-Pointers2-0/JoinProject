@@ -154,8 +154,11 @@ msgid "Join millions of viewers worldwide"
 msgstr "Uneix-te a milions d'espectadors a tot el món"
 
 #: Templates/identify/register.html:23
+#: users/templates/users/profile/profile.html:19
+#, fuzzy
+#| msgid "Username o Email"
 msgid "Username"
-msgstr "Nom d'usuari"
+msgstr "Usuari o Correu"
 
 #: Templates/identify/register.html:30
 #: venv-join/lib/python3.12/site-packages/django/db/models/fields/__init__.py:1920
@@ -1557,9 +1560,6 @@ msgstr ""
 
 #~ msgid "Please enter your login and password!"
 #~ msgstr "Si us plau, introdueix el teu usuari i contrasenya!"
-
-#~ msgid "Username o Email"
-#~ msgstr "Usuari o Correu"
 
 #~ msgid "Forgot password?"
 #~ msgstr "Has oblidat la contrasenya?"

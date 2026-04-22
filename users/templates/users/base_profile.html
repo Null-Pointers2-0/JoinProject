@@ -2,28 +2,35 @@
 {% load static %}
 {% block extra_css %}
     <link rel="stylesheet" href="{% static 'users/css/base_profile.css' %}">
+    <link rel="stylesheet" href="{% static 'users/css/user_settings.css' %}">
 {% endblock %}
 
 {% block content %}
-    
 
-    <!-- banner -->
-    <div class="profile-banner">
-        
+    <!-- Banner -->
+    <div class="profile-banner "></div>
+
+    <div class="container profile-container">
+        <!-- Avatar -->
+        <div class="profile-avatar-wrapper">
+            {% if user.avatar %}
+                <img src="{{ user.avatar.url }}" alt="Avatar de {{ user.username }}" class="profile-avatar">
+            {% else %}
+                <img src="{% static 'users/img/Avatar-Exemple.jpeg' %}" alt="Avatar por defecto" class="profile-avatar">
+            {% endif %}
+        </div>
+
+        <!-- Nombre y email -->
+        <div class="profile-info">
+            <div class="profile-username">{{ user.username }}</div>
+            <div class="profile-useremail">{{ user.email }}</div>
+        </div>
+
+        <!-- Contenido settings -->
+        <div class="user_settings">
+            {% block content_user_setings %}{% endblock %}
+        </div>
+
     </div>
 
-    <div class="profile-avatar-wrapper">
-        <img src="{% static 'users/img/Avatar-Exemple.jpeg' %}" alt="Avatar" class="profile-avatar">
-    </div>
-
-    <div class="profile-info">
-        <div class="profile-username">{{ user.username }}</div>
-        <div class="profile-useremail">{{ user.email }}</div>
-    </div>
-
-    <div class="user_settings">
-        {% block content_user_setings %}
-        {% endblock %} 
-    </div>
-    
 {% endblock %}
