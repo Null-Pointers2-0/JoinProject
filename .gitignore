@@ -7,10 +7,10 @@ __pycache__/
 venv/
 env/
 venv-join/
-
+.idea/
 *.sqlite3
 db.sqlite3
 .venv*/
-
+media/
 env/
 
