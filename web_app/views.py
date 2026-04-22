@@ -70,4 +70,49 @@ def movie_detail(request, movie_id):
     }
     return render(request, 'movie_detail.html', context)
 
+def catalog_view(request):
+    movies = Movie.objects.all()
+
+    search_query = request.GET.get('q', '')
+    genre_filter = request.GET.get('genre', '')
+    director_filter = request.GET.get('director', '')
+    age_rating_filter = request.GET.get('age_rating', '')
+    if search_query:
+        movies = movies.filter(title__icontains=search_query)
+    if genre_filter:
+        movies = movies.filter(genre__name=genre_filter)
+    if director_filter:
+        movies = movies.filter(director__name=director_filter)
+
+    if age_rating_filter:
+        movies = movies.filter(age_rating__description=age_rating_filter)
+
+    genres = Genre.objects.values_list('name', flat=True).distinct()
+    directors = Director.objects.values_list('name', flat=True).distinct()
+    age_ratings = AgeRating.objects.values_list('description', flat=True).distinct()
+
+    context = {
+        'movies': movies,
+        'genres': genres,
+        'directors': directors,
+        'age_ratings': age_ratings,
+    }
+
+    return render(request, 'catalog.html', context)
+
+@login_required(login_url='/login/')
+def api_user_profile(request):
+    user = request.user
+    followed_movie_ids = list(user.favorite_movies.values_list('movie_id', flat=True))
+    response_data = {
+        "personal_info": {
+            "username": user.username,
+            "email": user.email,
+            "first_name": user.first_name,
+            "last_name": user.last_name
+        },
+        "linked_platforms": [],  # Pendiente: crear modelo de plataformas en el futuro
+        "followed_content_ids": followed_movie_ids
+    }
+
 
