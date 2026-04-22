@@ -17,4 +17,8 @@ urlpatterns = [
 
     path("api/user/profile/", views.api_user_profile, name="api_user_profile"),
 
+    #path('user/profile', views.profile, name='profile'),
+    #path('user/history', views.history, name='history'),
+
+    #path("catalog/", views.catalog_view, name="catalog"),
 ]
