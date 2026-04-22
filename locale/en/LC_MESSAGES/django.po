@@ -152,9 +152,7 @@ msgstr "Create Account"
 msgid "Join millions of viewers worldwide"
 msgstr "Join millions of viewers worldwide"
 
-#: Templates/identify/register.html:23
-msgid "Username"
-msgstr "Username"
+
 
 #: Templates/identify/register.html:30
 #: venv-join/lib/python3.12/site-packages/django/db/models/fields/__init__.py:1920

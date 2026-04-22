@@ -2,7 +2,10 @@ from django.shortcuts import render, redirect, get_object_or_404
 from web_app.forms import CustomUserCreationForm
 from web_app.models import AgeRating, Director, Genre, Movie
 from web_app import utils
+from django.http import JsonResponse
+from django.contrib.auth.decorators import login_required
 
+from django.core.paginator import Paginator
 
 def home(request):
     movies = Movie.objects.all()
@@ -28,12 +31,18 @@ def home(request):
     directors = Director.objects.values_list('name', flat=True).distinct()
     age_ratings = AgeRating.objects.values_list('description', flat=True).distinct()
 
+    # Paginació
+    paginator = Paginator(movies, 10)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
     context = {
-        'movies': movies,
+        'movies': page_obj,
         'genres': genres,
         'directors': directors,
         'age_ratings': age_ratings,
-    }
+        'search_query': search_query,
+        }
 
     return render(request, "home/home.html", context)
 
@@ -61,7 +70,6 @@ def movie_detail(request, movie_id):
     }
     return render(request, 'movie_detail.html', context)
 
-
 def catalog_view(request):
     movies = Movie.objects.all()
 
@@ -69,13 +77,10 @@ def catalog_view(request):
     genre_filter = request.GET.get('genre', '')
     director_filter = request.GET.get('director', '')
     age_rating_filter = request.GET.get('age_rating', '')
-
     if search_query:
         movies = movies.filter(title__icontains=search_query)
-
     if genre_filter:
         movies = movies.filter(genre__name=genre_filter)
-
     if director_filter:
         movies = movies.filter(director__name=director_filter)
 
@@ -94,3 +99,20 @@ def catalog_view(request):
     }
 
     return render(request, 'catalog.html', context)
+
+@login_required(login_url='/login/')
+def api_user_profile(request):
+    user = request.user
+    followed_movie_ids = list(user.favorite_movies.values_list('movie_id', flat=True))
+    response_data = {
+        "personal_info": {
+            "username": user.username,
+            "email": user.email,
+            "first_name": user.first_name,
+            "last_name": user.last_name
+        },
+        "linked_platforms": [],  # Pendiente: crear modelo de plataformas en el futuro
+        "followed_content_ids": followed_movie_ids
+    }
+
+

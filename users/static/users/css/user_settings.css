@@ -1,15 +1,118 @@
-.row-description {
-    min-height: 300px;
-    border: 1px solid aliceblue;
+¡/* ---- Tabs ---- */
+.nav-tabs {
+    border-bottom: 1px solid var(--border-glass) !important;
+    background: var(--bg-glass);
+    border-radius: 8px 8px 0 0;
+    padding: 0 0.5rem;
+    margin-bottom: 0 !important;
 }
 
-.row-stats {
-    min-height: 100px;
-    border: 1px solid aliceblue;
+.nav-tabs .nav-link {
+    color: var(--text-muted) !important;
+    border: none !important;
+    border-bottom: 2px solid transparent !important;
+    border-radius: 0 !important;
+    padding: 14px 18px;
+    font-size: 13px;
+    font-weight: 500;
+    transition: color 0.2s, border-color 0.2s;
+    background: transparent !important;
+    font-family: 'DM Sans', sans-serif;
+    letter-spacing: 0.02em;
 }
 
-.row-location {
-    min-height: 100px;
-    border: 1px solid aliceblue;
+.nav-tabs .nav-link:hover {
+    color: var(--neon-cyan) !important;
 }
 
+.nav-tabs .nav-link.active {
+    color: var(--neon-cyan) !important;
+    border-bottom: 2px solid var(--neon-cyan) !important;
+    text-shadow: 0 0 10px rgba(102, 252, 241, 0.4);
+}
+
+/* ---- Tab content area ---- */
+.tab-content-area {
+    background: var(--bg-glass);
+    border-radius: 0 0 8px 8px;
+    border: 1px solid var(--border-glass);
+    border-top: none;
+    padding: 1.5rem;
+    min-height: 350px;
+}
+
+/* ---- Sidebar columna izquierda ---- */
+.profile-sidebar {
+    padding-right: 1rem;
+}
+
+/* ---- Forms ---- */
+.form-group label {
+    font-size: 11px;
+    color: var(--neon-cyan);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 6px;
+    display: block;
+    opacity: 0.7;
+}
+
+.form-group input,
+.form-group textarea,
+.form-control {
+    background: rgba(11, 12, 16, 0.8) !important;
+    border: 1px solid var(--border-glass) !important;
+    border-radius: 6px !important;
+    color: var(--text-primary) !important;
+    font-size: 13px !important;
+    padding: 10px 14px !important;
+    width: 100%;
+    transition: border-color 0.2s, box-shadow 0.2s !important;
+    font-family: 'DM Sans', sans-serif !important;
+}
+
+.form-group input:focus,
+.form-group textarea:focus,
+.form-control:focus {
+    border-color: var(--neon-cyan) !important;
+    box-shadow: 0 0 0 2px rgba(102, 252, 241, 0.08) !important;
+    outline: none !important;
+}
+
+.form-group input::placeholder,
+.form-group textarea::placeholder,
+.form-control::placeholder {
+    color: var(--text-muted) !important;
+}
+
+/* ---- Submit button ---- */
+.submit-btn {
+    background: transparent;
+    border: 1px solid var(--neon-cyan);
+    color: var(--neon-cyan);
+    border-radius: 6px;
+    padding: 10px 28px;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background 0.2s, box-shadow 0.2s;
+    font-family: 'DM Sans', sans-serif;
+    letter-spacing: 0.05em;
+    margin-top: 8px;
+}
+
+.submit-btn:hover {
+    background: rgba(102, 252, 241, 0.08);
+    box-shadow: 0 0 16px rgba(102, 252, 241, 0.15);
+}
+
+/* ---- Success message ---- */
+.msg-success {
+    color: var(--neon-cyan);
+    font-size: 13px;
+    margin-bottom: 16px;
+    padding: 10px 14px;
+    background: rgba(102, 252, 241, 0.06);
+    border: 1px solid rgba(102, 252, 241, 0.15);
+    border-radius: 6px;
+}
