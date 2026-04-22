@@ -109,6 +109,7 @@ class UserProfile(models.Model):
         related_name='profile'
     )
     favorite_movies = models.ManyToManyField(Movie, blank=True)
+    avatar = models.ImageField(upload_to='avatars/', null=True, blank=True)
     bio = models.TextField(blank=True, null=True)
 
     def __str__(self):
