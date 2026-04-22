@@ -2,8 +2,8 @@
 {% load i18n %}
 {% load static %}
 {% block extra_css %}
-<link rel="stylesheet" href="{% static 'css/home/home.css' %}?v=1.1">
-<link rel="stylesheet" href="{% static 'css/home/filter.css' %}?v=1.1">
+<link rel="stylesheet" href="{% static 'css/home/home.css' %}?v=1.2">
+<link rel="stylesheet" href="{% static 'css/home/filter.css' %}?v=1.2">
 {% endblock %}
 {% block search-menu %}
 <div class="menu-search">
@@ -73,7 +73,7 @@
                         
                     </div>
 
-                    <h2 class="results-title">{% trans "Results" %}</h2>
+                    <h2 class="results-title">{% trans "Results" %}: {{ search_query }}</h2>
 
                     <div class="movie-grid">
                         {% for movie in movies %}
@@ -105,22 +105,35 @@
                         {% endfor %}
                     </div>
 
-                    <div class="pagination">
-                        <span class="step-links">
+                    <div class="pagination-container">
+                        <nav class="pagination-nav">
                             {% if movies.has_previous %}
-                                <a href="?page=1">&laquo; {% trans "primera" %}</a>
-                                <a href="?page={{ movies.previous_page_number }}">{% trans "anterior" %}</a>
+                                <a href="?page=1{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}" class="pagination-btn icon-btn" title="{% trans 'primera' %}">
+                                    <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none"><polyline points="11 17 6 12 11 7"></polyline><polyline points="18 17 13 12 18 7"></polyline></svg>
+                                </a>
+                                <a href="?page={{ movies.previous_page_number }}{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}" class="pagination-btn" title="{% trans 'anterior' %}">
+                                    <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none"><polyline points="15 18 9 12 15 6"></polyline></svg>
+                                    <span class="btn-text">{% trans "anterior" %}</span>
+                                </a>
                             {% endif %}
 
-                            <span class="current">
-                                {% trans "Pàgina" %} {{ movies.number }} {% trans "de" %} {{ movies.paginator.num_pages }}
-                            </span>
+                            <div class="pagination-info">
+                                <span class="current-label">{% trans "Pàgina" %}</span>
+                                <span class="current-page">{{ movies.number }}</span>
+                                <span class="divider">{% trans "de" %}</span>
+                                <span class="total-pages">{{ movies.paginator.num_pages }}</span>
+                            </div>
 
                             {% if movies.has_next %}
-                                <a href="?page={{ movies.next_page_number }}">{% trans "següent" %}</a>
-                                <a href="?page={{ movies.paginator.num_pages }}">{% trans "última" %} &raquo;</a>
+                                <a href="?page={{ movies.next_page_number }}{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}" class="pagination-btn" title="{% trans 'següent' %}">
+                                    <span class="btn-text">{% trans "següent" %}</span>
+                                    <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                                </a>
+                                <a href="?page={{ movies.paginator.num_pages }}{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}" class="pagination-btn icon-btn" title="{% trans 'última' %}">
+                                    <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none"><polyline points="13 17 18 12 13 7"></polyline><polyline points="6 17 11 12 6 7"></polyline></svg>
+                                </a>
                             {% endif %}
-                        </span>
+                        </nav>
                     </div>
 
                 </div>
