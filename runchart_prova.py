@@ -5,26 +5,16 @@ import matplotlib.pyplot as plt
 
 
 def main():
-    # 1. Obtener la ruta exacta de la carpeta donde está este script (IshikawaTools/)
-    SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
-
-    # 2. Construir las rutas absolutas para los archivos
-    json_path = os.path.join(SCRIPT_DIR, 'issues.json')
-    img_path = os.path.join(SCRIPT_DIR, 'issue_runchart.png')
+    json_path ='issues.json'
+    img_path ='issue_runchart.png'
 
     try:
-        # Intento 1: UTF-8 (El estándar que usará GitHub Actions)
         with open(json_path, 'r', encoding='utf-8') as f:
             texto_crudo = f.read()
     except UnicodeDecodeError:
-        # Intento 2: UTF-16 (El formato que usa PowerShell en Windows localmente)
         with open(json_path, 'r', encoding='utf-16') as f:
             texto_crudo = f.read()
-    except FileNotFoundError:
-        print(f"Error: No se encontró el archivo en la ruta: {json_path}")
-        return
 
-    # Comprobamos si el archivo está vacío
     if not texto_crudo.strip():
         print("ERROR: El archivo está completamente vacío.")
         return
