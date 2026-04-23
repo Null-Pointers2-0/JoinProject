@@ -1,0 +1,154 @@
+/* ===========================================
+   REGISTER PAGE STYLES - Streamflix
+   Estilos específicos para la página de registro
+   =========================================== */
+
+/* Register Card */
+.register-card {
+    border-radius: 8px;
+    padding: 60px;
+    width: 100%;
+}
+
+.register-card h1 {
+    font-size: 32px;
+    font-weight: 700;
+    margin-bottom: 8px;
+}
+
+.register-card .subtitle {
+    color: #b3b3b3;
+    font-size: 16px;
+    margin-bottom: 28px;
+}
+
+/* Password Strength */
+.password-strength {
+    margin-top: 12px;
+}
+
+.strength-bar {
+    height: 4px;
+    background: #333;
+    border-radius: 2px;
+    overflow: hidden;
+    margin-bottom: 8px;
+}
+
+.strength-fill {
+    height: 100%;
+    width: 0%;
+    transition: width 0.3s, background 0.3s;
+}
+
+.strength-fill.weak {
+    width: 33%;
+    background: #e50914;
+}
+
+.strength-fill.medium {
+    width: 66%;
+    background: #f5c518;
+}
+
+.strength-fill.strong {
+    width: 100%;
+    background: #46d369;
+}
+
+.strength-text {
+    font-size: 12px;
+    color: #8c8c8c;
+}
+
+.strength-text.weak {
+    color: #e50914;
+}
+
+.strength-text.medium {
+    color: #f5c518;
+}
+
+.strength-text.strong {
+    color: #46d369;
+}
+
+/* Password Requirements */
+.password-requirements {
+    margin-top: 12px;
+    font-size: 12px;
+}
+
+.requirement {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: #737373;
+    margin-bottom: 4px;
+}
+
+.requirement.met {
+    color: #46d369;
+}
+
+.requirement-icon {
+    width: 16px;
+    height: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Checkbox */
+.checkbox-group {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    margin-top: 20px;
+    font-size: 14px;
+    color: #b3b3b3;
+}
+
+.checkbox-group input[type="checkbox"] {
+    width: 20px;
+    height: 20px;
+    accent-color: #fff;
+    margin-top: 2px;
+    flex-shrink: 0;
+}
+
+.checkbox-group a {
+    color: #fff;
+    text-decoration: none;
+}
+
+.checkbox-group a:hover {
+    text-decoration: underline;
+}
+
+/* Sign In Link */
+.signin-section {
+    margin-top: 32px;
+    color: #737373;
+    font-size: 16px;
+}
+
+.signin-section a {
+    color: #fff;
+    text-decoration: none;
+}
+
+.signin-section a:hover {
+    text-decoration: underline;
+}
+
+/* Responsive - Register */
+@media (max-width: 500px) {
+    .register-card {
+        padding: 40px 24px;
+    }
+
+    .register-card h1 {
+        font-size: 28px;
+    }
+}

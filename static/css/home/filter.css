@@ -1,0 +1,142 @@
+/* ===========================================
+   FILTER STYLES - Home Page
+   Neon Night / Cinematic Minimalism
+   =========================================== */
+
+.filter-group {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    gap: 1rem;
+    background: var(--bg-glass);
+    backdrop-filter: blur(8px);
+    padding: 1.25rem;
+    border-radius: 8px;
+    border: 1px solid var(--border-glass);
+    margin: 0 auto;
+    width: 90%;
+    max-width: 1200px;
+    transition: border-color .25s;
+}
+
+.filter-group:hover {
+    border-color: var(--border-glass-hover);
+}
+
+.genre-filter,
+.director-filter,
+.age-rating-filter {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    flex: 1;
+    min-width: 180px;
+}
+
+.filter-group label {
+    font-size: 10px;
+    font-weight: 400;
+    color: var(--neon-cyan);
+    text-transform: uppercase;
+    letter-spacing: .1em;
+    padding-left: 0.25rem;
+    opacity: .7;
+    font-family: 'DM Sans', sans-serif;
+}
+
+.filter-group select {
+    width: 100%;
+    padding: .6rem 2.5rem .6rem 1rem;
+    background-color: rgba(11, 12, 16, .8);
+    border: 1px solid var(--border-glass);
+    border-radius: 6px;
+    color: var(--text-primary);
+    font-size: 13px;
+    outline: none;
+    cursor: pointer;
+    transition: border-color .2s, box-shadow .2s;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%238A8D91' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 1rem center;
+    font-family: 'DM Sans', sans-serif;
+}
+
+.filter-group select option {
+    background: var(--bg-glass);
+    color: var(--text-primary);
+}
+
+.filter-group select:hover {
+    border-color: var(--border-glass-hover);
+}
+
+.filter-group select:focus {
+    border-color: var(--neon-cyan);
+    box-shadow: 0 0 0 2px rgba(102, 252, 241, .08);
+}
+
+.filter-buttons {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding-bottom: 2px;
+}
+
+.filter-buttons button {
+    padding: .6rem 1.5rem;
+    background: transparent;
+    color: var(--neon-cyan);
+    border: 1px solid var(--neon-cyan);
+    border-radius: 6px;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background .2s, box-shadow .2s;
+    white-space: nowrap;
+    font-family: 'DM Sans', sans-serif;
+}
+
+.filter-buttons button:hover {
+    background: rgba(102, 252, 241, .08);
+    box-shadow: 0 0 14px rgba(102, 252, 241, .15);
+    transform: none;
+}
+
+.filter-buttons button:active {
+    transform: none;
+}
+
+.clear-filters {
+    color: var(--text-muted);
+    text-decoration: none;
+    font-size: 13px;
+    transition: color .2s;
+    white-space: nowrap;
+    font-family: 'DM Sans', sans-serif;
+}
+
+.clear-filters:hover {
+    color: var(--neon-cyan);
+}
+
+.search-principal-container {
+    max-width: 600px;
+   /*  margin-top: 2rem !important;
+    margin-bottom: 0 !important; */
+    margin-left: auto !important;
+    margin-right: auto !important;
+}
+
+@media (max-width: 992px) {
+    .filter-group { width: 95%; }
+}
+
+@media (max-width: 768px) {
+    .filter-group {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    .filter-buttons { justify-content: space-between; margin-top: .5rem; }
+    .genre-filter, .director-filter, .age-rating-filter { min-width: 100%; }
+}

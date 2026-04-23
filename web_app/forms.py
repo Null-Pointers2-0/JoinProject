@@ -11,6 +11,11 @@ class CustomUserCreationForm(forms.ModelForm):
         max_length=150,
         help_text=''
     )
+    email = forms.EmailField(
+        label='Correo electrónico',
+        required=True,
+        help_text=''
+    )
     password = forms.CharField(
         label='Contraseña',
         widget=forms.PasswordInput,
@@ -24,7 +29,7 @@ class CustomUserCreationForm(forms.ModelForm):
 
     class Meta:
         model = CustomUser
-        fields = ('username', 'password', 'password2')
+        fields = ('username', 'email', 'password', 'password2')
 
     def clean_password2(self):
         password = self.cleaned_data.get('password')
@@ -39,3 +44,19 @@ class CustomUserCreationForm(forms.ModelForm):
         if commit:
             user.save()
         return user
+    
+class CustomUserChangeForm(UserChangeForm):
+    class Meta:
+        model = CustomUser
+        fields = ['username', 'first_name', 'last_name', 'email', 'avatar']
+        help_texts = {field: '' for field in fields}
+
+    def clean_avatar(self):
+        avatar = self.cleaned_data.get('avatar')
+
+        if avatar:
+            ext = avatar.name.split('.')[-1].lower()
+            if ext not in ['jpg', 'jpeg', 'png']:
+                raise ValidationError('Solo se permiten archivos JPG o PNG.')
+
+        return avatar

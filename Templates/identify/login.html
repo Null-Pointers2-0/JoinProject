@@ -1,32 +1,62 @@
 {% extends 'base.html' %}
+{% load static %}
+{% load i18n%}
+{% block content_class %}auth-container{% endblock %}
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/login.css' %}">
+{% endblock %}
+
 {% block content %}
-<div class="py-5 d-flex justify-content-center">
-    <div class="col-12 col-md-8 col-lg-6">
-        <h2 class="text-center mb-4">Inici de sessió</h2>
 
-        <form method="post" class="auth-card p-4 p-md-5">
-            {% csrf_token %}
-            {% for error in form.non_field_errors %}
-            <small class="text-danger d-block mb-2">{{ error }}</small>
-            {% endfor %}
-            <div class="mb-3">
-                <label for="{{ form.username.id_for_label }}" class="form-label">Username</label>
-                {{ form.username }}
-            </div>
-            <div class="mb-3">
-                <label for="{{ form.password.id_for_label }}" class="form-label">Password</label>
-                {{ form.password }}
-            </div>
-            {% if next %}
-            <input type="hidden" name="next" value="{{ next }}">
-            {% endif %}
-            <button type="submit" class="btn btn-emerald w-100">Iniciar sessió</button>
-        </form>
+<div class="login-card">
+  <h1>{% trans "Sign In" %}</h1>
 
-        <p class="text-center mt-3 mb-0">
-            No tens compte?
-            <a href="{% url 'register' %}" class="auth-link">Registra't</a>
-        </p>
+  <form id="loginForm" method="post" action="{% url 'login' %}">
+    {% csrf_token %}
+
+    {% for error in form.non_field_errors %}
+    <p style="color: #e50914; font-size: 14px; margin-bottom: 10px;">{{ error }}</p>
+    {% endfor %}
+
+    <div class="form-group">
+      <input type="text" name="username" id="email" placeholder="{% trans 'Email address or username' %}" required>
     </div>
+
+    <div class="form-group">
+      <div class="password-container">
+        <input type="password" name="password" id="password" placeholder="{% trans 'Password' %}" required>
+        <button type="button" class="password-toggle" onclick="togglePassword()">{% trans "Show" %}</button>
+      </div>
+    </div>
+
+    {% if next %}
+    <input type="hidden" name="next" value="{{ next }}">
+    {% endif %}
+
+    <button type="submit" class="submit-btn">{% trans "Sign In" %}</button>
+
+  </form>
+
+  <div class="signup-section">
+    {% trans "New to Streamflix?" %} <a href="{% url 'register' %}">{% trans "Sign up now" %}</a>
+  </div>
+
 </div>
+
+
+<script>
+  function togglePassword() {
+    const passwordInput = document.getElementById('password');
+    const toggleBtn = document.querySelector('.password-toggle');
+
+    if (passwordInput.type === 'password') {
+      passwordInput.type = 'text';
+      toggleBtn.textContent = 'Hide';
+    } else {
+      passwordInput.type = 'password';
+      toggleBtn.textContent = 'Show';
+    }
+  }
+</script>
+
 {% endblock %}

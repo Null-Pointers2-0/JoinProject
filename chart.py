@@ -6,8 +6,6 @@ def generate_diagram():
     with open('issues_data.json', 'r') as f:
         data = json.load(f)
 
-    # 2. Procesamiento con Pandas
-    # Aplanamos la estructura de etiquetas
     all_labels = []
     for issue in data:
         if issue['labels']:
@@ -19,20 +17,16 @@ def generate_diagram():
     df = pd.Series(all_labels).value_counts().to_frame(name='frecuencia')
     df.index.name = 'etiqueta'
 
-    # Calcular porcentajes
     df['porcentaje'] = (df['frecuencia'] / df['frecuencia'].sum()) * 100
     df['acumulado'] = df['porcentaje'].cumsum()
 
-    # 3. Construcción del gráfico
     fig, ax1 = plt.subplots(figsize=(10, 6))
 
-    # Eje Principal: Barras de frecuencia
     ax1.bar(df.index, df['frecuencia'], color="steelblue", label="Frecuencia")
     ax1.set_ylabel("Cantidad de Issues", fontweight='bold')
     ax1.set_xlabel("Etiquetas", fontweight='bold')
     plt.xticks(rotation=45, ha='right')
 
-    # Eje Secundario: Línea de porcentaje acumulado
     ax2 = ax1.twinx()
     ax2.plot(df.index, df['acumulado'], color="red", marker="D", ms=5, label="% Acumulado")
     ax2.axhline(80, color="orange", linestyle="--", alpha=0.5) # Línea del 80%
