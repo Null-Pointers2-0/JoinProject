@@ -29,4 +29,20 @@ def history(request):
 def subscription(request):
     if not request.user.is_authenticated:
         return redirect('login')
-    return render(request, 'users/parts/subscription.html')
+
+    from web_app.models import API
+    from django.contrib import messages as django_messages
+
+    all_apis = API.objects.all().order_by('port')
+    user_subscription_ids = set(request.user.subscriptions.values_list('id', flat=True))
+
+    if request.method == 'POST':
+        selected_ids = request.POST.getlist('subscriptions')
+        request.user.subscriptions.set(API.objects.filter(id__in=selected_ids))
+        django_messages.success(request, '¡Suscripciones actualizadas correctamente!')
+        return redirect('suscription')
+
+    return render(request, 'users/parts/subscription.html', {
+        'all_apis': all_apis,
+        'user_subscription_ids': user_subscription_ids,
+    })
