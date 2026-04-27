@@ -25,6 +25,17 @@ def history(request):
     movies = Movie.objects.all()
     return render(request, 'users/parts/history.html', {'movies': movies})
 
+def followed(request):
+    if not request.user.is_authenticated:
+        return redirect('login')
+    try:
+        movies = request.user.profile.favorite_movies.all()
+        series_list = request.user.profile.favorite_series.all()
+    except:
+        movies = []
+        series_list = []
+    return render(request, 'users/parts/followed.html', {'movies': movies, 'series_list': series_list})
+
 
 def subscription(request):
     if not request.user.is_authenticated:
