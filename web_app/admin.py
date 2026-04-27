@@ -1,6 +1,13 @@
 from django.contrib import admin
 from django.utils.safestring import mark_safe
-from .models import SyncLog
+from .models import SyncLog, API
+
+
+@admin.register(API)
+class APIAdmin(admin.ModelAdmin):
+    list_display = ('port', 'name')
+    fields = ('port', 'name')
+
 
 
 @admin.register(SyncLog)
