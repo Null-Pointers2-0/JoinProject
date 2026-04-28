@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-28 08:46+0000\n"
+"POT-Creation-Date: 2026-04-28 16:41+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -68,7 +68,7 @@ msgstr "Contáctenos"
 msgid "Legal"
 msgstr "Legal"
 
-#: Templates/base.html:168 Templates/identify/register.html:110
+#: Templates/base.html:168
 msgid "Privacy Policy"
 msgstr "Política de privacidad"
 
@@ -83,6 +83,151 @@ msgstr "Contacto"
 #: Templates/base.html:181
 msgid "All rights reserved"
 msgstr "Todos los derechos reservados"
+
+#: Templates/footer_legal/privacy_policy.html:12
+msgid "Política de Privacidad"
+msgstr ""
+
+#: Templates/footer_legal/privacy_policy.html:13
+#: Templates/footer_legal/terms_use.html:13
+msgid "Última actualización"
+msgstr ""
+
+#: Templates/footer_legal/privacy_policy.html:15
+msgid "Información que Recopilamos"
+msgstr ""
+
+#: Templates/footer_legal/privacy_policy.html:17
+msgid ""
+"Al ser StreamSync un proyecto universitario, recopilamos información "
+"únicamente para simular un entorno real y brindar una buena experiencia "
+"dentro de la aplicación. Esto incluye datos básicos al registrarte (como tu "
+"correo o nombre de usuario) y datos de uso de la plataforma."
+msgstr ""
+
+#: Templates/footer_legal/privacy_policy.html:20
+msgid "Uso de la Información"
+msgstr ""
+
+#: Templates/footer_legal/privacy_policy.html:22
+msgid "Para mantener, mejorar y desarrollar nuevos servicios."
+msgstr ""
+
+#: Templates/footer_legal/privacy_policy.html:23
+msgid "Para personalizar las recomendaciones de series y películas."
+msgstr ""
+
+#: Templates/footer_legal/privacy_policy.html:24
+msgid ""
+"Para comunicarnos contigo sobre novedades, soporte o alertas de seguridad."
+msgstr ""
+
+#: Templates/footer_legal/privacy_policy.html:27
+msgid "Protección de Datos"
+msgstr ""
+
+#: Templates/footer_legal/privacy_policy.html:29
+msgid ""
+"Implementamos sólidas medidas de seguridad diseñadas para proteger tu "
+"información personal contra el acceso, la alteración o la destrucción no "
+"autorizados."
+msgstr ""
+
+#: Templates/footer_legal/privacy_policy.html:32
+msgid "Compartir Información con Terceros"
+msgstr ""
+
+#: Templates/footer_legal/privacy_policy.html:34
+msgid ""
+"No vendemos tu información personal. Únicamente la compartimos con terceros "
+"bajo circunstancias muy específicas, como para cumplir con una obligación "
+"legal, proteger nuestros derechos o en caso de integración con servicios "
+"suscritos por ti."
+msgstr ""
+
+#: Templates/footer_legal/privacy_policy.html:37
+msgid "Tus Derechos"
+msgstr ""
+
+#: Templates/footer_legal/privacy_policy.html:39
+msgid ""
+"Tienes derecho a acceder, rectificar o eliminar tu información personal en "
+"cualquier momento accediendo a la configuración de tu perfil, o contactando "
+"directamente con nuestro equipo de soporte técnico."
+msgstr ""
+
+#: Templates/footer_legal/terms_use.html:12
+msgid "Términos de Uso"
+msgstr ""
+
+#: Templates/footer_legal/terms_use.html:15
+#, fuzzy
+#| msgid "Acceptance of Terms"
+msgid "Aceptación de los Términos"
+msgstr "Aceptación de los Términos"
+
+#: Templates/footer_legal/terms_use.html:17
+msgid ""
+"StreamSync es una plataforma desarrollada exclusivamente para fines "
+"académicos como parte de un proyecto universitario. Al acceder y utilizar "
+"StreamSync, acepta estos términos de uso (sin validez legal real), y se "
+"compromete a hacer un uso adecuado de la plataforma."
+msgstr ""
+
+#: Templates/footer_legal/terms_use.html:20
+#, fuzzy
+#| msgid "Use of the Service"
+msgid "Uso del Servicio"
+msgstr "Uso del Servicio"
+
+#: Templates/footer_legal/terms_use.html:22
+msgid "Debe tener al menos 18 años para crear una cuenta."
+msgstr ""
+
+#: Templates/footer_legal/terms_use.html:23
+msgid ""
+"Se compromete a utilizar la plataforma exclusivamente con fines legales."
+msgstr ""
+
+#: Templates/footer_legal/terms_use.html:24
+msgid ""
+"No debe transmitir ningún gusano, virus o cualquier código de naturaleza "
+"destructiva."
+msgstr ""
+
+#: Templates/footer_legal/terms_use.html:27
+msgid "Propiedad Intelectual"
+msgstr ""
+
+#: Templates/footer_legal/terms_use.html:29
+msgid ""
+"Todo el contenido, diseño, logotipos, texto, gráficos e interfaces de "
+"StreamSync son propiedad exclusiva de la plataforma o de sus licenciantes, y "
+"están protegidos por las leyes de propiedad intelectual."
+msgstr ""
+
+#: Templates/footer_legal/terms_use.html:32
+msgid "Limitación de Responsabilidad"
+msgstr ""
+
+#: Templates/footer_legal/terms_use.html:34
+msgid ""
+"En ningún caso StreamSync o sus proveedores serán responsables de ningún "
+"daño (incluidos, entre otros, daños por pérdida de datos o beneficios, o "
+"debido a la interrupción del negocio) que surjan del uso o la incapacidad de "
+"usar el servicio."
+msgstr ""
+
+#: Templates/footer_legal/terms_use.html:37
+msgid "Modificaciones"
+msgstr ""
+
+#: Templates/footer_legal/terms_use.html:39
+msgid ""
+"StreamSync puede revisar estos términos de uso para su sitio web en "
+"cualquier momento sin previo aviso. Al usar este sitio web, usted acepta "
+"estar sujeto a la versión actual de estos Términos y Condiciones de Uso."
+msgstr ""
 
 #: Templates/home/home.html:22 Templates/home/home.html:86
 msgid "Genre"
@@ -215,77 +360,23 @@ msgstr "Acepto los"
 msgid "terms and conditions of use"
 msgstr "términos y condiciones de uso"
 
-#: Templates/identify/register.html:100
-msgid "Terms and Conditions of Use"
-msgstr "Términos y Condiciones de Uso"
-
-#: Templates/identify/register.html:104
-msgid "Acceptance of Terms"
-msgstr "Aceptación de los Términos"
-
-#: Templates/identify/register.html:105
-msgid ""
-"By creating an account on StreamSync, you agree to comply with and be bound "
-"by these Terms and Conditions."
-msgstr "Al crear una cuenta en StreamSync, usted acepta cumplir y estar vinculado por estos Términos y Condiciones."
-
-#: Templates/identify/register.html:107
-msgid "Use of the Service"
-msgstr "Uso del Servicio"
-
-#: Templates/identify/register.html:108
-msgid ""
-"You agree to use the service only for lawful purposes. You are responsible "
-"for maintaining the confidentiality of your account credentials."
-msgstr "Usted acepta utilizar el servicio solo para fines lícitos. Usted es responsable de mantener la confidencialidad de las credenciales de su cuenta."
-
-#: Templates/identify/register.html:111
-msgid ""
-"Your privacy is important to us. Please review our Privacy Policy to "
-"understand how we collect and use your data."
-msgstr "Su privacidad es importante para nosotros. Revise nuestra Política de Privacidad para comprender cómo recopilamos y utilizamos sus datos."
-
-#: Templates/identify/register.html:113
-msgid "Limitation of Liability"
-msgstr "Limitación de Responsabilidad"
-
-#: Templates/identify/register.html:114
-msgid ""
-"StreamSync is provided 'as is' without warranties of any kind. We are not "
-"liable for any damages arising from the use of our service."
-msgstr "StreamSync se proporciona 'tal cual' sin garantías de ningún tipo. No somos responsables de ningún daño derivado del uso de nuestro servicio."
-
-#: Templates/identify/register.html:116
-msgid "Changes to Terms"
-msgstr "Cambios en los Términos"
-
-#: Templates/identify/register.html:117
-msgid ""
-"We reserve the right to modify these terms at any time. Your continued use "
-"of the service constitutes acceptance of the new terms."
-msgstr "Nos reservamos el derecho de modificar estos términos en cualquier momento. El uso continuado del servicio constituye la aceptación de los nuevos términos."
-
-#: Templates/identify/register.html:120
-msgid "Close"
-msgstr "Cerrar"
-
-#: Templates/identify/register.html:127
+#: Templates/identify/register.html:97
 msgid "Already have an account?"
 msgstr "¿Ya tienes cuenta?"
 
-#: Templates/identify/register.html:127
+#: Templates/identify/register.html:97
 msgid "Sign in"
 msgstr "Iniciar sesión"
 
-#: Templates/identify/register.html:174
+#: Templates/identify/register.html:144
 msgid "Weak password"
 msgstr "Contraseña débil"
 
-#: Templates/identify/register.html:178
+#: Templates/identify/register.html:148
 msgid "Medium password"
 msgstr "Contraseña media"
 
-#: Templates/identify/register.html:182
+#: Templates/identify/register.html:152
 msgid "Strong password"
 msgstr "Contraseña fuerte"
 
@@ -403,6 +494,56 @@ msgstr "Acepto los términos y condiciones de uso"
 #: web_app/forms.py:34
 msgid "You must accept the terms and conditions to continue."
 msgstr "Debe aceptar los términos y condiciones para continuar."
+
+#~ msgid "Terms and Conditions of Use"
+#~ msgstr "Términos y Condiciones de Uso"
+
+#~ msgid ""
+#~ "By creating an account on StreamSync, you agree to comply with and be "
+#~ "bound by these Terms and Conditions."
+#~ msgstr ""
+#~ "Al crear una cuenta en StreamSync, usted acepta cumplir y estar vinculado "
+#~ "por estos Términos y Condiciones."
+
+#~ msgid ""
+#~ "You agree to use the service only for lawful purposes. You are "
+#~ "responsible for maintaining the confidentiality of your account "
+#~ "credentials."
+#~ msgstr ""
+#~ "Usted acepta utilizar el servicio solo para fines lícitos. Usted es "
+#~ "responsable de mantener la confidencialidad de las credenciales de su "
+#~ "cuenta."
+
+#~ msgid ""
+#~ "Your privacy is important to us. Please review our Privacy Policy to "
+#~ "understand how we collect and use your data."
+#~ msgstr ""
+#~ "Su privacidad es importante para nosotros. Revise nuestra Política de "
+#~ "Privacidad para comprender cómo recopilamos y utilizamos sus datos."
+
+#~ msgid "Limitation of Liability"
+#~ msgstr "Limitación de Responsabilidad"
+
+#~ msgid ""
+#~ "StreamSync is provided 'as is' without warranties of any kind. We are not "
+#~ "liable for any damages arising from the use of our service."
+#~ msgstr ""
+#~ "StreamSync se proporciona 'tal cual' sin garantías de ningún tipo. No "
+#~ "somos responsables de ningún daño derivado del uso de nuestro servicio."
+
+#~ msgid "Changes to Terms"
+#~ msgstr "Cambios en los Términos"
+
+#~ msgid ""
+#~ "We reserve the right to modify these terms at any time. Your continued "
+#~ "use of the service constitutes acceptance of the new terms."
+#~ msgstr ""
+#~ "Nos reservamos el derecho de modificar estos términos en cualquier "
+#~ "momento. El uso continuado del servicio constituye la aceptación de los "
+#~ "nuevos términos."
+
+#~ msgid "Close"
+#~ msgstr "Cerrar"
 
 #~ msgid "Messages"
 #~ msgstr "Mensajes"
