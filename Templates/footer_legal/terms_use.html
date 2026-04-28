@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+{% load i18n static %}
+
+{% block extra_css %}
+{{ block.super }}
+    <link rel="stylesheet" href="{% static 'css/terms_use.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="container my-5 terms-container">
+    <div class="terms-card">
+        <h1 class="terms-title">{% trans 'Términos de Uso' %}</h1>
+        <p class="terms-date">{% trans 'Última actualización' %}: {% now "F Y" %}</p>
+
+        <h2 class="terms-subtitle">1. {% trans 'Aceptación de los Términos' %}</h2>
+        <p class="terms-text">
+            {% trans 'StreamSync es una plataforma desarrollada exclusivamente para fines académicos como parte de un proyecto universitario. Al acceder y utilizar StreamSync, acepta estos términos de uso (sin validez legal real), y se compromete a hacer un uso adecuado de la plataforma.' %}
+        </p>
+
+        <h2 class="terms-subtitle">2. {% trans 'Uso del Servicio' %}</h2>
+        <ul class="terms-list">
+            <li>{% trans 'Debe tener al menos 18 años para crear una cuenta.' %}</li>
+            <li>{% trans 'Se compromete a utilizar la plataforma exclusivamente con fines legales.' %}</li>
+            <li>{% trans 'No debe transmitir ningún gusano, virus o cualquier código de naturaleza destructiva.' %}</li>
+        </ul>
+
+        <h2 class="terms-subtitle">3. {% trans 'Propiedad Intelectual' %}</h2>
+        <p class="terms-text">
+            {% trans 'Todo el contenido, diseño, logotipos, texto, gráficos e interfaces de StreamSync son propiedad exclusiva de la plataforma o de sus licenciantes, y están protegidos por las leyes de propiedad intelectual.' %}
+        </p>
+
+        <h2 class="terms-subtitle">4. {% trans 'Limitación de Responsabilidad' %}</h2>
+        <p class="terms-text">
+            {% trans 'En ningún caso StreamSync o sus proveedores serán responsables de ningún daño (incluidos, entre otros, daños por pérdida de datos o beneficios, o debido a la interrupción del negocio) que surjan del uso o la incapacidad de usar el servicio.' %}
+        </p>
+
+        <h2 class="terms-subtitle">5. {% trans 'Modificaciones' %}</h2>
+        <p class="terms-text">
+            {% trans 'StreamSync puede revisar estos términos de uso para su sitio web en cualquier momento sin previo aviso. Al usar este sitio web, usted acepta estar sujeto a la versión actual de estos Términos y Condiciones de Uso.' %}
+        </p>
+    </div>
+</div>
+{% endblock %}
