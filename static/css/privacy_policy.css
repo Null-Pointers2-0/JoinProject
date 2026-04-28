@@ -1,0 +1,60 @@
+/* ===========================================
+   PRIVACY POLICY - StreamSync
+   Estética: Cinematic Minimalism · Neon Night
+   =========================================== */
+
+/* Sobrescribir el fondo gris global de .content-div para esta página */
+.content-div {
+    background-color: transparent !important;
+    border: none !important;
+    backdrop-filter: none !important;
+    box-shadow: none !important;
+}
+
+.privacy-container {
+    max-width: 800px;
+    margin: 0 auto;
+    font-family: 'DM Sans', sans-serif;
+}
+
+.privacy-card {
+    background-color: var(--bg-glass, #1F2833);
+    border: 1px solid var(--border-glass, rgba(102, 252, 241, 0.08));
+    border-radius: 8px;
+    padding: 40px;
+    transition: border 0.3s ease;
+}
+
+.privacy-card:hover {
+    border-color: var(--border-glass-hover, rgba(102, 252, 241, 0.22));
+}
+
+.privacy-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 32px;
+    font-weight: 700;
+    color: var(--neon-cyan, #66FCF1);
+    margin-bottom: 8px;
+    letter-spacing: -0.03em;
+}
+
+.privacy-subtitle {
+    font-family: 'Syne', sans-serif;
+    font-size: 20px;
+    color: var(--text-primary, #E0E6ED);
+    margin-top: 32px;
+    margin-bottom: 12px;
+}
+
+.privacy-date {
+    color: var(--text-muted, #8A8D91);
+    font-size: 12px;
+    margin-bottom: 32px;
+}
+
+.privacy-text, .privacy-list {
+    color: var(--text-muted, #8A8D91);
+    font-size: 14px;
+    line-height: 1.6;
+    margin-bottom: 16px;
+}

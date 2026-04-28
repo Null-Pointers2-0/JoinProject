@@ -113,8 +113,15 @@ def api_user_profile(request):
             "first_name": user.first_name,
             "last_name": user.last_name
         },
-        "linked_platforms": [],  # Pendiente: crear modelo de plataformas en el futuro
+        "linked_platforms": [],
         "followed_content_ids": followed_movie_ids
     }
+
+
+def terms_use(request):
+    return render(request, 'footer_legal/terms_use.html')
+
+def privacy_policy(request):
+    return render(request, 'footer_legal/privacy_policy.html')
 
 
