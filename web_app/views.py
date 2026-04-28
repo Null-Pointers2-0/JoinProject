@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from web_app.forms import CustomUserCreationForm
-from web_app.models import AgeRating, Director, Genre, Movie
+from web_app.models import AgeRating, Director, Genre, Movie, UserProfile
 from web_app import utils
 from django.http import JsonResponse
 from django.contrib.auth.decorators import login_required
@@ -70,35 +70,23 @@ def movie_detail(request, movie_id):
     }
     return render(request, 'movie_detail.html', context)
 
-def catalog_view(request):
-    movies = Movie.objects.all()
 
-    search_query = request.GET.get('q', '')
-    genre_filter = request.GET.get('genre', '')
-    director_filter = request.GET.get('director', '')
-    age_rating_filter = request.GET.get('age_rating', '')
-    if search_query:
-        movies = movies.filter(title__icontains=search_query)
-    if genre_filter:
-        movies = movies.filter(genre__name=genre_filter)
-    if director_filter:
-        movies = movies.filter(director__name=director_filter)
+def movie_detail(request, pk):
+    movie = get_object_or_404(Movie, id=pk)
 
-    if age_rating_filter:
-        movies = movies.filter(age_rating__description=age_rating_filter)
+    is_favorite = False
+    if request.user.is_authenticated:
+        profile, _ = UserProfile.objects.get_or_create(user=request.user)
+        # Comprobamos en la lista correspondiente
+        if isinstance(movie, Movie):
+            is_favorite = movie in profile.favorite_movies.all()
+        else:
+            is_favorite = movie in profile.favorite_series.all()
 
-    genres = Genre.objects.values_list('name', flat=True).distinct()
-    directors = Director.objects.values_list('name', flat=True).distinct()
-    age_ratings = AgeRating.objects.values_list('description', flat=True).distinct()
-
-    context = {
-        'movies': movies,
-        'genres': genres,
-        'directors': directors,
-        'age_ratings': age_ratings,
-    }
-
-    return render(request, 'catalog.html', context)
+    return render(request, 'details.html', {
+        'content': movie,
+        'is_favorite': is_favorite
+    })
 
 @login_required(login_url='/login/')
 def api_user_profile(request):
@@ -115,4 +103,39 @@ def api_user_profile(request):
         "followed_content_ids": followed_movie_ids
     }
 
+from django.http import JsonResponse
+from django.contrib.auth.decorators import login_required
+from django.shortcuts import get_object_or_404
+from .models import Movie, Series, UserProfile
 
+@login_required
+def toggle_favorite(request, pk):
+    if request.method == 'POST':
+        # 1. Intentamos determinar si es película o serie
+        # Podríamos pasar un parámetro extra o intentar buscar en ambos modelos
+        movie = Movie.objects.filter(id=pk).first()
+        series = Series.objects.filter(id=pk).first()
+        
+        profile, _ = UserProfile.objects.get_or_create(user=request.user)
+        status = ""
+
+        if movie:
+            if movie in profile.favorite_movies.all():
+                profile.favorite_movies.remove(movie)
+                status = "removed"
+            else:
+                profile.favorite_movies.add(movie)
+                status = "added"
+        elif series:
+            if series in profile.favorite_series.all():
+                profile.favorite_series.remove(series)
+                status = "removed"
+            else:
+                profile.favorite_series.add(series)
+                status = "added"
+        else:
+            return JsonResponse({'error': 'Contenido no encontrado'}, status=404)
+
+        return JsonResponse({'status': status})
+    
+    return JsonResponse({'error': 'Método no permitido'}, status=405)

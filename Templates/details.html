@@ -1,0 +1,103 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/details.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="details-wrapper">
+    
+    <aside class="details-sidebar">
+        <div class="side-meta">
+            <span class="label-neon">StreamSync Premium</span>
+            <h1 class="main-title">{{ content.title }}</h1>
+            
+            <div class="badge-group">
+                <span class="badge">{{ content.genre.name }}</span>
+                {% if content.age_rating %}
+                    <span class="badge">{{ content.age_rating.description }}</span>
+                {% endif %}
+                <span class="badge" style="color: var(--rating); border-color: rgba(245, 197, 24, 0.2);">★ {{ content.rating }}</span>
+            </div>
+        </div>
+
+        <div class="side-info-list" style="display: flex; flex-direction: column; gap: 12px;">
+            <div class="data-card">
+                <div class="data-card-label">Lanzamiento</div>
+                <div class="data-card-value">
+                    {% if content.year %} 
+                        {{ content.year }}
+                    {% else %} 
+                        {{ content.start_year }} - {{ content.end_year|default:"Actualidad" }}
+                    {% endif %}
+                </div>
+            </div>
+
+            {% if content.director %}
+            <div class="data-card">
+                <div class="data-card-label">Dirección</div>
+                <div class="data-card-value">{{ content.director.name }}</div>
+            </div>
+            {% endif %}
+
+            {% if content.total_seasons %}
+            <div class="data-card">
+                <div class="data-card-label">Temporadas</div>
+                <div class="data-card-value">{{ content.total_seasons }} Seasons</div>
+            </div>
+            {% endif %}
+        </div>
+    </aside>
+
+    <div class="details-main">
+        <section>
+            <h2 class="section-title">Sinopsis</h2>
+            <p class="synopsis-text">
+                {{ content.synopsis|default:"No hay una descripción disponible para este título en este momento." }}
+            </p>
+
+            <h2 class="section-title">Acciones</h2>
+            <div style="display: flex; gap: 16px;">
+                {% if user.is_authenticated %}
+                    <button id="btn-save" class="btn-action" 
+                            data-id="{{ content.id }}">
+                        {% if content in user.profile.favorite_movies.all %}
+                            Dejar de seguir
+                        {% else %}
+                            Seguir
+                        {% endif %}
+                    </button>
+                {% endif %}
+            </div>
+        </section>
+    </div>
+
+</div>
+
+<script>
+document.getElementById('btn-save').addEventListener('click', function() {
+    const movieId = this.getAttribute('data-id');
+    const btn = this;
+
+    fetch(`/favorite/toggle/${movieId}/`, {
+        method: 'POST',
+        headers: {
+            'X-CSRFToken': '{{ csrf_token }}', // Necesario para seguridad en Django
+            'Content-Type': 'application/json'
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.status === 'added') {
+            btn.innerText = 'Quitar de la lista';
+            btn.style.color = 'var(--cyan)';
+        } else {
+            btn.innerText = 'Guardar en lista';
+            btn.style.color = 'var(--tm)';
+        }
+    })
+    .catch(error => console.error('Error:', error));
+});
+</script>
+{% endblock %}

@@ -12,10 +12,10 @@ urlpatterns = [
     path("logout/", LogoutView.as_view(), name="logout"),
 
     path("user_setting/", views.user_setting, name="user_setting"),
-    path("movie/<int:movie_id>/", views.movie_detail, name="movie_detail"),
-    path("catalog/", views.catalog_view, name="catalog"),
+    path("movie/<int:pk>/", views.movie_detail, name="movie_detail"),
 
     path("api/user/profile/", views.api_user_profile, name="api_user_profile"),
+    path('favorite/toggle/<int:pk>/', views.toggle_favorite, name='toggle_favorite'),
 
     #path('user/profile', views.profile, name='profile'),
     #path('user/history', views.history, name='history'),
