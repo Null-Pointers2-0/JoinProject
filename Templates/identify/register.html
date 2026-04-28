@@ -79,8 +79,49 @@
             {% endfor %}
         </div>
 
+        <div class="checkbox-group">
+            <input type="checkbox" name="terms_accepted" id="id_terms_accepted" required>
+            <label for="id_terms_accepted">
+                {% trans "I accept the" %} <a href="#" data-bs-toggle="modal" data-bs-target="#termsModal">{% trans "terms and conditions of use" %}</a>
+            </label>
+        </div>
+        {% for error in form.terms_accepted.errors %}
+        <small style="color: #e50914; font-size: 12px; display: block; margin-top: 5px;">{{ error }}</small>
+        {% endfor %}
+
         <button type="submit" class="submit-btn">{% trans "Create Account" %}</button>
     </form>
+
+    <!-- Modal para Términos de Uso -->
+    <div class="modal fade" id="termsModal" tabindex="-1" aria-labelledby="termsModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content" style="background-color: var(--bg-glass); color: var(--text-primary); border: 1px solid var(--border-glass);">
+                <div class="modal-header" style="border-bottom: 1px solid var(--border-glass);">
+                    <h5 class="modal-title" id="termsModalLabel">{% trans "Terms and Conditions of Use" %}</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body" style="max-height: 400px; overflow-y: auto; font-family: 'DM Sans', sans-serif; font-size: 14px; line-height: 1.6;">
+                    <h6>1. {% trans "Acceptance of Terms" %}</h6>
+                    <p>{% trans "By creating an account on StreamSync, you agree to comply with and be bound by these Terms and Conditions." %}</p>
+                    
+                    <h6>2. {% trans "Use of the Service" %}</h6>
+                    <p>{% trans "You agree to use the service only for lawful purposes. You are responsible for maintaining the confidentiality of your account credentials." %}</p>
+                    
+                    <h6>3. {% trans "Privacy Policy" %}</h6>
+                    <p>{% trans "Your privacy is important to us. Please review our Privacy Policy to understand how we collect and use your data." %}</p>
+                    
+                    <h6>4. {% trans "Limitation of Liability" %}</h6>
+                    <p>{% trans "StreamSync is provided 'as is' without warranties of any kind. We are not liable for any damages arising from the use of our service." %}</p>
+                    
+                    <h6>5. {% trans "Changes to Terms" %}</h6>
+                    <p>{% trans "We reserve the right to modify these terms at any time. Your continued use of the service constitutes acceptance of the new terms." %}</p>
+                </div>
+                <div class="modal-footer" style="border-top: 1px solid var(--border-glass);">
+                    <button type="button" class="btn btn-emerald" data-bs-dismiss="modal">{% trans "Close" %}</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <div class="signin-section">
         {% trans "Already have an account?" %} <a href="{% url 'login' %}">{% trans "Sign in" %}</a>

@@ -4,6 +4,7 @@ from web_app.models import AgeRating, Director, Genre, Movie
 from web_app import utils
 from django.http import JsonResponse
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth import login
 
 from django.core.paginator import Paginator
 
@@ -50,8 +51,9 @@ def home(request):
 def register_view(request):
     form = CustomUserCreationForm(request.POST or None)
     if form.is_valid():
-        form.save()
-        return redirect('login')
+        user = form.save()
+        login(request, user)
+        return redirect('home')
     return render(request, 'identify/register.html', {'form': form})
 
 
