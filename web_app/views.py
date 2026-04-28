@@ -77,7 +77,6 @@ def movie_detail(request, pk):
     is_favorite = False
     if request.user.is_authenticated:
         profile, _ = UserProfile.objects.get_or_create(user=request.user)
-        # Comprobamos en la lista correspondiente
         if isinstance(movie, Movie):
             is_favorite = movie in profile.favorite_movies.all()
         else:
@@ -87,6 +86,23 @@ def movie_detail(request, pk):
         'content': movie,
         'is_favorite': is_favorite
     })
+
+def series_detail(request, pk):
+    series = get_object_or_404(Series, id=pk)
+
+    is_favorite = False
+    if request.user.is_authenticated:
+        profile, _ = UserProfile.objects.get_or_create(user=request.user)
+        if isinstance(series, Movie):
+            is_favorite = series in profile.favorite_movies.all()
+        else:
+            is_favorite = series in profile.favorite_series.all()
+
+    return render(request, 'details.html', {
+        'content': series,
+        'is_favorite': is_favorite
+    })
+
 
 @login_required(login_url='/login/')
 def api_user_profile(request):

@@ -13,6 +13,7 @@ urlpatterns = [
 
     path("user_setting/", views.user_setting, name="user_setting"),
     path("movie/<int:pk>/", views.movie_detail, name="movie_detail"),
+    path("series/<int:pk>/", views.series_detail, name="series_detail"),
 
     path("api/user/profile/", views.api_user_profile, name="api_user_profile"),
     path('favorite/toggle/<int:pk>/', views.toggle_favorite, name='toggle_favorite'),
