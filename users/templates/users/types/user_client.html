@@ -17,6 +17,10 @@
             <a class="nav-link {% if request.resolver_match.url_name == 'suscription' %}active{% endif %}"
                href="{% url 'suscription' %}">{% trans 'Subscriptions' %}</a>
         </li>
+        <li class="nav-item">
+            <a class="nav-link {% if request.resolver_match.url_name == 'followed' %}active{% endif %}"
+               href="{% url 'followed' %}">{% trans 'Followed' %}</a>
+        </li>
     </ul>
 
     <!-- Contenido de la tab activa -->

@@ -48,7 +48,7 @@ class CustomUserCreationForm(forms.ModelForm):
 class CustomUserChangeForm(UserChangeForm):
     class Meta:
         model = CustomUser
-        fields = ['username', 'first_name', 'last_name', 'email', 'avatar']
+        fields = ['username', 'first_name', 'last_name', 'email', 'avatar', 'bio', 'location']
         help_texts = {field: '' for field in fields}
 
     def clean_avatar(self):
