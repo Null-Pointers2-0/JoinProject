@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from web_app.forms import CustomUserCreationForm
 from web_app.models import AgeRating, Director, Genre, Movie, UserProfile
 from web_app import utils
+from itertools import chain
 from django.http import JsonResponse
 from django.contrib.auth.decorators import login_required
 
@@ -9,40 +10,62 @@ from django.core.paginator import Paginator
 
 def home(request):
     movies = Movie.objects.all()
+    series = Series.objects.all()
 
     search_query = request.GET.get('q', '')
     genre_filter = request.GET.get('genre', '')
     director_filter = request.GET.get('director', '')
     age_rating_filter = request.GET.get('age_rating', '')
 
+    # 1. Aplicar filtros a AMBOS QuerySets
     if search_query:
         movies = movies.filter(title__icontains=search_query)
+        series = series.filter(title__icontains=search_query)
 
     if genre_filter:
         movies = movies.filter(genre__name=genre_filter)
+        series = series.filter(genre__name=genre_filter)
 
     if director_filter:
         movies = movies.filter(director__name=director_filter)
+        series = series.filter(director__name=director_filter)
 
     if age_rating_filter:
         movies = movies.filter(age_rating__description=age_rating_filter)
+        series = series.filter(age_rating__description=age_rating_filter)
 
+    # 2. Identificar el tipo de contenido para usarlo en el HTML
+    # Al evaluar el queryset, les asignamos un atributo temporal.
+    movies_list = list(movies)
+    for m in movies_list:
+        m.content_type = 'movie'
+        
+    series_list = list(series)
+    for s in series_list:
+        s.content_type = 'series'
+
+    # 3. Encadenar los resultados en una sola lista
+    # Opcional: puedes ordenar la lista combinada (ej. por título)
+    combined_results = list(chain(movies_list, series_list))
+    # combined_results.sort(key=lambda x: x.title)
+
+    # Las listas nativas de Python también soportan Paginator en Django
+    paginator = Paginator(combined_results, 10)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
+    # Obtener los filtros disponibles (esto se mantiene igual)
     genres = Genre.objects.values_list('name', flat=True).distinct()
     directors = Director.objects.values_list('name', flat=True).distinct()
     age_ratings = AgeRating.objects.values_list('description', flat=True).distinct()
 
-    # Paginació
-    paginator = Paginator(movies, 10)
-    page_number = request.GET.get('page')
-    page_obj = paginator.get_page(page_number)
-
     context = {
-        'movies': page_obj,
+        'items': page_obj,  # Cambiamos el nombre de 'movies' a 'items' por coherencia
         'genres': genres,
         'directors': directors,
         'age_ratings': age_ratings,
         'search_query': search_query,
-        }
+    }
 
     return render(request, "home/home.html", context)
 
