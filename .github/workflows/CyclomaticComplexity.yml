@@ -30,6 +30,6 @@ jobs:
           echo "Analizando los siguientes archivos:"
           echo "$ARCHIVOS"
           
-          python mi_complejidad.py $ARCHIVOS > resultados_complejidad.json
+          python CyclomaticMetric.py $ARCHIVOS > resultados_complejidad.json
           
           cat resultados_complejidad.json
