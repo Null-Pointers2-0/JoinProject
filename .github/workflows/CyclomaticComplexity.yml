@@ -1,0 +1,36 @@
+name: Check Complexity PR
+
+on:
+  push:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+jobs:
+  check-complexity:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout del código
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # Obligatorio para descargar el historial de Git y poder comparar ramas
+
+      - name: Configurar Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Analizar solo archivos modificados
+        run: |
+          RAMA_DESTINO="origin/${{ github.base_ref }}"
+          
+          ARCHIVOS=$(git diff --name-only --diff-filter=AM $RAMA_DESTINO HEAD | grep '\.py$' || true)
+          
+          if [ -z "$ARCHIVOS" ]; then
+            echo "No hay archivos Python modificados en esta Pull Request."
+            exit 0
+          fi
+          
+          echo "Archivos detectados para analizar:"
+          echo "$ARCHIVOS"
+          
+          python CyclomaticMetric.py $ARCHIVOS
