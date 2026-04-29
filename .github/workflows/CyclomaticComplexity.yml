@@ -22,14 +22,6 @@ jobs:
         run: |
           ARCHIVOS=$(git diff --name-only --diff-filter=AM origin/${{ github.base_ref }} HEAD | grep '\.py$' || true)
           
-          if [ -z "$ARCHIVOS" ]; then
-            echo "No se encontraron archivos Python modificados en esta Pull Request."
-            exit 0
-          fi
-
-          echo "Analizando los siguientes archivos:"
-          echo "$ARCHIVOS"
-          
           python CyclomaticMetric.py $ARCHIVOS > resultados_complejidad.json
           
           cat resultados_complejidad.json
