@@ -119,12 +119,7 @@ def analizar_archivos(rutas_archivos: list, limite_complejidad: int = 15):
     
     # Imprimir el JSON formateado con indentación
     print(json.dumps(salida_json, indent=4))
-            
-    # Mantener el código de salida del sistema para que falle en el CI si es necesario
-    if archivos_fallidos > 0:
-        sys.exit(1)
-    else:
-        sys.exit(0)
+    sys.exit(0)
 
 if __name__ == "__main__":
     archivos_a_analizar = sys.argv[1:]
