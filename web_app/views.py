@@ -1,11 +1,11 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from web_app.forms import CustomUserCreationForm
-from web_app.models import AgeRating, Director, Genre, Movie, UserProfile
+from web_app.models import AgeRating, Director, Genre, Movie, UserProfile, Series
 from web_app import utils
 from itertools import chain
 from django.http import JsonResponse
 from django.contrib.auth.decorators import login_required
-
+from django.contrib.auth import login
 from django.core.paginator import Paginator
 
 def home(request):
@@ -73,8 +73,9 @@ def home(request):
 def register_view(request):
     form = CustomUserCreationForm(request.POST or None)
     if form.is_valid():
-        form.save()
-        return redirect('login')
+        user = form.save()
+        login(request, user)
+        return redirect('home')
     return render(request, 'identify/register.html', {'form': form})
 
 
@@ -138,14 +139,10 @@ def api_user_profile(request):
             "first_name": user.first_name,
             "last_name": user.last_name
         },
-        "linked_platforms": [],  # Pendiente: crear modelo de plataformas en el futuro
+        "linked_platforms": [],
         "followed_content_ids": followed_movie_ids
     }
 
-from django.http import JsonResponse
-from django.contrib.auth.decorators import login_required
-from django.shortcuts import get_object_or_404
-from .models import Movie, Series, UserProfile
 
 @login_required
 def toggle_favorite(request, pk):
@@ -178,3 +175,10 @@ def toggle_favorite(request, pk):
         return JsonResponse({'status': status})
     
     return JsonResponse({'error': 'Método no permitido'}, status=405)
+def terms_use(request):
+    return render(request, 'footer_legal/terms_use.html')
+
+def privacy_policy(request):
+    return render(request, 'footer_legal/privacy_policy.html')
+
+

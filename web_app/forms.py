@@ -1,4 +1,5 @@
 from django import forms
+from django.utils.translation import gettext_lazy as _
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm
 from django.core.exceptions import ValidationError
 from django.core.validators import MaxLengthValidator
@@ -25,6 +26,12 @@ class CustomUserCreationForm(forms.ModelForm):
         label='Confirmar contraseña',
         widget=forms.PasswordInput,
         help_text=''
+    )
+
+    terms_accepted = forms.BooleanField(
+        required=True,
+        label=_("I accept the terms and conditions of use"),
+        error_messages={'required': _('You must accept the terms and conditions to continue.')}
     )
 
     class Meta:

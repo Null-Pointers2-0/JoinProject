@@ -79,9 +79,20 @@
             {% endfor %}
         </div>
 
+        <div class="checkbox-group">
+            <input type="checkbox" name="terms_accepted" id="id_terms_accepted" required>
+            <label for="id_terms_accepted">
+                {% trans "I accept the" %} <a href="{% url 'terms_use' %}" target="_blank">{% trans "terms and conditions of use" %}</a>
+            </label>
+        </div>
+        {% for error in form.terms_accepted.errors %}
+        <small style="color: #e50914; font-size: 12px; display: block; margin-top: 5px;">{{ error }}</small>
+        {% endfor %}
+
         <button type="submit" class="submit-btn">{% trans "Create Account" %}</button>
     </form>
 
+    
     <div class="signin-section">
         {% trans "Already have an account?" %} <a href="{% url 'login' %}">{% trans "Sign in" %}</a>
     </div>

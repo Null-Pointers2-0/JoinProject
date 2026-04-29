@@ -18,6 +18,9 @@ urlpatterns = [
     path("api/user/profile/", views.api_user_profile, name="api_user_profile"),
     path('favorite/toggle/<int:pk>/', views.toggle_favorite, name='toggle_favorite'),
 
+    path('terms-use/', views.terms_use, name='terms_use'),
+    path('privacy-policy/', views.privacy_policy, name='privacy_policy'),
+
     #path('user/profile', views.profile, name='profile'),
     #path('user/history', views.history, name='history'),
 
