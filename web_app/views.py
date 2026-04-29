@@ -84,17 +84,6 @@ def user_setting(request):
         return redirect('login')
     return render(request, 'User/user_types/user_client.html')
 
-
-def movie_detail(request, movie_id):
-    movie = get_object_or_404(Movie, pk=movie_id)
-
-    context = {
-        'movie': movie,
-        'recommendations': movie.get_similar_by_genre(limit=5)
-    }
-    return render(request, 'movie_detail.html', context)
-
-
 def movie_detail(request, pk):
     movie = get_object_or_404(Movie, id=pk)
 
