@@ -1,0 +1,98 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/details.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="details-wrapper">
+    <aside class="details-sidebar">
+        <div class="side-meta">
+            <span class="label-neon">StreamSync Premium</span>
+            <h1 class="main-title">{{ content.title }}</h1>
+            
+            <div class="badge-group">
+                <span class="badge">{{ content.genre.name }}</span>
+                {% if content.age_rating %}
+                    <span class="badge">{{ content.age_rating.description }}</span>
+                {% endif %}
+                <span class="badge" style="color: var(--rating); border-color: rgba(245, 197, 24, 0.2);">★ {{ content.rating }}</span>
+            </div>
+        </div>
+
+        <div class="side-info-list" style="display: flex; flex-direction: column; gap: 12px;">
+            {# Los archivos hijos (movie_detail y series_detail) rellenarán esto #}
+            {% block content_metadata %}{% endblock %}
+            
+            {% if content.director %}
+            <div class="data-card">
+                <div class="data-card-label">Dirección</div>
+                <div class="data-card-value">{{ content.director.name }}</div>
+            </div>
+            {% endif %}
+
+            {% block platforms %}{% endblock %}
+        </div>
+    </aside>
+
+    <div class="details-main">
+        <section>
+            <h2 class="section-title">Sinopsis</h2>
+            <p class="synopsis-text">
+                {{ content.synopsis|default:"No hay una descripción disponible." }}
+            </p>
+
+            {% block extra_main_content %}{% endblock %}
+
+            <h2 class="section-title">Acciones</h2>
+            <div style="display: flex; gap: 16px;">
+                {% if user.is_authenticated %}
+                    <button id="btn-save" class="btn-action" 
+                            data-url="{% block favorite_url %}{% endblock %}">
+                        {% if is_favorite %} Dejar de seguir {% else %} Seguir {% endif %}
+                    </button>
+                {% endif %}
+            </div>
+        </section>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    const favoriteBtn = document.getElementById('btn-save');
+    
+    if (favoriteBtn) {
+        favoriteBtn.addEventListener('click', function() {
+            // Lee la URL específica generada por el bloque de Django
+            const targetUrl = this.getAttribute('data-url');
+            const btn = this;
+
+            fetch(targetUrl, {
+                method: 'POST',
+                headers: {
+                    // Al estar incrustado en el template, Django inyecta el token aquí directamente
+                    'X-CSRFToken': '{{ csrf_token }}',
+                    'Content-Type': 'application/json'
+                }
+            })
+            .then(response => {
+                if (!response.ok) throw new Error('Error en la petición');
+                return response.json();
+            })
+            .then(data => {
+                // Actualización directa de la interfaz gráfica
+                if (data.status === 'added') {
+                    btn.innerText = 'Quitar de la lista';
+                    btn.style.color = 'var(--cyan)';
+                } else {
+                    btn.innerText = 'Seguir';
+                    btn.style.color = 'var(--tm)';
+                }
+            })
+            .catch(error => console.error('Error:', error));
+        });
+    }
+});
+</script>
+{% endblock %}

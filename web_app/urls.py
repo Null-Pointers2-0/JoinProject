@@ -16,7 +16,8 @@ urlpatterns = [
     path("series/<int:pk>/", views.series_detail, name="series_detail"),
 
     path("api/user/profile/", views.api_user_profile, name="api_user_profile"),
-    path('favorite/toggle/<int:pk>/', views.toggle_favorite, name='toggle_favorite'),
+    path('favorite/movie/<int:pk>/', views.toggle_movie_favorite, name='toggle_movie_favorite'),
+    path('favorite/series/<int:pk>/', views.toggle_series_favorite, name='toggle_series_favorite'),
 
     path('terms-use/', views.terms_use, name='terms_use'),
     path('privacy-policy/', views.privacy_policy, name='privacy_policy'),

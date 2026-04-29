@@ -95,7 +95,7 @@ def movie_detail(request, pk):
         else:
             is_favorite = movie in profile.favorite_series.all()
 
-    return render(request, 'details.html', {
+    return render(request, 'Details/details_movie.html', {
         'content': movie,
         'is_favorite': is_favorite
     })
@@ -111,7 +111,7 @@ def series_detail(request, pk):
         else:
             is_favorite = series in profile.favorite_series.all()
 
-    return render(request, 'details.html', {
+    return render(request, 'Details/details_serie.html', {
         'content': series,
         'is_favorite': is_favorite
     })
@@ -133,37 +133,38 @@ def api_user_profile(request):
     }
 
 
+# views.py
+
 @login_required
-def toggle_favorite(request, pk):
+def toggle_movie_favorite(request, pk):
     if request.method == 'POST':
-        # 1. Intentamos determinar si es película o serie
-        # Podríamos pasar un parámetro extra o intentar buscar en ambos modelos
-        movie = Movie.objects.filter(id=pk).first()
-        series = Series.objects.filter(id=pk).first()
-        
+        movie = get_object_or_404(Movie, id=pk)
         profile, _ = UserProfile.objects.get_or_create(user=request.user)
-        status = ""
-
-        if movie:
-            if movie in profile.favorite_movies.all():
-                profile.favorite_movies.remove(movie)
-                status = "removed"
-            else:
-                profile.favorite_movies.add(movie)
-                status = "added"
-        elif series:
-            if series in profile.favorite_series.all():
-                profile.favorite_series.remove(series)
-                status = "removed"
-            else:
-                profile.favorite_series.add(series)
-                status = "added"
+        
+        if movie in profile.favorite_movies.all():
+            profile.favorite_movies.remove(movie)
+            status = "removed"
         else:
-            return JsonResponse({'error': 'Contenido no encontrado'}, status=404)
-
+            profile.favorite_movies.add(movie)
+            status = "added"
         return JsonResponse({'status': status})
-    
     return JsonResponse({'error': 'Método no permitido'}, status=405)
+
+@login_required
+def toggle_series_favorite(request, pk):
+    if request.method == 'POST':
+        series = get_object_or_404(Series, id=pk)
+        profile, _ = UserProfile.objects.get_or_create(user=request.user)
+        
+        if series in profile.favorite_series.all():
+            profile.favorite_series.remove(series)
+            status = "removed"
+        else:
+            profile.favorite_series.add(series)
+            status = "added"
+        return JsonResponse({'status': status})
+    return JsonResponse({'error': 'Método no permitido'}, status=405)
+
 def terms_use(request):
     return render(request, 'footer_legal/terms_use.html')
 
