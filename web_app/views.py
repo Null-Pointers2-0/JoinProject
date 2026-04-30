@@ -134,9 +134,6 @@ def api_user_profile(request):
         "followed_content_ids": followed_movie_ids
     }
 
-
-# views.py
-
 @login_required
 def toggle_movie_favorite(request, pk):
     if request.method == 'POST':
