@@ -1,14 +1,14 @@
 <div class="col-md-3 col-sm-6 mb-4">
-        <div class="movie-card"
-        data-url="{% url 'movie_detail' movie.id %}" 
-        onclick="window.location.href=this.dataset.url"    
-        style="cursor: pointer;">
-            <div class="movie-card-body">
-                <h5 class="movie-title">{{ movie.title }}</h5>
-                <p class="movie-year">{{ movie.year }}</p>
-                <p class="movie-genre">{{ movie.genre }}</p>
-                <div class="movie-rating">★ {{ movie.rating }}</div>
-                <p class="movie-synopsis">{{ movie.synopsis|truncatewords:15 }}</p>
-            </div>
+    <div class="movie-card"
+    data-url="{% url 'movie_detail' movie.id %}" 
+    onclick="window.location.href=this.dataset.url"    
+    style="cursor: pointer;">
+        <div class="movie-card-body">
+            <h5 class="movie-title">{{ movie.title }}</h5>
+            <p class="movie-year">{{ movie.year }}</p>
+            <p class="movie-genre">{{ movie.genre }}</p>
+            <div class="movie-rating">★ {{ movie.rating }}</div>
+            <p class="movie-synopsis">{{ movie.synopsis|truncatewords:15 }}</p>
         </div>
     </div>
+</div>
