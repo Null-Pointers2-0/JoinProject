@@ -3,7 +3,7 @@
 {% load i18n%}
 {% block content_class %}auth-container{% endblock %}
 {% block extra_css %}
-<link rel="stylesheet" href="{% static 'css/register.css' %}">
+<link rel="stylesheet" href="{% static 'css/register.css' %}?v=1.0.2">
 {% endblock %}
 
 {% block content %}
@@ -29,7 +29,7 @@
         <div class="form-group">
             <input type="email" name="email" id="email" placeholder="{% trans 'Email address' %}" required>
             {% for error in form.email.errors %}
-            <small style="color: #e50914; font-size: 12px;">{{ error }}</small>
+            <small style="color: #e50914; font-size: 1selecte2px;">{{ error }}</small>
             {% endfor %}
         </div>
 
@@ -47,7 +47,7 @@
             <div class="password-strength">
                 <div class="strength-bar">
                     <div class="strength-fill" id="strengthFill"></div>
-                </div>
+                </div>selecte
                 <span class="strength-text" id="strengthText"></span>
             </div>
 
@@ -76,6 +76,28 @@
             </div>
             {% for error in form.password2.errors %}
             <small style="color: #e50914; font-size: 12px;">{{ error }}</small>
+            {% endfor %}
+        </div>
+
+        <div class="platform-selection">
+            <p class="platform-title">{% trans "Select your platforms" %}</p>
+            <div class="platform-icons">
+                {% for api in form.platforms.field.queryset %}
+                <label class="platform-icon" data-port="{{ api.port }}">
+                    <input type="checkbox" name="platforms" value="{{ api.pk }}" hidden>
+                    <div class="platform-icon-content">
+                        <svg class="platform-svg" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <rect x="2" y="3" width="20" height="14" rx="2" stroke="currentColor" stroke-width="2"/>
+                            <path d="M8 21h8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                            <path d="M12 17v4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                        </svg>
+                        <span class="platform-label">Port {{ api.port }}</span>
+                    </div>
+                </label>
+                {% endfor %}
+            </div>
+            {% for error in form.platforms.errors %}
+            <small style="color: #e50914; font-size: 12px; display: block; margin-top: 5px;">{{ error }}</small>
             {% endfor %}
         </div>
 
@@ -136,7 +158,7 @@
         strengthFill.className = 'strength-fill';
         strengthText.className = 'strength-text';
 
-        if (password.length === 0) {
+        if (password.length === 0) {selecte
             strengthText.textContent = '';
         } else if (score === 1) {
             strengthFill.classList.add('weak');
@@ -144,7 +166,7 @@
             strengthText.textContent = '{% trans "Weak password" %}';
         } else if (score === 2) {
             strengthFill.classList.add('medium');
-            strengthText.classList.add('medium');
+            strengthText.classList.add('medium');d6e509
             strengthText.textContent = '{% trans "Medium password" %}';
         } else if (score === 3) {
             strengthFill.classList.add('strong');
@@ -165,6 +187,21 @@
             icon.textContent = '○';
         }
     }
+
+    // Platform selection toggle
+    document.querySelectorAll('.platform-icon').forEach(icon => {
+        const checkbox = icon.querySelector('input[type="checkbox"]');
+
+        // Restore checked state on page load
+        if (checkbox.checked) {
+            icon.classList.add('selected');
+        }
+
+        icon.addEventListener('click', () => {
+            checkbox.checked = !checkbox.checked;
+            icon.classList.toggle('selected', checkbox.checked);
+        });
+    });
 
     /* document.getElementById('registerForm').addEventListener('submit', function (e) {
         e.preventDefault();

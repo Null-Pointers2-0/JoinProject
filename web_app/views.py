@@ -52,6 +52,9 @@ def register_view(request):
     form = CustomUserCreationForm(request.POST or None)
     if form.is_valid():
         user = form.save()
+        platforms = form.cleaned_data.get('platforms')
+        if platforms:
+            user.subscriptions.set(platforms)
         login(request, user)
         return redirect('home')
     return render(request, 'identify/register.html', {'form': form})

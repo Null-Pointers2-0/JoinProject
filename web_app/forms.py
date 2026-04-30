@@ -34,9 +34,16 @@ class CustomUserCreationForm(forms.ModelForm):
         error_messages={'required': _('You must accept the terms and conditions to continue.')}
     )
 
+    platforms = forms.ModelMultipleChoiceField(
+        queryset=API.objects.all(),
+        widget=forms.CheckboxSelectMultiple,
+        required=False,
+        label=_("Select your platforms")
+    )
+
     class Meta:
         model = CustomUser
-        fields = ('username', 'email', 'password', 'password2')
+        fields = ('username', 'email', 'password', 'password2', 'platforms')
 
     def clean_password2(self):
         password = self.cleaned_data.get('password')
