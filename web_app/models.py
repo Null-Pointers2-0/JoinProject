@@ -95,6 +95,10 @@ class Series(models.Model):
     class Meta:
         unique_together = ('series_id', 'api')
 
+    @property
+    def year(self):
+        return self.start_year
+
     def __str__(self):
         return self.title
 

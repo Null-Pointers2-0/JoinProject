@@ -1,0 +1,32 @@
+{% load i18n %}
+{% if item.content_type == 'movie' %}
+<div class="movie-card" 
+data-url="{% url 'movie_detail' item.id %}" 
+onclick="window.location.href=this.dataset.url"    
+style="cursor: pointer;">
+{% elif item.content_type == 'series' %}
+<div class="movie-card" 
+data-url="{% url 'series_detail' item.id %}" 
+onclick="window.location.href=this.dataset.url"    
+style="cursor: pointer;">
+{% endif %}
+    <div class="card-header">
+        <h3 class="movie-title">{{ item.title }}</h3>
+        <span class="movie-year">{{ item.year }}</span>
+    </div>
+    <div class="card-body">
+        <p class="movie-info"><strong>{% trans "Genre" %}:</strong> {{ item.genre.name|default:_("N/A") }}</p>
+        <p class="movie-info"><strong>{% trans "Director" %}:</strong> {{ item.director.name|default:_("N/A") }}</p>
+        <div class="movie-meta">
+            <span class="rating-badge">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="gold"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
+                {{ item.rating|default:_("N/A") }}
+            </span>
+            <span class="age-badge">{{ item.age_rating.description|default:_("N/A") }}</span>
+        </div>
+
+        {% if item.synopsis %}
+        <p class="movie-synopsis">{{ item.synopsis|truncatewords:20 }}</p>
+        {% endif %}
+    </div>
+</div>
