@@ -33,17 +33,26 @@ def home(request):
         movies = movies.filter(age_rating__description=age_rating_filter)
         series = series.filter(age_rating__description=age_rating_filter)
 
-    movies_list = list(movies)
-    for m in movies_list:
-        m.content_type = 'movie'
-        
-    series_list = list(series)
-    for s in series_list:
-        s.content_type = 'series'
+    unique_results = []
+    seen_keys = set()
 
-    combined_results = list(chain(movies_list, series_list))
+    for m in movies:
+        key = (m.title.lower(), 'movie') 
+        if key not in seen_keys:
+            m.content_type = 'movie'
+    
+            unique_results.append(m)
+            seen_keys.add(key)
 
-    paginator = Paginator(combined_results, 10)
+    for s in series:
+        key = (s.title.lower(), 'series')
+        if key not in seen_keys:
+            s.content_type = 'series'
+    
+            unique_results.append(s)
+            seen_keys.add(key)
+
+    paginator = Paginator(unique_results, 10)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
 
@@ -60,7 +69,6 @@ def home(request):
     }
 
     return render(request, "home/home.html", context)
-
 
 def register_view(request):
     form = CustomUserCreationForm(request.POST or None)
