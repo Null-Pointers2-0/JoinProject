@@ -17,7 +17,6 @@ def home(request):
     director_filter = request.GET.get('director', '')
     age_rating_filter = request.GET.get('age_rating', '')
 
-    # 1. Aplicar filtros a AMBOS QuerySets
     if search_query:
         movies = movies.filter(title__icontains=search_query)
         series = series.filter(title__icontains=search_query)
@@ -34,33 +33,35 @@ def home(request):
         movies = movies.filter(age_rating__description=age_rating_filter)
         series = series.filter(age_rating__description=age_rating_filter)
 
-    # 2. Identificar el tipo de contenido para usarlo en el HTML
-    # Al evaluar el queryset, les asignamos un atributo temporal.
-    movies_list = list(movies)
-    for m in movies_list:
-        m.content_type = 'movie'
-        
-    series_list = list(series)
-    for s in series_list:
-        s.content_type = 'series'
+    unique_results = []
+    seen_keys = set()
 
-    # 3. Encadenar los resultados en una sola lista
-    # Opcional: puedes ordenar la lista combinada (ej. por título)
-    combined_results = list(chain(movies_list, series_list))
-    # combined_results.sort(key=lambda x: x.title)
+    for m in movies:
+        key = (m.title.lower(), 'movie') 
+        if key not in seen_keys:
+            m.content_type = 'movie'
+    
+            unique_results.append(m)
+            seen_keys.add(key)
 
-    # Las listas nativas de Python también soportan Paginator en Django
-    paginator = Paginator(combined_results, 10)
+    for s in series:
+        key = (s.title.lower(), 'series')
+        if key not in seen_keys:
+            s.content_type = 'series'
+    
+            unique_results.append(s)
+            seen_keys.add(key)
+
+    paginator = Paginator(unique_results, 10)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
 
-    # Obtener los filtros disponibles (esto se mantiene igual)
     genres = Genre.objects.values_list('name', flat=True).distinct()
     directors = Director.objects.values_list('name', flat=True).distinct()
     age_ratings = AgeRating.objects.values_list('description', flat=True).distinct()
 
     context = {
-        'items': page_obj,  # Cambiamos el nombre de 'movies' a 'items' por coherencia
+        'items': page_obj,
         'genres': genres,
         'directors': directors,
         'age_ratings': age_ratings,
@@ -68,7 +69,6 @@ def home(request):
     }
 
     return render(request, "home/home.html", context)
-
 
 def register_view(request):
     form = CustomUserCreationForm(request.POST or None)
