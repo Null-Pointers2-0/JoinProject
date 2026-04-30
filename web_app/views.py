@@ -17,7 +17,6 @@ def home(request):
     director_filter = request.GET.get('director', '')
     age_rating_filter = request.GET.get('age_rating', '')
 
-    # 1. Aplicar filtros a AMBOS QuerySets
     if search_query:
         movies = movies.filter(title__icontains=search_query)
         series = series.filter(title__icontains=search_query)
@@ -34,8 +33,6 @@ def home(request):
         movies = movies.filter(age_rating__description=age_rating_filter)
         series = series.filter(age_rating__description=age_rating_filter)
 
-    # 2. Identificar el tipo de contenido para usarlo en el HTML
-    # Al evaluar el queryset, les asignamos un atributo temporal.
     movies_list = list(movies)
     for m in movies_list:
         m.content_type = 'movie'
@@ -44,23 +41,18 @@ def home(request):
     for s in series_list:
         s.content_type = 'series'
 
-    # 3. Encadenar los resultados en una sola lista
-    # Opcional: puedes ordenar la lista combinada (ej. por título)
     combined_results = list(chain(movies_list, series_list))
-    # combined_results.sort(key=lambda x: x.title)
 
-    # Las listas nativas de Python también soportan Paginator en Django
     paginator = Paginator(combined_results, 10)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
 
-    # Obtener los filtros disponibles (esto se mantiene igual)
     genres = Genre.objects.values_list('name', flat=True).distinct()
     directors = Director.objects.values_list('name', flat=True).distinct()
     age_ratings = AgeRating.objects.values_list('description', flat=True).distinct()
 
     context = {
-        'items': page_obj,  # Cambiamos el nombre de 'movies' a 'items' por coherencia
+        'items': page_obj,
         'genres': genres,
         'directors': directors,
         'age_ratings': age_ratings,
