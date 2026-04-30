@@ -9,21 +9,13 @@
 {% block parts_content %}
 <div class="row mt-3">
     {% for movie in movies %}
-    {% include 'part/cardlite.html' with movie=movie %}
+        {% include 'part/cardlite.html' with movie=movie %}
     {% endfor %}
+
     {% for series in series_list %}
-    <div class="col-md-3 col-sm-6 mb-4">
-        <div class="movie-card">
-            <div class="movie-card-body">
-                <h5 class="movie-title">{{ series.title }}</h5>
-                <p class="movie-year">{{ series.start_year }}</p>
-                <p class="movie-genre">{{ series.genre }}</p>
-                <div class="movie-rating">★ {{ series.rating }}</div>
-                <p class="movie-synopsis">{{ series.synopsis|truncatewords:15 }}</p>
-            </div>
-        </div>
-    </div>
+        {% include 'part/seriescard.html' with series=series %}
     {% endfor %}
+    
     {% if not movies and not series_list %}
     <div class="history-empty">
         <div class="history-empty-icon">◻</div>
