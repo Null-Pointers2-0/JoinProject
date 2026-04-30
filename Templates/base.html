@@ -32,8 +32,6 @@
             {% if user.is_authenticated %}
             <span class="welcome-text">{% trans "Welcome" %} {{ user.username }}</span>
             {% endif %}
-        </div>
-        <div class="header-right">
             <form action="{% url 'set_language' %}" method="post" class="nav-item dropdown">
                 {% csrf_token %}
                 <input name="next" type="hidden" value="{{ redirect_to }}">
@@ -111,7 +109,7 @@
 
         {% if user.is_authenticated %}
         <div class="menu-user">
-            <a href="{% url 'profile' %}">
+            <a href="{% url 'profile' %}" class="hidden-link">
                 <div class="user-info">
                     <div class="user-avatar">{{ user.username|first|upper }}</div>
                     <div class="user-details">

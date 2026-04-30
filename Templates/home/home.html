@@ -64,60 +64,26 @@
 </div>
 {% endblock %}
 {% block content %}
-<div class="container">
+<div class="container home-container">
     <div class="row">
-        <div class="col-md-12">
-            <div class="home-container">
-                <div class="home-container-left">
-                    <div class="filter-container">
-                        
-                    </div>
-
-                    <h2 class="results-title">{% trans "Results" %}: {{ search_query }}</h2>
-
-                    <div class="movie-grid">
-                        {% for item in items %}
-                            {% include 'part/card.html' with item=item %} 
-                        {% empty %}
-                            <p class="no-results">
-                                {% trans "No content found matching those filters." %}
-                            </p>
-                        {% endfor %}
-                    </div>
-
-                    <div class="pagination-container">
-                        <nav class="pagination-nav">
-                            {% if items.has_previous %}
-                                <a href="?page=1{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}" class="pagination-btn icon-btn" title="{% trans 'primera' %}">
-                                    <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none"><polyline points="11 17 6 12 11 7"></polyline><polyline points="18 17 13 12 18 7"></polyline></svg>
-                                </a>
-                                <a href="?page={{ items.previous_page_number }}{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}" class="pagination-btn" title="{% trans 'anterior' %}">
-                                    <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none"><polyline points="15 18 9 12 15 6"></polyline></svg>
-                                    <span class="btn-text">{% trans "anterior" %}</span>
-                                </a>
-                            {% endif %}
-
-                            <div class="pagination-info">
-                                <span class="current-label">{% trans "Pàgina" %}</span>
-                                <span class="current-page">{{ items.number }}</span>
-                                <span class="divider">{% trans "de" %}</span>
-                                <span class="total-pages">{{ items.paginator.num_pages }}</span>
-                            </div>
-
-                            {% if items.has_next %}
-                                <a href="?page={{ items.next_page_number }}{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}" class="pagination-btn" title="{% trans 'següent' %}">
-                                    <span class="btn-text">{% trans "següent" %}</span>
-                                    <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none"><polyline points="9 18 15 12 9 6"></polyline></svg>
-                                </a>
-                                <a href="?page={{ items.paginator.num_pages }}{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}" class="pagination-btn icon-btn" title="{% trans 'última' %}">
-                                    <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none"><polyline points="13 17 18 12 13 7"></polyline><polyline points="6 17 11 12 6 7"></polyline></svg>
-                                </a>
-                            {% endif %}
-                        </nav>
-                    </div>
-
-                </div>
+        <div class="col-12 home-container-left">
+            <div class="filter-container">
+                
             </div>
+
+            <h2 class="results-title">{% trans "Results" %}: {{ search_query }}</h2>
+
+            <div class="movie-grid">
+                {% for item in items %}
+                    {% include 'part/card.html' with item=item %} 
+                {% empty %}
+                    <p class="no-results">
+                        {% trans "No content found matching those filters." %}
+                    </p>
+                {% endfor %}
+            </div>
+
+            {% include 'home/home_parts/paginator.html' with items=items %}
         </div>
     </div>
 </div>
