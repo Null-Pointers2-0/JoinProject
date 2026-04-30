@@ -10,11 +10,17 @@
 <div class="row mt-3">
     {% for movie in movies %}
         {% include 'part/cardlite.html' with movie=movie %}
-    {% empty %}
+    {% endfor %}
+
+    {% for series in series_list %}
+        {% include 'part/seriescard.html' with series=series %}
+    {% endfor %}
+    
+    {% if not movies and not series_list %}
     <div class="history-empty">
         <div class="history-empty-icon">◻</div>
-        <p>{% trans "No movies in history yet." %}</p>
+        <p>{% trans "No followed movies or series yet." %}</p>
     </div>
-    {% endfor %}
+    {% endif %}
 </div>
 {% endblock %}

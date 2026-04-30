@@ -76,42 +76,22 @@
                     <h2 class="results-title">{% trans "Results" %}: {{ search_query }}</h2>
 
                     <div class="movie-grid">
-                        {% for movie in movies %}
-                        <div class="movie-card">
-                            <div class="card-header">
-                                <h3 class="movie-title">{{ movie.title }}</h3>
-                                <span class="movie-year">{{ movie.year }}</span>
-                            </div>
-                            <div class="card-body">
-                                <p class="movie-info"><strong>{% trans "Genre" %}:</strong> {{ movie.genre.name|default:_("N/A") }}</p>
-                                <p class="movie-info"><strong>{% trans "Director" %}:</strong> {{ movie.director.name|default:_("N/A") }}</p>
-                                <div class="movie-meta">
-                                    <span class="rating-badge">
-                                        <svg width="14" height="14" viewBox="0 0 24 24" fill="gold"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
-                                        {{ movie.rating|default:_("N/A") }}
-                                    </span>
-                                    <span class="age-badge">{{ movie.age_rating.description|default:_("N/A") }}</span>
-                                </div>
-
-                                {% if movie.synopsis %}
-                                <p class="movie-synopsis">{{ movie.synopsis|truncatewords:20 }}</p>
-                                {% endif %}
-                            </div>
-                        </div>
+                        {% for item in items %}
+                            {% include 'part/card.html' with item=item %} 
                         {% empty %}
-                        <p class="no-results">
-                            {% trans "No movies found matching those filters." %}
-                        </p>
+                            <p class="no-results">
+                                {% trans "No content found matching those filters." %}
+                            </p>
                         {% endfor %}
                     </div>
 
                     <div class="pagination-container">
                         <nav class="pagination-nav">
-                            {% if movies.has_previous %}
+                            {% if items.has_previous %}
                                 <a href="?page=1{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}" class="pagination-btn icon-btn" title="{% trans 'primera' %}">
                                     <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none"><polyline points="11 17 6 12 11 7"></polyline><polyline points="18 17 13 12 18 7"></polyline></svg>
                                 </a>
-                                <a href="?page={{ movies.previous_page_number }}{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}" class="pagination-btn" title="{% trans 'anterior' %}">
+                                <a href="?page={{ items.previous_page_number }}{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}" class="pagination-btn" title="{% trans 'anterior' %}">
                                     <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none"><polyline points="15 18 9 12 15 6"></polyline></svg>
                                     <span class="btn-text">{% trans "anterior" %}</span>
                                 </a>
@@ -119,17 +99,17 @@
 
                             <div class="pagination-info">
                                 <span class="current-label">{% trans "Pàgina" %}</span>
-                                <span class="current-page">{{ movies.number }}</span>
+                                <span class="current-page">{{ items.number }}</span>
                                 <span class="divider">{% trans "de" %}</span>
-                                <span class="total-pages">{{ movies.paginator.num_pages }}</span>
+                                <span class="total-pages">{{ items.paginator.num_pages }}</span>
                             </div>
 
-                            {% if movies.has_next %}
-                                <a href="?page={{ movies.next_page_number }}{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}" class="pagination-btn" title="{% trans 'següent' %}">
+                            {% if items.has_next %}
+                                <a href="?page={{ items.next_page_number }}{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}" class="pagination-btn" title="{% trans 'següent' %}">
                                     <span class="btn-text">{% trans "següent" %}</span>
                                     <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none"><polyline points="9 18 15 12 9 6"></polyline></svg>
                                 </a>
-                                <a href="?page={{ movies.paginator.num_pages }}{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}" class="pagination-btn icon-btn" title="{% trans 'última' %}">
+                                <a href="?page={{ items.paginator.num_pages }}{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}" class="pagination-btn icon-btn" title="{% trans 'última' %}">
                                     <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none"><polyline points="13 17 18 12 13 7"></polyline><polyline points="6 17 11 12 6 7"></polyline></svg>
                                 </a>
                             {% endif %}

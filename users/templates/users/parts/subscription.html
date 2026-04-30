@@ -1,8 +1,115 @@
 {% extends 'users/types/user_client.html' %}
 {% load static %}
+{% load i18n %}
 {% block extra_css %}
 {{ block.super }}
     <link rel="stylesheet" href="{% static 'users/css/subscription.css' %}">
 {% endblock %}
+
 {% block parts_content %}
+
+{% if messages %}
+    {% for message in messages %}
+        <div class="msg-success">{{ message }}</div>
+    {% endfor %}
+{% endif %}
+
+<div class="subscription-header">
+    <h2 class="subscription-title">{% trans 'My Subscriptions' %}</h2>
+    <p class="subscription-subtitle">{% trans 'Select the platforms you are subscribed to' %}</p>
+</div>
+
+<form method="post" id="subscription-form">
+    {% csrf_token %}
+
+    {% if all_apis %}
+        <div class="platforms-grid">
+            {% for api in all_apis %}
+                <div class="platform-card {% if api.id in user_subscription_ids %}platform-card--active{% endif %}"
+                     id="platform-card-{{ api.id }}"
+                     data-api-id="{{ api.id }}">
+
+                    <!-- Icono / Insignia de la plataforma -->
+                    <div class="platform-icon">
+                        <span class="platform-port">{{ api.port }}</span>
+                    </div>
+
+                    <!-- Info -->
+                    <div class="platform-info">
+                        <div class="platform-name">
+                            {% if api.name %}
+                                {{ api.name }}
+                            {% else %}
+                                Platform {{ api.port }}
+                            {% endif %}
+                        </div>
+                        <div class="platform-port-label">Port {{ api.port }}</div>
+                    </div>
+
+                    <!-- Badge de estado -->
+                    <div class="platform-badge {% if api.id in user_subscription_ids %}platform-badge--active{% endif %}"
+                         id="badge-{{ api.id }}">
+                        {% if api.id in user_subscription_ids %}
+                            <span class="badge-icon">✓</span>
+                            {% trans 'Subscribed' %}
+                        {% else %}
+                            <span class="badge-icon">+</span>
+                            {% trans 'Add' %}
+                        {% endif %}
+                    </div>
+
+                    <!-- Checkbox oculto -->
+                    <input type="checkbox"
+                           name="subscriptions"
+                           value="{{ api.id }}"
+                           id="chk-{{ api.id }}"
+                           class="platform-checkbox"
+                           {% if api.id in user_subscription_ids %}checked{% endif %}>
+                </div>
+            {% endfor %}
+        </div>
+
+        <div class="subscription-actions">
+            <button type="submit" class="submit-btn" id="save-subscriptions-btn">
+                {% trans 'Save subscriptions' %}
+            </button>
+        </div>
+
+    {% else %}
+        <div class="subscription-empty">
+            <div class="subscription-empty-icon">📡</div>
+            <p>{% trans 'No platforms available at the moment.' %}</p>
+        </div>
+    {% endif %}
+
+</form>
+
+<script>
+function togglePlatform(apiId) {
+    const card = document.getElementById('platform-card-' + apiId);
+    const checkbox = document.getElementById('chk-' + apiId);
+    const badge = document.getElementById('badge-' + apiId);
+
+    checkbox.checked = !checkbox.checked;
+
+    if (checkbox.checked) {
+        card.classList.add('platform-card--active');
+        badge.classList.add('platform-badge--active');
+        badge.innerHTML = '<span class="badge-icon">✓</span> {% trans "Subscribed" %}';
+    } else {
+        card.classList.remove('platform-card--active');
+        badge.classList.remove('platform-badge--active');
+        badge.innerHTML = '<span class="badge-icon">+</span> {% trans "Add" %}';
+    }
+}
+
+document.addEventListener('DOMContentLoaded', function () {
+    document.querySelectorAll('.platform-card').forEach(function (card) {
+        card.addEventListener('click', function () {
+            togglePlatform(this.dataset.apiId);
+        });
+    });
+});
+</script>
+
 {% endblock %}

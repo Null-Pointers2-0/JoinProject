@@ -1,4 +1,5 @@
 from django import forms
+from django.utils.translation import gettext_lazy as _
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm
 from django.core.exceptions import ValidationError
 from django.core.validators import MaxLengthValidator
@@ -27,9 +28,22 @@ class CustomUserCreationForm(forms.ModelForm):
         help_text=''
     )
 
+    terms_accepted = forms.BooleanField(
+        required=True,
+        label=_("I accept the terms and conditions of use"),
+        error_messages={'required': _('You must accept the terms and conditions to continue.')}
+    )
+
+    platforms = forms.ModelMultipleChoiceField(
+        queryset=API.objects.all(),
+        widget=forms.CheckboxSelectMultiple,
+        required=False,
+        label=_("Select your platforms")
+    )
+
     class Meta:
         model = CustomUser
-        fields = ('username', 'email', 'password', 'password2')
+        fields = ('username', 'email', 'password', 'password2', 'platforms')
 
     def clean_password2(self):
         password = self.cleaned_data.get('password')
@@ -48,7 +62,7 @@ class CustomUserCreationForm(forms.ModelForm):
 class CustomUserChangeForm(UserChangeForm):
     class Meta:
         model = CustomUser
-        fields = ['username', 'first_name', 'last_name', 'email', 'avatar']
+        fields = ['username', 'first_name', 'last_name', 'email', 'avatar', 'bio', 'location']
         help_texts = {field: '' for field in fields}
 
     def clean_avatar(self):
