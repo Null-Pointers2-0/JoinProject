@@ -109,7 +109,7 @@
 
         {% if user.is_authenticated %}
         <div class="menu-user">
-            <a href="{% url 'profile' %}">
+            <a href="{% url 'profile' %}" class="hidden-link">
                 <div class="user-info">
                     <div class="user-avatar">{{ user.username|first|upper }}</div>
                     <div class="user-details">
