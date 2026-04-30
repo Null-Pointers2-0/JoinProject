@@ -17,7 +17,6 @@ def home(request):
     director_filter = request.GET.get('director', '')
     age_rating_filter = request.GET.get('age_rating', '')
 
-    # 1. Aplicar filtros a AMBOS QuerySets
     if search_query:
         movies = movies.filter(title__icontains=search_query)
         series = series.filter(title__icontains=search_query)
@@ -34,8 +33,6 @@ def home(request):
         movies = movies.filter(age_rating__description=age_rating_filter)
         series = series.filter(age_rating__description=age_rating_filter)
 
-    # 2. Identificar el tipo de contenido para usarlo en el HTML
-    # Al evaluar el queryset, les asignamos un atributo temporal.
     movies_list = list(movies)
     for m in movies_list:
         m.content_type = 'movie'
@@ -44,23 +41,18 @@ def home(request):
     for s in series_list:
         s.content_type = 'series'
 
-    # 3. Encadenar los resultados en una sola lista
-    # Opcional: puedes ordenar la lista combinada (ej. por título)
     combined_results = list(chain(movies_list, series_list))
-    # combined_results.sort(key=lambda x: x.title)
 
-    # Las listas nativas de Python también soportan Paginator en Django
     paginator = Paginator(combined_results, 10)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
 
-    # Obtener los filtros disponibles (esto se mantiene igual)
     genres = Genre.objects.values_list('name', flat=True).distinct()
     directors = Director.objects.values_list('name', flat=True).distinct()
     age_ratings = AgeRating.objects.values_list('description', flat=True).distinct()
 
     context = {
-        'items': page_obj,  # Cambiamos el nombre de 'movies' a 'items' por coherencia
+        'items': page_obj,
         'genres': genres,
         'directors': directors,
         'age_ratings': age_ratings,
@@ -89,36 +81,35 @@ def user_setting(request):
 
 def movie_detail(request, pk):
     movie = get_object_or_404(Movie, id=pk)
-
+    
+    available_apis = [m.api for m in Movie.objects.filter(title__iexact=movie.title).select_related('api') if m.api]
+    
     is_favorite = False
     if request.user.is_authenticated:
         profile, _ = UserProfile.objects.get_or_create(user=request.user)
-        if isinstance(movie, Movie):
-            is_favorite = movie in profile.favorite_movies.all()
-        else:
-            is_favorite = movie in profile.favorite_series.all()
+        is_favorite = movie in profile.favorite_movies.all()
 
     return render(request, 'Details/details_movie.html', {
         'content': movie,
-        'is_favorite': is_favorite
+        'is_favorite': is_favorite,
+        'available_apis': available_apis
     })
 
 def series_detail(request, pk):
     series = get_object_or_404(Series, id=pk)
 
+    available_apis = [s.api for s in Series.objects.filter(title__iexact=series.title).select_related('api') if s.api]
+
     is_favorite = False
     if request.user.is_authenticated:
         profile, _ = UserProfile.objects.get_or_create(user=request.user)
-        if isinstance(series, Movie):
-            is_favorite = series in profile.favorite_movies.all()
-        else:
-            is_favorite = series in profile.favorite_series.all()
+        is_favorite = series in profile.favorite_series.all()
 
     return render(request, 'Details/details_serie.html', {
         'content': series,
-        'is_favorite': is_favorite
+        'is_favorite': is_favorite,
+        'available_apis': available_apis
     })
-
 
 @login_required(login_url='/login/')
 def api_user_profile(request):
@@ -134,9 +125,6 @@ def api_user_profile(request):
         "linked_platforms": [],
         "followed_content_ids": followed_movie_ids
     }
-
-
-# views.py
 
 @login_required
 def toggle_movie_favorite(request, pk):

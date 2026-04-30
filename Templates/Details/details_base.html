@@ -22,7 +22,6 @@
         </div>
 
         <div class="side-info-list" style="display: flex; flex-direction: column; gap: 12px;">
-            {# Los archivos hijos (movie_detail y series_detail) rellenarán esto #}
             {% block content_metadata %}{% endblock %}
             
             {% if content.director %}
@@ -31,8 +30,17 @@
                 <div class="data-card-value">{{ content.director.name }}</div>
             </div>
             {% endif %}
-
-            {% block platforms %}{% endblock %}
+            
+            <div class="data-card">
+                <div class="data-card-label">Disponible en:</div>
+                <div class="data-card-value">
+                    {% for api in available_apis %}
+                        <span>{{ api.name|default:api.port }}</span>
+                    {% empty %}
+                        <span>No hay información de API disponible.</span>
+                    {% endfor %}
+                </div>
+            </div>
         </div>
     </aside>
 
@@ -64,14 +72,12 @@ document.addEventListener('DOMContentLoaded', () => {
     
     if (favoriteBtn) {
         favoriteBtn.addEventListener('click', function() {
-            // Lee la URL específica generada por el bloque de Django
             const targetUrl = this.getAttribute('data-url');
             const btn = this;
 
             fetch(targetUrl, {
                 method: 'POST',
                 headers: {
-                    // Al estar incrustado en el template, Django inyecta el token aquí directamente
                     'X-CSRFToken': '{{ csrf_token }}',
                     'Content-Type': 'application/json'
                 }
@@ -81,7 +87,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 return response.json();
             })
             .then(data => {
-                // Actualización directa de la interfaz gráfica
                 if (data.status === 'added') {
                     btn.innerText = 'Quitar de la lista';
                     btn.style.color = 'var(--cyan)';
