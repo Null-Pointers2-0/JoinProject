@@ -1,49 +1,71 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from web_app.forms import CustomUserCreationForm
-from web_app.models import AgeRating, Director, Genre, Movie
+from web_app.models import AgeRating, Director, Genre, Movie, UserProfile, Series
 from web_app import utils
+from itertools import chain
 from django.http import JsonResponse
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import login
-
 from django.core.paginator import Paginator
 
 def home(request):
     movies = Movie.objects.all()
+    series = Series.objects.all()
 
     search_query = request.GET.get('q', '')
     genre_filter = request.GET.get('genre', '')
     director_filter = request.GET.get('director', '')
     age_rating_filter = request.GET.get('age_rating', '')
 
+    # 1. Aplicar filtros a AMBOS QuerySets
     if search_query:
         movies = movies.filter(title__icontains=search_query)
+        series = series.filter(title__icontains=search_query)
 
     if genre_filter:
         movies = movies.filter(genre__name=genre_filter)
+        series = series.filter(genre__name=genre_filter)
 
     if director_filter:
         movies = movies.filter(director__name=director_filter)
+        series = series.filter(director__name=director_filter)
 
     if age_rating_filter:
         movies = movies.filter(age_rating__description=age_rating_filter)
+        series = series.filter(age_rating__description=age_rating_filter)
 
+    # 2. Identificar el tipo de contenido para usarlo en el HTML
+    # Al evaluar el queryset, les asignamos un atributo temporal.
+    movies_list = list(movies)
+    for m in movies_list:
+        m.content_type = 'movie'
+        
+    series_list = list(series)
+    for s in series_list:
+        s.content_type = 'series'
+
+    # 3. Encadenar los resultados en una sola lista
+    # Opcional: puedes ordenar la lista combinada (ej. por título)
+    combined_results = list(chain(movies_list, series_list))
+    # combined_results.sort(key=lambda x: x.title)
+
+    # Las listas nativas de Python también soportan Paginator en Django
+    paginator = Paginator(combined_results, 10)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
+    # Obtener los filtros disponibles (esto se mantiene igual)
     genres = Genre.objects.values_list('name', flat=True).distinct()
     directors = Director.objects.values_list('name', flat=True).distinct()
     age_ratings = AgeRating.objects.values_list('description', flat=True).distinct()
 
-    # Paginació
-    paginator = Paginator(movies, 10)
-    page_number = request.GET.get('page')
-    page_obj = paginator.get_page(page_number)
-
     context = {
-        'movies': page_obj,
+        'items': page_obj,  # Cambiamos el nombre de 'movies' a 'items' por coherencia
         'genres': genres,
         'directors': directors,
         'age_ratings': age_ratings,
         'search_query': search_query,
-        }
+    }
 
     return render(request, "home/home.html", context)
 
@@ -62,45 +84,38 @@ def user_setting(request):
         return redirect('login')
     return render(request, 'User/user_types/user_client.html')
 
+def movie_detail(request, pk):
+    movie = get_object_or_404(Movie, id=pk)
 
-def movie_detail(request, movie_id):
-    movie = get_object_or_404(Movie, pk=movie_id)
+    is_favorite = False
+    if request.user.is_authenticated:
+        profile, _ = UserProfile.objects.get_or_create(user=request.user)
+        if isinstance(movie, Movie):
+            is_favorite = movie in profile.favorite_movies.all()
+        else:
+            is_favorite = movie in profile.favorite_series.all()
 
-    context = {
-        'movie': movie,
-        'recommendations': movie.get_similar_by_genre(limit=5)
-    }
-    return render(request, 'movie_detail.html', context)
+    return render(request, 'Details/details_movie.html', {
+        'content': movie,
+        'is_favorite': is_favorite
+    })
 
-def catalog_view(request):
-    movies = Movie.objects.all()
+def series_detail(request, pk):
+    series = get_object_or_404(Series, id=pk)
 
-    search_query = request.GET.get('q', '')
-    genre_filter = request.GET.get('genre', '')
-    director_filter = request.GET.get('director', '')
-    age_rating_filter = request.GET.get('age_rating', '')
-    if search_query:
-        movies = movies.filter(title__icontains=search_query)
-    if genre_filter:
-        movies = movies.filter(genre__name=genre_filter)
-    if director_filter:
-        movies = movies.filter(director__name=director_filter)
+    is_favorite = False
+    if request.user.is_authenticated:
+        profile, _ = UserProfile.objects.get_or_create(user=request.user)
+        if isinstance(series, Movie):
+            is_favorite = series in profile.favorite_movies.all()
+        else:
+            is_favorite = series in profile.favorite_series.all()
 
-    if age_rating_filter:
-        movies = movies.filter(age_rating__description=age_rating_filter)
+    return render(request, 'Details/details_serie.html', {
+        'content': series,
+        'is_favorite': is_favorite
+    })
 
-    genres = Genre.objects.values_list('name', flat=True).distinct()
-    directors = Director.objects.values_list('name', flat=True).distinct()
-    age_ratings = AgeRating.objects.values_list('description', flat=True).distinct()
-
-    context = {
-        'movies': movies,
-        'genres': genres,
-        'directors': directors,
-        'age_ratings': age_ratings,
-    }
-
-    return render(request, 'catalog.html', context)
 
 @login_required(login_url='/login/')
 def api_user_profile(request):
@@ -117,6 +132,38 @@ def api_user_profile(request):
         "followed_content_ids": followed_movie_ids
     }
 
+
+# views.py
+
+@login_required
+def toggle_movie_favorite(request, pk):
+    if request.method == 'POST':
+        movie = get_object_or_404(Movie, id=pk)
+        profile, _ = UserProfile.objects.get_or_create(user=request.user)
+        
+        if movie in profile.favorite_movies.all():
+            profile.favorite_movies.remove(movie)
+            status = "removed"
+        else:
+            profile.favorite_movies.add(movie)
+            status = "added"
+        return JsonResponse({'status': status})
+    return JsonResponse({'error': 'Método no permitido'}, status=405)
+
+@login_required
+def toggle_series_favorite(request, pk):
+    if request.method == 'POST':
+        series = get_object_or_404(Series, id=pk)
+        profile, _ = UserProfile.objects.get_or_create(user=request.user)
+        
+        if series in profile.favorite_series.all():
+            profile.favorite_series.remove(series)
+            status = "removed"
+        else:
+            profile.favorite_series.add(series)
+            status = "added"
+        return JsonResponse({'status': status})
+    return JsonResponse({'error': 'Método no permitido'}, status=405)
 
 def terms_use(request):
     return render(request, 'footer_legal/terms_use.html')
