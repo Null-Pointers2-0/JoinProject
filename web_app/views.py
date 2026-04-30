@@ -89,36 +89,35 @@ def user_setting(request):
 
 def movie_detail(request, pk):
     movie = get_object_or_404(Movie, id=pk)
-
+    
+    available_apis = [m.api for m in Movie.objects.filter(title__iexact=movie.title).select_related('api') if m.api]
+    
     is_favorite = False
     if request.user.is_authenticated:
         profile, _ = UserProfile.objects.get_or_create(user=request.user)
-        if isinstance(movie, Movie):
-            is_favorite = movie in profile.favorite_movies.all()
-        else:
-            is_favorite = movie in profile.favorite_series.all()
+        is_favorite = movie in profile.favorite_movies.all()
 
     return render(request, 'Details/details_movie.html', {
         'content': movie,
-        'is_favorite': is_favorite
+        'is_favorite': is_favorite,
+        'available_apis': available_apis
     })
 
 def series_detail(request, pk):
     series = get_object_or_404(Series, id=pk)
 
+    available_apis = [s.api for s in Series.objects.filter(title__iexact=series.title).select_related('api') if s.api]
+
     is_favorite = False
     if request.user.is_authenticated:
         profile, _ = UserProfile.objects.get_or_create(user=request.user)
-        if isinstance(series, Movie):
-            is_favorite = series in profile.favorite_movies.all()
-        else:
-            is_favorite = series in profile.favorite_series.all()
+        is_favorite = series in profile.favorite_series.all()
 
     return render(request, 'Details/details_serie.html', {
         'content': series,
-        'is_favorite': is_favorite
+        'is_favorite': is_favorite,
+        'available_apis': available_apis
     })
-
 
 @login_required(login_url='/login/')
 def api_user_profile(request):
@@ -134,9 +133,6 @@ def api_user_profile(request):
         "linked_platforms": [],
         "followed_content_ids": followed_movie_ids
     }
-
-
-# views.py
 
 @login_required
 def toggle_movie_favorite(request, pk):
