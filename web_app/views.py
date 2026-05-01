@@ -67,7 +67,7 @@ def home(request):
             unique_results.append(s)
             seen_keys.add(key)
 
-    paginator = Paginator(unique_results, 12)
+    paginator = Paginator(unique_results, 20)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
 
