@@ -25,7 +25,8 @@
 
 .genre-filter,
 .director-filter,
-.age-rating-filter {
+.age-rating-filter,
+.platform-filter {
     display: flex;
     flex-direction: column;
     gap: 0.5rem;
@@ -138,5 +139,5 @@
         align-items: stretch;
     }
     .filter-buttons { justify-content: space-between; margin-top: .5rem; }
-    .genre-filter, .director-filter, .age-rating-filter { min-width: 100%; }
+    .genre-filter, .director-filter, .age-rating-filter, .platform-filter { min-width: 100%; }
 }

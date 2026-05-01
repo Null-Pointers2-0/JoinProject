@@ -158,6 +158,51 @@
     font-weight: 300;
 }
 
+/* Platform badges */
+.card-platforms {
+    margin-top: auto;
+    padding-top: .5rem;
+    border-top: 1px solid var(--border-glass);
+    display: flex;
+    flex-direction: column;
+    gap: .35rem;
+}
+
+.platforms-label {
+    font-size: 10px;
+    font-weight: 400;
+    color: var(--neon-cyan);
+    text-transform: uppercase;
+    letter-spacing: .08em;
+    opacity: .7;
+    font-family: 'DM Sans', sans-serif;
+}
+
+.platforms-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: .35rem;
+}
+
+.platform-badge {
+    font-size: 10px;
+    font-weight: 500;
+    padding: 2px 8px;
+    border-radius: 4px;
+    background: rgba(102, 252, 241, .06);
+    color: var(--neon-cyan);
+    border: 1px solid rgba(102, 252, 241, .2);
+    font-family: 'DM Sans', sans-serif;
+    letter-spacing: .04em;
+    white-space: nowrap;
+    transition: background .2s, border-color .2s;
+}
+
+.movie-card:hover .platform-badge {
+    background: rgba(102, 252, 241, .12);
+    border-color: rgba(102, 252, 241, .35);
+}
+
 /* Empty state */
 .no-results {
     grid-column: 1 / -1;
