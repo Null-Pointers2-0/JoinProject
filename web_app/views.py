@@ -31,7 +31,7 @@ def home(request):
         series = series.filter(director__name=director_filter)
 
     if age_rating_filter:
-        movies = movies.filter(age_rating__description=age_ravailable_apisating_filter)
+        movies = movies.filter(age_rating__description=age_rating_filter)
         series = series.filter(age_rating__description=age_rating_filter)
 
     if platform_filter:
@@ -107,7 +107,7 @@ def user_setting(request):
 def movie_detail(request, pk):
     movie = get_object_or_404(Movie, id=pk)
     
-    available_apis = [m.api.port for m in Movie.objects.filter(title__iexact=movie.title).select_related('api') if m.api]
+    available_apis = [m.api for m in Movie.objects.filter(title__iexact=movie.title).select_related('api') if m.api]
     
     is_favorite = False
     if request.user.is_authenticated:
