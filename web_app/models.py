@@ -7,7 +7,7 @@ class API(models.Model):
     name = models.CharField(max_length=100, blank=True, default='')
 
     def __str__(self):
-        return self.name if self.name else f"API on port {self.port}"
+        return self.name if self.name else f"{self.port}"
 
 
 class Director(models.Model):
