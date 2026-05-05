@@ -2,8 +2,10 @@ import sys
 
 import requests, os, django
 from dotenv import load_dotenv
-from web_app.models import Movie, API, Director, Genre, AgeRating, Series
+from web_app.models import Movie, API, Director, Genre, AgeRating, Series, Contingut
 load_dotenv()
+
+SERIES_ID_OFFSET = 100000
 
 def store_data():
     for port in ['8080', '8081', '8082']:
@@ -30,8 +32,18 @@ def Call(endpoint, params=None):
         r = requests.get(url, headers=headers, params=params)
         if r.status_code == 200:
             result[port] = r.json()
-        print(f"Response from port {port}: {r.status_code} - {r.text[:100]}...")  # Log status and a snippet of the response
+        print(f"Response from port {port}: {r.status_code} - {r.text[:100]}...")
     return result
+
+def deduplicate_by_id(data):
+    seen_ids = set()
+    unique = []
+    for item in data:
+        item_id = item['id']
+        if item_id not in seen_ids:
+            seen_ids.add(item_id)
+            unique.append(item)
+    return unique
 
 def get_directors():
     directors = Call('directors')
@@ -71,7 +83,7 @@ def get_age_ratings():
                     age_rating_id=json['id'],
                     api=API.objects.get(port=port),
                     defaults={
-                        'description': json['description'],
+                        'codi': json['description'],
                         'age': json['minimum_age'],
                     }
                 )
@@ -84,24 +96,33 @@ def get_movies(params=None):
             continue
             
         api_instance = API.objects.get(port=port)
+        unique_data = deduplicate_by_id(data)
         
-        for json in data:
-            movie, created = Movie.objects.update_or_create(
-                movie_id=json['id'],
+        for json in unique_data:
+            director = Director.objects.filter(director_id=json.get('director_id')).first()
+            genre = Genre.objects.filter(genre_id=json.get('genre_id')).first()
+            age_rating = AgeRating.objects.filter(age_rating_id=json.get('age_rating_id'), api=api_instance).first()
+
+            contingut, _ = Contingut.objects.update_or_create(
+                api_content_id=json['id'],
                 api=api_instance,
                 defaults={
-                    'title': json['title'],
+                    'titol': json['title'],
+                    'data_estrena': json.get('year'),
                     'synopsis': json.get('synopsis'),
-                    'year': json.get('year'),
                     'rating': json.get('rating'),
                     'expires_at': json.get('expires_at'),
-                    'director': Director.objects.filter(director_id=json.get('director_id')).first(),
-                    'genre': Genre.objects.filter(genre_id=json.get('genre_id')).first(),
-                    'age_rating': AgeRating.objects.filter(age_rating_id=json.get('age_rating_id'), api=api_instance).first(),
+                    'director': director,
+                    'genere': genre,
+                    'age_rating': age_rating,
                 }
             )
+
+            movie, created = Movie.objects.get_or_create(
+                contingut=contingut,
+            )
             
-            status = "created" if created else "updated"
+            status = "created" if created else "found"
             print(f"Movie '{movie.title}' {status} from port {port}.")
 
 
@@ -112,28 +133,36 @@ def get_series(params=None):
             continue
             
         api_instance = API.objects.get(port=port)
+        unique_data = deduplicate_by_id(data)
         
-        for json in data:
-            series, created = Series.objects.update_or_create(
-                series_id=json['id'],
+        for json in unique_data:
+            director = Director.objects.filter(director_id=json.get('director_id')).first()
+            genre = Genre.objects.filter(genre_id=json.get('genre_id')).first()
+            age_rating = AgeRating.objects.filter(age_rating_id=json.get('age_rating_id'), api=api_instance).first()
+
+            contingut, _ = Contingut.objects.update_or_create(
+                api_content_id=json['id'] + SERIES_ID_OFFSET,
                 api=api_instance,
                 defaults={
-                    'title': json['title'],
+                    'titol': json['title'],
+                    'data_estrena': json.get('start_year'),
                     'synopsis': json.get('synopsis'),
-                    'start_year': json.get('start_year'),
-                    'end_year': json.get('end_year'),
-                    'total_seasons': json.get('total_seasons'),
                     'rating': json.get('rating'),
                     'expires_at': json.get('expires_at'),
-                    'director': Director.objects.filter(director_id=json.get('director_id')).first(),
-                    'genre': Genre.objects.filter(genre_id=json.get('genre_id')).first(),
-                    'age_rating': AgeRating.objects.filter(age_rating_id=json.get('age_rating_id'), api=api_instance).first(),
-                    'country_id': json.get('country_id'),
-                    'language_id': json.get('language_id'),
+                    'director': director,
+                    'genere': genre,
+                    'age_rating': age_rating,
+                }
+            )
+
+            series, created = Series.objects.get_or_create(
+                contingut=contingut,
+                defaults={
+                    'num_temporades': json.get('total_seasons'),
                 }
             )
             
-            status = "created" if created else "updated"
+            status = "created" if created else "found"
             print(f"Series '{series.title}' {status} from port {port}.")
 
 if __name__ == '__main__':

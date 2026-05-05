@@ -2,6 +2,13 @@ from django.db import models
 from django.contrib.auth.models import AbstractUser
 from web import settings
 
+
+class UserType(models.TextChoices):
+    STAFF = 'Staff', 'Staff'
+    ADMIN = 'Admin', 'Admin'
+    CONSUMER = 'Consumer', 'Consumer'
+
+
 class API(models.Model):
     port = models.IntegerField(unique=True)
     name = models.CharField(max_length=100, blank=True, default='')
@@ -40,77 +47,146 @@ class Genre(models.Model):
 class AgeRating(models.Model):
     age_rating_id = models.IntegerField()
     api = models.ForeignKey(API, on_delete=models.CASCADE, related_name='age_ratings')
-    description = models.CharField(max_length=255)
+    codi = models.CharField(max_length=10, verbose_name='Codi')
     age = models.IntegerField()
 
     class Meta:
         unique_together = ('age_rating_id', 'api')
 
     def __str__(self):
-        return self.description
+        return self.codi
+
+    @property
+    def description(self):
+        return self.codi
+
+
+class Contingut(models.Model):
+    api_content_id = models.IntegerField(verbose_name='ID de l\'API', blank=True, null=True, db_index=True)
+    titol = models.CharField(max_length=255, verbose_name='Títol')
+    data_estrena = models.IntegerField(blank=True, null=True, verbose_name='Any d\'estrena')
+    expires_at = models.DateTimeField(blank=True, null=True)
+    director = models.ForeignKey(Director, on_delete=models.SET_NULL, blank=True, null=True)
+    genere = models.ForeignKey(Genre, on_delete=models.SET_NULL, blank=True, null=True)
+    age_rating = models.ForeignKey(AgeRating, on_delete=models.SET_NULL, blank=True, null=True)
+    api = models.ForeignKey(API, on_delete=models.SET_NULL, blank=True, null=True)
+
+    synopsis = models.TextField(blank=True, null=True)
+    rating = models.FloatField(blank=True, null=True)
+
+    class Meta:
+        verbose_name = 'Contingut'
+        verbose_name_plural = 'Continguts'
+
+    def __str__(self):
+        return self.titol
 
 
 class Movie(models.Model):
-    movie_id = models.IntegerField()
-    age_rating = models.ForeignKey(AgeRating, on_delete=models.SET_NULL, blank=True, null=True)
-    director = models.ForeignKey(Director, on_delete=models.SET_NULL, blank=True, null=True)
-    genre = models.ForeignKey(Genre, on_delete=models.SET_NULL, blank=True, null=True)
-    api = models.ForeignKey(API, blank=True, null=True, on_delete=models.SET_NULL)
-
-    title = models.CharField(max_length=255)
-    synopsis = models.TextField(blank=True, null=True)
-    year = models.IntegerField(blank=True, null=True)
-    rating = models.FloatField(blank=True, null=True)
-    expires_at = models.DateTimeField(blank=True, null=True)
+    contingut = models.OneToOneField(Contingut, on_delete=models.CASCADE, related_name='movie')
 
     class Meta:
-        unique_together = ('movie_id', 'api')
+        verbose_name = 'Pel·lícula'
+        verbose_name_plural = 'Pel·lícules'
 
     def __str__(self):
-        return self.title
+        return self.contingut.titol
 
-    def get_similar_by_genre(self, limit=4):
-        if not self.genre:
-            return Movie.objects.none()
-        return Movie.objects.filter(genre=self.genre).exclude(id=self.id).order_by('?')[:limit]
-
-
-class Series(models.Model):
-    series_id = models.IntegerField()
-    age_rating = models.ForeignKey('AgeRating', on_delete=models.SET_NULL, blank=True, null=True)
-    director = models.ForeignKey('Director', on_delete=models.SET_NULL, blank=True, null=True)
-    genre = models.ForeignKey('Genre', on_delete=models.SET_NULL, blank=True, null=True)
-    api = models.ForeignKey('API', blank=True, null=True, on_delete=models.SET_NULL)
-
-    title = models.CharField(max_length=255)
-    synopsis = models.TextField(blank=True, null=True)
-    start_year = models.IntegerField(blank=True, null=True)
-    end_year = models.IntegerField(blank=True, null=True)
-    total_seasons = models.IntegerField(blank=True, null=True)
-    rating = models.FloatField(blank=True, null=True)
-    country_id = models.IntegerField(blank=True, null=True)
-    language_id = models.IntegerField(blank=True, null=True)
-    expires_at = models.DateTimeField(blank=True, null=True)
-
-    class Meta:
-        unique_together = ('series_id', 'api')
+    @property
+    def title(self):
+        return self.contingut.titol
 
     @property
     def year(self):
-        return self.start_year
+        return self.contingut.data_estrena
+
+    @property
+    def genre(self):
+        return self.contingut.genere
+
+    @property
+    def director(self):
+        return self.contingut.director
+
+    @property
+    def age_rating(self):
+        return self.contingut.age_rating
+
+    @property
+    def synopsis(self):
+        return self.contingut.synopsis
+
+    @property
+    def rating(self):
+        return self.contingut.rating
+
+
+class Series(models.Model):
+    contingut = models.OneToOneField(Contingut, on_delete=models.CASCADE, related_name='series')
+    num_temporades = models.IntegerField(blank=True, null=True, verbose_name='Nombre de temporades')
+
+    class Meta:
+        verbose_name = 'Sèrie'
+        verbose_name_plural = 'Sèries'
 
     def __str__(self):
-        return self.title
+        return self.contingut.titol
+
+    @property
+    def title(self):
+        return self.contingut.titol
+
+    @property
+    def year(self):
+        return self.contingut.data_estrena
+
+    @property
+    def start_year(self):
+        return self.contingut.data_estrena
+
+    @property
+    def end_year(self):
+        return None
+
+    @property
+    def genre(self):
+        return self.contingut.genere
+
+    @property
+    def director(self):
+        return self.contingut.director
+
+    @property
+    def age_rating(self):
+        return self.contingut.age_rating
+
+    @property
+    def synopsis(self):
+        return self.contingut.synopsis
+
+    @property
+    def rating(self):
+        return self.contingut.rating
+
+    @property
+    def total_seasons(self):
+        return self.num_temporades
 
 
 class CustomUser(AbstractUser):
     avatar = models.ImageField(upload_to='avatars/', null=True, blank=True)
     bio = models.TextField(blank=True, null=True)
     location = models.CharField(max_length=255, blank=True, null=True)
+    type = models.CharField(
+        max_length=10,
+        choices=UserType.choices,
+        default=UserType.CONSUMER,
+    )
     subscriptions = models.ManyToManyField('API', blank=True, related_name='subscribed_users')
 
     def __str__(self):
         return self.username
+
 
 class UserProfile(models.Model):
     user = models.OneToOneField(
@@ -118,11 +194,39 @@ class UserProfile(models.Model):
         on_delete=models.CASCADE,
         related_name='profile'
     )
-    favorite_movies = models.ManyToManyField(Movie, blank=True)
-    favorite_series = models.ManyToManyField(Series, blank=True)
+    preferits = models.ManyToManyField(Contingut, blank=True, through='Preferits')
 
     def __str__(self):
         return f"Perfil de {self.user.username}"
+
+
+class Preferits(models.Model):
+    user_profile = models.ForeignKey(UserProfile, on_delete=models.CASCADE, related_name='preferits_set')
+    contingut = models.ForeignKey(Contingut, on_delete=models.CASCADE)
+    afegit_a = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = ('user_profile', 'contingut')
+        verbose_name = 'Preferit'
+        verbose_name_plural = 'Preferits'
+
+    def __str__(self):
+        return f"{self.user_profile.user.username} -> {self.contingut.titol}"
+
+
+class Valoracio(models.Model):
+    puntuacio = models.IntegerField()
+    comentari = models.TextField(blank=True, null=True)
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='valoracions')
+    contingut = models.ForeignKey(Contingut, on_delete=models.CASCADE, related_name='valoracions')
+    creada_a = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        verbose_name = 'Valoració'
+        verbose_name_plural = 'Valoracions'
+
+    def __str__(self):
+        return f"{self.user.username} -> {self.contingut.titol} ({self.puntuacio}/5)"
 
 
 class SyncLog(models.Model):

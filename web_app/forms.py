@@ -1,10 +1,10 @@
 from django import forms
 from django.utils.translation import gettext_lazy as _
-from django.contrib.auth.forms import UserCreationForm, UserChangeForm
+from django.contrib.auth.forms import UserChangeForm
 from django.core.exceptions import ValidationError
 from django.core.validators import MaxLengthValidator
 
-from .models import *
+from .models import CustomUser, API, UserType
 
 class CustomUserCreationForm(forms.ModelForm):
     username = forms.CharField(
@@ -62,7 +62,7 @@ class CustomUserCreationForm(forms.ModelForm):
 class CustomUserChangeForm(UserChangeForm):
     class Meta:
         model = CustomUser
-        fields = ['username', 'first_name', 'last_name', 'email', 'avatar', 'bio', 'location']
+        fields = ['username', 'first_name', 'last_name', 'email', 'avatar', 'bio', 'location', 'type']
         help_texts = {field: '' for field in fields}
 
     def clean_avatar(self):
