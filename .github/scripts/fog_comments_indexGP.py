@@ -120,8 +120,4 @@ if __name__ == "__main__":
 
     results, total, failed = scan(sys.argv[1])
 
-    if not results:
-        print("[]")
-        sys.exit(0)
-
     print_json(results, total, failed)
