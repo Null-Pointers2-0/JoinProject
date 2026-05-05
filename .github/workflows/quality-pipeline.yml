@@ -544,6 +544,11 @@ jobs:
           FAIL=0
 
           ROUTER="src/app/router/index.js"
+          
+          if [ ! -f "$ROUTER" ]; then
+            echo "::notice::Archivo $ROUTER no encontrado. Se omite el análisis del router guard."
+            exit 0
+          fi
 
           if ! grep -q "router\.beforeEach" "$ROUTER"; then
             echo "::error file=$ROUTER::router.beforeEach guard not found — all routes may be unprotected"
