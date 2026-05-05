@@ -1,6 +1,10 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from web_app.forms import CustomUserCreationForm
+<<<<<<< HEAD
 from web_app.models import AgeRating, Director, Genre, Movie, UserProfile, Series, Contingut
+=======
+from web_app.models import AgeRating, API, Director, Genre, Movie, UserProfile, Series
+>>>>>>> dev
 from web_app import utils
 from itertools import chain
 from django.http import JsonResponse
@@ -16,6 +20,7 @@ def home(request):
     genre_filter = request.GET.get('genre', '')
     director_filter = request.GET.get('director', '')
     age_rating_filter = request.GET.get('age_rating', '')
+    platform_filter = request.GET.get('platform', '')  # value = API port
 
     if search_query:
         movies = movies.filter(contingut__titol__icontains=search_query)
@@ -33,13 +38,26 @@ def home(request):
         movies = movies.filter(contingut__age_rating__codi=age_rating_filter)
         series = series.filter(contingut__age_rating__codi=age_rating_filter)
 
+    if platform_filter:
+        movies = movies.filter(api__port=platform_filter)
+        series = series.filter(api__port=platform_filter)
+
     unique_results = []
     seen_keys = set()
 
     for m in movies:
-        key = (m.title.lower(), 'movie') 
+        key = (m.title.lower(), 'movie')
         if key not in seen_keys:
             m.content_type = 'movie'
+<<<<<<< HEAD
+=======
+            # Collect all platforms (API objects) this title is available on
+            m.available_platforms = list(
+                API.objects.filter(
+                    movie__title__iexact=m.title
+                ).distinct()
+            )
+>>>>>>> dev
             unique_results.append(m)
             seen_keys.add(key)
 
@@ -47,22 +65,37 @@ def home(request):
         key = (s.title.lower(), 'series')
         if key not in seen_keys:
             s.content_type = 'series'
+<<<<<<< HEAD
+=======
+            # Collect all platforms (API objects) this title is available on
+            s.available_platforms = list(
+                API.objects.filter(
+                    series__title__iexact=s.title
+                ).distinct()
+            )
+>>>>>>> dev
             unique_results.append(s)
             seen_keys.add(key)
 
-    paginator = Paginator(unique_results, 10)
+    paginator = Paginator(unique_results, 20)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
 
     genres = Genre.objects.values_list('name', flat=True).distinct()
     directors = Director.objects.values_list('name', flat=True).distinct()
+<<<<<<< HEAD
     age_ratings = AgeRating.objects.values_list('codi', flat=True).distinct()
+=======
+    age_ratings = AgeRating.objects.values_list('description', flat=True).distinct()
+    platforms = API.objects.all()
+>>>>>>> dev
 
     context = {
         'items': page_obj,
         'genres': genres,
         'directors': directors,
         'age_ratings': age_ratings,
+        'platforms': platforms,
         'search_query': search_query,
     }
 

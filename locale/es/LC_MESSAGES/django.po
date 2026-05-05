@@ -246,6 +246,10 @@ msgstr "Director"
 msgid "Age Rating"
 msgstr "Clasificación"
 
+#: Templates/home/home.html:57
+msgid "Platform"
+msgstr "Plataforma"
+
 #: Templates/home/home.html:58
 msgid "Filter / Search"
 msgstr "Filtrar / Buscar"
@@ -263,7 +267,14 @@ msgstr "Resultados"
 msgid "N/A"
 msgstr "N/A"
 
-#: Templates/home/home.html:103
+#: Templates/home/home.html:82
+msgid "No content found matching those filters."
+msgstr "No se ha encontrado ningún contenido con esos filtros."
+
+#: Templates/part/card.html
+msgid "Available on"
+msgstr "Disponible en"
+
 msgid "No movies found matching those filters."
 msgstr "No se encontraron películas con esos filtros."
 

@@ -28,5 +28,16 @@ style="cursor: pointer;">
         {% if item.synopsis %}
         <p class="movie-synopsis">{{ item.synopsis|truncatewords:20 }}</p>
         {% endif %}
+
+        {% if item.available_platforms %}
+        <div class="card-platforms">
+            <span class="platforms-label">{% trans "Available on" %}:</span>
+            <div class="platforms-list">
+                {% for platform in item.available_platforms %}
+                <span class="platform-badge">{{ platform.name|default:platform.port }}</span>
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
     </div>
 </div>
