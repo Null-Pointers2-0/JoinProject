@@ -18,6 +18,10 @@ headers = {
 
 # ── Fetch con paginación ───────────────────────────────────────────────────────
 def fetch_all_issues(owner: str, repo: str) -> list[dict]:
+    """
+    Fetches all issues from the specified GitHub repository using pagination 
+    to ensure no data is left behind during the request process.
+    """
     issues, page = [], 1
     while True:
         resp = requests.get(
@@ -35,6 +39,10 @@ def fetch_all_issues(owner: str, repo: str) -> list[dict]:
 
 # ── Parseo de fechas ───────────────────────────────────────────────────────────
 def parse_dates(issues: list[dict]) -> list[tuple[datetime, datetime | None]]:
+    """
+    Parses the creation and closure timestamps from the GitHub API payload 
+    into standard Python datetime objects for further analysis.
+    """
     result = []
     for issue in issues:
         created = datetime.strptime(issue["created_at"], "%Y-%m-%dT%H:%M:%SZ")
@@ -76,6 +84,10 @@ def count_open_per_week(
 
 # ── Main ───────────────────────────────────────────────────────────────────────
 def main():
+    """
+    Generates a bar chart using matplotlib to visually represent the total 
+    number of open issues distributed across the calculated weeks.
+    """
     print("Obteniendo issues de GitHub…")
     issues      = fetch_all_issues(OWNER, REPO_NAME)
     issue_dates = parse_dates(issues)
