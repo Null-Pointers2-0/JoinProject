@@ -164,7 +164,7 @@ function buildQualitySection(key, data) {
 
   const results = data.results || []
   const totalFiles = (data.summary && data.summary.total_files != null) ? data.summary.total_files : results.length
-  const violations = results.filter((r) => r.status_code !== 'OK' && r.status_code !== 'OK!')
+  const violations = results.filter((r) => r.status_code !== 'OK' && r.status_code !== 'OK!' && r.status_code !== 'NO DATA')
   const passed = totalFiles - violations.length
 
   const findingsHtml = violations.length === 0
