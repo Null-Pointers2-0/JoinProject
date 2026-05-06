@@ -174,6 +174,10 @@ class Series(models.Model):
 
 
 class CustomUser(AbstractUser):
+    """
+    Extends the default Django user model to include additional profile attributes 
+    like a custom avatar, user biography, and physical location.
+    """
     avatar = models.ImageField(upload_to='avatars/', null=True, blank=True)
     bio = models.TextField(blank=True, null=True)
     location = models.CharField(max_length=255, blank=True, null=True)
@@ -230,6 +234,10 @@ class Valoracio(models.Model):
 
 
 class SyncLog(models.Model):
+    """
+    Records the operational status and statistical summary of background synchronization 
+    processes, tracking the total number of created and updated database records.
+    """
     start_time = models.DateTimeField(auto_now_add=True)
     end_time = models.DateTimeField(null=True, blank=True)
     status = models.CharField(max_length=50)

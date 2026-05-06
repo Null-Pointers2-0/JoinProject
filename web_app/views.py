@@ -146,6 +146,7 @@ def series_detail(request, pk):
         'available_apis': available_apis
     })
 
+
 @login_required(login_url='/login/')
 def api_user_profile(request):
     user = request.user
@@ -162,6 +163,8 @@ def api_user_profile(request):
         "followed_content_ids": followed_contingut_ids
     }
     return JsonResponse(response_data)
+
+    #return JsonResponse(response_data)
 
 @login_required
 def toggle_movie_favorite(request, pk):
