@@ -1,5 +1,4 @@
 from django.apps import AppConfig
-import sys
 
 class WebAppConfig(AppConfig):
     default_auto_field = 'django.db.models.BigAutoField'
@@ -9,13 +8,14 @@ class WebAppConfig(AppConfig):
         import os
         import sys
         
-        # 1. Ignorar comandos de gestión
-        comandos_ignorados = ['collectstatic', 'makemigrations', 'migrate', 'check']
-        if any(comando in sys.argv for comando in comandos_ignorados):
+        if any(cmd in sys.argv for cmd in ['collectstatic', 'migrate', 'makemigrations', 'check']):
             return 
 
-        # 2. EVITAR EL DOBLE ARRANQUE:
-        # Solo arranca el scheduler si NO es el auto-reloader (proceso secundario)
-        if os.environ.get('RUN_MAIN') != 'true':
+        if 'runserver' in sys.argv and os.environ.get('RUN_MAIN') != 'true':
+            return
+
+        try:
             from . import scheduler
             scheduler.start()
+        except Exception as e:
+            print(f"Scheduler no pudo arrancar (ignorar si es build): {e}")
