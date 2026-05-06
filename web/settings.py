@@ -92,6 +92,7 @@ WSGI_APPLICATION = 'web.wsgi.application'
 DATABASE_URL = os.getenv("DATABASE_URL")
 
 if DATABASE_URL:
+    print("DATABASE_URL encontrado, configurando PostgreSQL")
     tmpPostgres = urlparse(DATABASE_URL)
     DATABASES = {
         'default': {
@@ -105,7 +106,7 @@ if DATABASE_URL:
         }
     }
 else:
-    # Configuración dummy para que collectstatic no pete si no hay DB
+    print("DATABASE_URL no encontrado, usando SQLite por defecto")
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.sqlite3',
