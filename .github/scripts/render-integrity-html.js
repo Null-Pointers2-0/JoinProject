@@ -225,7 +225,7 @@ const qualitySummaryRows = quality
       const qm = QUALITY_META[key]
       const data = quality[key]
       const status = qualityJobStatus(data)
-      const violations = data ? (data.results || []).filter((r) => r.status_code !== 'OK' && r.status_code !== 'OK!').length : 0
+      const violations = data ? (data.results || []).filter((r) => r.status_code !== 'OK' && r.status_code !== 'OK!' && r.status_code !== 'NO DATA').length : 0
       return `
   <tr>
     <td style="padding:12px 16px"><strong>${qm.icon} ${esc(qm.name)}</strong></td>
