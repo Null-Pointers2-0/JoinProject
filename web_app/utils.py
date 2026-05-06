@@ -1,9 +1,10 @@
 import sys
+import requests, os
 
-import requests, os, django
 from dotenv import load_dotenv
-from web_app.models import Movie, API, Director, Genre, AgeRating, Series, Contingut
 load_dotenv()
+
+from web_app.models import Movie, API, Director, Genre, AgeRating, Series, Contingut
 
 SERIES_ID_OFFSET = 100000
 
@@ -29,10 +30,20 @@ def Call(endpoint, params=None):
     for port, api_key in APIs:
         url = f'http://localhost:{port}/{endpoint}'
         headers = {'X-API-KEY': api_key}
-        r = requests.get(url, headers=headers, params=params)
-        if r.status_code == 200:
-            result[port] = r.json()
-        print(f"Response from port {port}: {r.status_code} - {r.text[:100]}...")
+        try:
+            r = requests.get(url, headers=headers, params=params, timeout=5)
+            if r.status_code == 200:
+                result[port] = r.json()
+            print(f"Response from port {port}: {r.status_code} - {r.text[:100]}...")
+        except requests.exceptions.ConnectionError:
+            print(f"Failed to connect to {url}: Connection refused")
+            result[port] = None
+        except requests.exceptions.Timeout:
+            print(f"Request to {url} timed out")
+            result[port] = None
+        except Exception as e:
+            print(f"Error calling {url}: {e}")
+            result[port] = None
     return result
 
 def deduplicate_by_id(data):

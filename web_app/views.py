@@ -1,10 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from web_app.forms import CustomUserCreationForm
-<<<<<<< HEAD
-from web_app.models import AgeRating, Director, Genre, Movie, UserProfile, Series, Contingut
-=======
-from web_app.models import AgeRating, API, Director, Genre, Movie, UserProfile, Series
->>>>>>> dev
+from web_app.models import AgeRating, API, Director, Genre, Movie, UserProfile, Series, Contingut
 from web_app import utils
 from itertools import chain
 from django.http import JsonResponse
@@ -49,15 +45,12 @@ def home(request):
         key = (m.title.lower(), 'movie')
         if key not in seen_keys:
             m.content_type = 'movie'
-<<<<<<< HEAD
-=======
             # Collect all platforms (API objects) this title is available on
             m.available_platforms = list(
                 API.objects.filter(
-                    movie__title__iexact=m.title
+                    contingut__titol__iexact=m.title
                 ).distinct()
             )
->>>>>>> dev
             unique_results.append(m)
             seen_keys.add(key)
 
@@ -65,15 +58,12 @@ def home(request):
         key = (s.title.lower(), 'series')
         if key not in seen_keys:
             s.content_type = 'series'
-<<<<<<< HEAD
-=======
             # Collect all platforms (API objects) this title is available on
             s.available_platforms = list(
                 API.objects.filter(
-                    series__title__iexact=s.title
+                    contingut__titol__iexact=s.title
                 ).distinct()
             )
->>>>>>> dev
             unique_results.append(s)
             seen_keys.add(key)
 
@@ -83,12 +73,8 @@ def home(request):
 
     genres = Genre.objects.values_list('name', flat=True).distinct()
     directors = Director.objects.values_list('name', flat=True).distinct()
-<<<<<<< HEAD
     age_ratings = AgeRating.objects.values_list('codi', flat=True).distinct()
-=======
-    age_ratings = AgeRating.objects.values_list('description', flat=True).distinct()
     platforms = API.objects.all()
->>>>>>> dev
 
     context = {
         'items': page_obj,

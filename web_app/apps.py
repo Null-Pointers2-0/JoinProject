@@ -6,5 +6,9 @@ class WebAppConfig(AppConfig):
 
     def ready(self):
         from . import signals
-        from . import scheduler
-        scheduler.start()
+        # Delay scheduler start to avoid database access during app initialization
+        import threading
+        def start_scheduler():
+            from . import scheduler
+            scheduler.start()
+        threading.Thread(target=start_scheduler).start()

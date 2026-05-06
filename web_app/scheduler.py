@@ -8,8 +8,6 @@ def start():
     if "runserver" not in sys.argv:
         return
 
-    download_catalog_data()
-
     scheduler = BackgroundScheduler(timezone="Europe/Madrid")
     scheduler.add_jobstore(DjangoJobStore(), "default")
 
@@ -24,4 +22,4 @@ def start():
     )
 
     scheduler.start()
-    print("Cron Job configured at 03:00 AM.")
+    #print("Cron Job configured at 03:00 AM.")
