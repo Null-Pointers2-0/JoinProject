@@ -90,7 +90,7 @@ def scan(target_path):
         results.append({
             "file": str(file),
             "avg_fog": round(avg, 1) if avg else None,
-            "max_fog": round(max_score, 1) if max_score else None,
+            "fog_score": round(max_score, 1) if max_score else None,
             "status_code": status
         })
 
