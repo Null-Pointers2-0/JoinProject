@@ -9,8 +9,8 @@ from django.contrib.auth import login
 from django.core.paginator import Paginator
 
 def home(request):
-    movies = Movie.objects.select_related('contingut', 'contingut__genere', 'contingut__director', 'contingut__age_rating').all()
-    series = Series.objects.select_related('contingut', 'contingut__genere', 'contingut__director', 'contingut__age_rating').all()
+    movies = Movie.objects.select_related('contingut', 'contingut__genere', 'contingut__director', 'contingut__age_rating').prefetch_related('contingut__api').all()
+    series = Series.objects.select_related('contingut', 'contingut__genere', 'contingut__director', 'contingut__age_rating').prefetch_related('contingut__api').all()
 
     search_query = request.GET.get('q', '')
     genre_filter = request.GET.get('genre', '')
@@ -41,6 +41,16 @@ def home(request):
     unique_results = []
     seen_keys = set()
 
+    for cont in chain(movies, series):
+        is_movie = isinstance(cont, Movie)
+        type_str = 'movie' if is_movie else 'series'
+        key = (cont.title.lower(), type_str)
+        if key not in seen_keys:
+            cont.content_type = type_str
+            cont.available_platforms = [cont.contingut.api] if cont.contingut.api else []
+            unique_results.append(cont)
+            seen_keys.add(key)
+    '''
     for m in movies:
         key = (m.title.lower(), 'movie')
         if key not in seen_keys:
@@ -66,7 +76,7 @@ def home(request):
             )
             unique_results.append(s)
             seen_keys.add(key)
-
+'''
     paginator = Paginator(unique_results, 20)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
