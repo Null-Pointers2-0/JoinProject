@@ -136,10 +136,18 @@ def series_detail(request, pk):
         'available_apis': available_apis
     })
 
+
 @login_required(login_url='/login/')
 def api_user_profile(request):
     user = request.user
-    followed_movie_ids = list(user.favorite_movies.values_list('movie_id', flat=True))
+
+    followed_movie_ids = []
+    followed_series_ids = []
+
+    if hasattr(user, 'profile'):
+        followed_movie_ids = list(user.profile.favorite_movies.values_list('movie_id', flat=True))
+        followed_series_ids = list(user.profile.favorite_series.values_list('series_id', flat=True))
+
     response_data = {
         "personal_info": {
             "username": user.username,
@@ -148,8 +156,11 @@ def api_user_profile(request):
             "last_name": user.last_name
         },
         "linked_platforms": [],
-        "followed_content_ids": followed_movie_ids
+        "followed_movies": followed_movie_ids,
+        "followed_series": followed_series_ids
     }
+
+    return JsonResponse(response_data)
 
 @login_required
 def toggle_movie_favorite(request, pk):
