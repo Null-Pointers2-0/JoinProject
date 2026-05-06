@@ -85,10 +85,10 @@ class NestingVisitor(ast.NodeVisitor):
 
 def get_status_code(max_depth: int) -> str:
     if max_depth > CRITICAL_THRESHOLD:
-        return "❌ CRITICAL"
+        return "CRITICAL"
     if max_depth >= WARNING_THRESHOLD:
-        return "🚨 WARNING"
-    return "✅ OK"
+        return "WARNING"
+    return "OK"
 
 
 def get_metrics(filepath: Path) -> Optional[Dict[str, Any]]:
@@ -144,7 +144,7 @@ def main() -> None:
             all_results.append({
                 "file": str(filepath),
                 "avg_depth": metrics["avg"],
-                "max_depth": metrics["max"],
+                "max_nesting_depth": metrics["max"],
                 "status_code": metrics["status_code"]
             })
             if metrics["max"] > CRITICAL_THRESHOLD:
