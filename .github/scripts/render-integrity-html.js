@@ -172,7 +172,7 @@ function buildQualitySection(key, data) {
     : violations.map((r) => {
         const val = r[qm.metric]
         const display = typeof val === 'number' ? val.toFixed(qm.decimals) : (val ?? '?')
-        const lvl = (r.status_code === 'DANGER' || r.status_code === '⚠️ IMPROVE NAMING') ? 'error' : 'warning'
+        const lvl = (r.status_code === 'DANGER' || r.status_code === '⚠️ IMPROVE NAMING' || r.status_code === 'COMPLEX') ? 'error' : 'warning'
         return `
       <div style="display:flex;gap:10px;align-items:flex-start;padding:10px 0;border-bottom:1px solid #f1f5f9">
         <div style="flex-shrink:0;padding-top:1px">${chip(lvl)}</div>
