@@ -34,3 +34,19 @@ class CustomUserCreationFormTest(TestCase):
         })
         self.assertFalse(form.is_valid())
         self.assertEqual(form.errors['terms_accepted'], ["Debe aceptar los términos y condiciones para continuar."])
+
+class CustomUserChangeFormTest(TestCase):
+    
+    def test_succes_avatar(self):
+        form= CustomUserChangeForm({
+            'avatar': '/static/images/avatars/default.png', 
+        })
+        self.assertTrue(form.is_valid())
+
+    def test_failure_avatar(self):
+        form = CustomUserChangeForm({
+            'avatar': 'ruta/no/valid.png',
+
+        })
+        self.assertFalse(form.is_valid())
+        self.assertEqual(form.errors['avatar'], ["La URL del avatar no es vàlida."])
