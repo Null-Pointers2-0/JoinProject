@@ -2,7 +2,7 @@ from django.test import TestCase
 from django.urls import reverse
 from django.utils import timezone
 from django.contrib.auth import get_user_model
-from web_app.models import API, Director, Genre, AgeRating, Movie, Series, UserProfile
+from web_app.models import API, Director, Genre, AgeRating, Contingut, Movie, Series, UserProfile
 import io
 from PIL import Image
 
@@ -18,6 +18,19 @@ def create_test_image():
     return buffer
 
 
+def create_contingut(api=None, genre=None, director=None, age_rating=None, title='Test', year=2020):
+    """Helper para crear Contingut con datos por defecto."""
+    return Contingut.objects.create(
+        api_content_id=100 + Contingut.objects.count(),
+        titol=title,
+        data_estrena=year,
+        director=director,
+        genere=genre,
+        age_rating=age_rating,
+        api=api
+    )
+
+
 class HomeViewTest(TestCase):
     def setUp(self):
         self.api = API.objects.create(port=8000, name='Netflix')
@@ -27,17 +40,18 @@ class HomeViewTest(TestCase):
             birth_date=timezone.now(), country='US'
         )
         self.age_rating = AgeRating.objects.create(
-            age_rating_id=1, api=self.api, description='PG', age=10
+            age_rating_id=1, api=self.api, codi='PG', age=10
         )
-        self.movie = Movie.objects.create(
-            movie_id=1, api=self.api, title='Movie One',
-            genre=self.genre, director=self.director, age_rating=self.age_rating, year=2020
+        self.contingut_movie = create_contingut(
+            api=self.api, genre=self.genre, director=self.director,
+            age_rating=self.age_rating, title='Movie One', year=2020
         )
-        self.series = Series.objects.create(
-            series_id=1, api=self.api, title='Series One',
-            genre=self.genre, director=self.director, age_rating=self.age_rating,
-            start_year=2020, total_seasons=3
+        self.movie = Movie.objects.create(contingut=self.contingut_movie)
+        self.contingut_series = create_contingut(
+            api=self.api, genre=self.genre, director=self.director,
+            age_rating=self.age_rating, title='Series One', year=2020
         )
+        self.series = Series.objects.create(contingut=self.contingut_series, num_temporades=3)
 
     # ------------------------------------------------------------------ #
     #  HOME - BÁSICO                                                        #
@@ -105,16 +119,31 @@ class HomeViewTest(TestCase):
         self.assertEqual(len(response.context['items']), 2)
 
     # ------------------------------------------------------------------ #
+    #  HOME - FILTRO POR PLATAFORMA                                         #
+    # ------------------------------------------------------------------ #
+
+    def test_home_platform_filter(self):
+        """Comprueba que el filtro por plataforma (API port) devuelve solo contenido de esa API."""
+        response = self.client.get(reverse('home'), {'platform': '8000'})
+        self.assertEqual(len(response.context['items']), 2)
+
+    def test_home_platform_filter_no_results(self):
+        """Comprueba que un port inexistente no devuelve resultados."""
+        response = self.client.get(reverse('home'), {'platform': '9999'})
+        self.assertEqual(len(response.context['items']), 0)
+
+    # ------------------------------------------------------------------ #
     #  HOME - PAGINACIÓN                                                    #
     # ------------------------------------------------------------------ #
 
     def test_home_pagination_page_1(self):
-        """Comprueba que la página 1 tiene como máximo 10 items y hay siguiente página."""
-        for i in range(15):
-            Movie.objects.create(
-                movie_id=100 + i, api=self.api, title=f'Extra Movie {i}',
-                director=self.director, age_rating=self.age_rating, genre=self.genre, year=2020
+        """Comprueba que la página 1 tiene como máximo 20 items y hay siguiente página."""
+        for i in range(25):
+            cont = create_contingut(
+                api=self.api, director=self.director, age_rating=self.age_rating,
+                title=f'Extra Movie {i}', year=2020
             )
+            Movie.objects.create(contingut=cont)
         response = self.client.get(reverse('home'))
         page_obj = response.context['items']
         self.assertTrue(page_obj.has_next())
@@ -122,11 +151,12 @@ class HomeViewTest(TestCase):
 
     def test_home_pagination_page_2(self):
         """Comprueba que se puede acceder a la segunda página de resultados."""
-        for i in range(15):
-            Movie.objects.create(
-                movie_id=100 + i, api=self.api, title=f'Extra Movie {i}',
-                director=self.director, age_rating=self.age_rating, genre=self.genre, year=2020
+        for i in range(25):
+            cont = create_contingut(
+                api=self.api, director=self.director, age_rating=self.age_rating,
+                title=f'Extra Movie {i}', year=2020
             )
+            Movie.objects.create(contingut=cont)
         response = self.client.get(reverse('home'), {'page': 2})
         page_obj = response.context['items']
         self.assertTrue(page_obj.has_previous())
@@ -247,12 +277,13 @@ class MovieDetailViewTest(TestCase):
             birth_date=timezone.now(), country='US'
         )
         self.age_rating = AgeRating.objects.create(
-            age_rating_id=2, api=self.api, description='PG-13', age=13
+            age_rating_id=2, api=self.api, codi='PG-13', age=13
         )
-        self.movie = Movie.objects.create(
-            movie_id=2, api=self.api, title='Test Movie',
-            director=self.director, age_rating=self.age_rating, year=2021
+        self.contingut = create_contingut(
+            api=self.api, director=self.director, age_rating=self.age_rating,
+            title='Test Movie', year=2021
         )
+        self.movie = Movie.objects.create(contingut=self.contingut)
         self.user = CustomUser.objects.create_user(username='movieuser', password='password123')
 
     def test_movie_detail_status_code(self):
@@ -284,7 +315,7 @@ class MovieDetailViewTest(TestCase):
     def test_movie_detail_favorite_for_authenticated(self):
         """Comprueba que un usuario autenticado con la peli en favoritos ve is_favorite=True."""
         self.client.login(username='movieuser', password='password123')
-        self.user.profile.favorite_movies.add(self.movie)
+        self.user.profile.preferits.add(self.movie.contingut)
         response = self.client.get(reverse('movie_detail', args=[self.movie.id]))
         self.assertTrue(response.context['is_favorite'])
 
@@ -297,13 +328,13 @@ class SeriesDetailViewTest(TestCase):
             birth_date=timezone.now(), country='UK'
         )
         self.age_rating = AgeRating.objects.create(
-            age_rating_id=3, api=self.api, description='TV-MA', age=17
+            age_rating_id=3, api=self.api, codi='TV-MA', age=17
         )
-        self.series = Series.objects.create(
-            series_id=2, api=self.api, title='Test Series',
-            director=self.director, age_rating=self.age_rating,
-            start_year=2019, total_seasons=4
+        self.contingut = create_contingut(
+            api=self.api, director=self.director, age_rating=self.age_rating,
+            title='Test Series', year=2019
         )
+        self.series = Series.objects.create(contingut=self.contingut, num_temporades=4)
         self.user = CustomUser.objects.create_user(username='seriesuser', password='password123')
 
     def test_series_detail_status_code(self):
@@ -335,7 +366,7 @@ class SeriesDetailViewTest(TestCase):
     def test_series_detail_favorite_for_authenticated(self):
         """Comprueba que un usuario autenticado con la serie en favoritos ve is_favorite=True."""
         self.client.login(username='seriesuser', password='password123')
-        self.user.profile.favorite_series.add(self.series)
+        self.user.profile.preferits.add(self.series.contingut)
         response = self.client.get(reverse('series_detail', args=[self.series.id]))
         self.assertTrue(response.context['is_favorite'])
 
@@ -353,6 +384,22 @@ class ApiUserProfileTest(TestCase):
         self.assertEqual(response.status_code, 302)
         self.assertIn('/login/', response.url)
 
+    def test_api_profile_returns_json(self):
+        """Comprueba que la respuesta es JSON válido."""
+        self.client.login(username='apiuser', password='password123')
+        response = self.client.get(reverse('api_user_profile'))
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response['Content-Type'], 'application/json')
+
+    def test_api_profile_data(self):
+        """Comprueba que el JSON contiene los datos personales del usuario."""
+        self.client.login(username='apiuser', password='password123')
+        data = self.client.get(reverse('api_user_profile')).json()
+        self.assertEqual(data['personal_info']['username'], 'apiuser')
+        self.assertEqual(data['personal_info']['email'], 'api@mail.com')
+        self.assertEqual(data['personal_info']['first_name'], 'John')
+        self.assertEqual(data['personal_info']['last_name'], 'Doe')
+
 
 class ToggleMovieFavoriteTest(TestCase):
     def setUp(self):
@@ -362,12 +409,13 @@ class ToggleMovieFavoriteTest(TestCase):
             birth_date=timezone.now(), country='ES'
         )
         self.age_rating = AgeRating.objects.create(
-            age_rating_id=4, api=self.api, description='G', age=0
+            age_rating_id=4, api=self.api, codi='G', age=0
         )
-        self.movie = Movie.objects.create(
-            movie_id=3, api=self.api, title='Fav Movie',
-            director=self.director, age_rating=self.age_rating, year=2022
+        self.contingut = create_contingut(
+            api=self.api, director=self.director, age_rating=self.age_rating,
+            title='Fav Movie', year=2022
         )
+        self.movie = Movie.objects.create(contingut=self.contingut)
         self.user = CustomUser.objects.create_user(username='favuser', password='password123')
 
     def test_toggle_redirects_if_not_authenticated(self):
@@ -383,16 +431,16 @@ class ToggleMovieFavoriteTest(TestCase):
         self.assertEqual(response.status_code, 200)
         data = response.json()
         self.assertEqual(data['status'], 'added')
-        self.assertIn(self.movie, self.user.profile.favorite_movies.all())
+        self.assertIn(self.movie.contingut, self.user.profile.preferits.all())
 
     def test_toggle_remove_favorite(self):
         """Comprueba que POST quita la película de favoritos y devuelve status 'removed'."""
         self.client.login(username='favuser', password='password123')
-        self.user.profile.favorite_movies.add(self.movie)
+        self.user.profile.preferits.add(self.movie.contingut)
         response = self.client.post(reverse('toggle_movie_favorite', args=[self.movie.id]))
         data = response.json()
         self.assertEqual(data['status'], 'removed')
-        self.assertNotIn(self.movie, self.user.profile.favorite_movies.all())
+        self.assertNotIn(self.movie.contingut, self.user.profile.preferits.all())
 
     def test_toggle_get_method_not_allowed(self):
         """Comprueba que GET devuelve 405 (solo se permite POST)."""
@@ -415,13 +463,13 @@ class ToggleSeriesFavoriteTest(TestCase):
             birth_date=timezone.now(), country='FR'
         )
         self.age_rating = AgeRating.objects.create(
-            age_rating_id=5, api=self.api, description='PG', age=7
+            age_rating_id=5, api=self.api, codi='PG', age=7
         )
-        self.series = Series.objects.create(
-            series_id=3, api=self.api, title='Fav Series',
-            director=self.director, age_rating=self.age_rating,
-            start_year=2021, total_seasons=2
+        self.contingut = create_contingut(
+            api=self.api, director=self.director, age_rating=self.age_rating,
+            title='Fav Series', year=2021
         )
+        self.series = Series.objects.create(contingut=self.contingut, num_temporades=2)
         self.user = CustomUser.objects.create_user(username='favseriesuser', password='password123')
 
     def test_toggle_series_redirects_if_not_authenticated(self):
@@ -436,16 +484,16 @@ class ToggleSeriesFavoriteTest(TestCase):
         response = self.client.post(reverse('toggle_series_favorite', args=[self.series.id]))
         data = response.json()
         self.assertEqual(data['status'], 'added')
-        self.assertIn(self.series, self.user.profile.favorite_series.all())
+        self.assertIn(self.series.contingut, self.user.profile.preferits.all())
 
     def test_toggle_series_remove_favorite(self):
         """Comprueba que POST quita la serie de favoritos y devuelve status 'removed'."""
         self.client.login(username='favseriesuser', password='password123')
-        self.user.profile.favorite_series.add(self.series)
+        self.user.profile.preferits.add(self.series.contingut)
         response = self.client.post(reverse('toggle_series_favorite', args=[self.series.id]))
         data = response.json()
         self.assertEqual(data['status'], 'removed')
-        self.assertNotIn(self.series, self.user.profile.favorite_series.all())
+        self.assertNotIn(self.series.contingut, self.user.profile.preferits.all())
 
     def test_toggle_series_get_method_not_allowed(self):
         """Comprueba que GET devuelve 405 (solo se permite POST)."""
@@ -505,6 +553,8 @@ class UserProfileViewTest(TestCase):
             'username': 'profileuser',
             'first_name': 'Updated',
             'last_name': 'Name',
+            'email': 'prof@mail.com',
+            'type': 'Consumer',
         })
         self.user.refresh_from_db()
         self.assertEqual(self.user.first_name, 'Updated')
@@ -519,6 +569,8 @@ class UserProfileViewTest(TestCase):
         response = self.client.post(reverse('profile'), {
             'username': 'profileuser',
             'first_name': 'WithAvatar',
+            'email': 'prof@mail.com',
+            'type': 'Consumer',
         }, files={'avatar': img})
         self.user.refresh_from_db()
         self.assertEqual(self.user.first_name, 'WithAvatar')
@@ -533,12 +585,13 @@ class UserHistoryViewTest(TestCase):
             birth_date=timezone.now(), country='US'
         )
         self.age_rating = AgeRating.objects.create(
-            age_rating_id=6, api=self.api, description='R', age=18
+            age_rating_id=6, api=self.api, codi='R', age=18
         )
-        Movie.objects.create(
-            movie_id=4, api=self.api, title='History Movie',
-            director=self.director, age_rating=self.age_rating, year=2019
+        cont = create_contingut(
+            api=self.api, director=self.director, age_rating=self.age_rating,
+            title='History Movie', year=2019
         )
+        Movie.objects.create(contingut=cont)
 
     def test_history_redirects_if_not_authenticated(self):
         """Comprueba que redirige a login si no está autenticado."""
@@ -583,17 +636,18 @@ class UserFollowedViewTest(TestCase):
             birth_date=timezone.now(), country='DE'
         )
         self.age_rating = AgeRating.objects.create(
-            age_rating_id=7, api=self.api, description='PG', age=10
+            age_rating_id=7, api=self.api, codi='PG', age=10
         )
-        self.movie = Movie.objects.create(
-            movie_id=5, api=self.api, title='Follow Movie',
-            director=self.director, age_rating=self.age_rating, year=2020
+        self.contingut_movie = create_contingut(
+            api=self.api, director=self.director, age_rating=self.age_rating,
+            title='Follow Movie', year=2020
         )
-        self.series = Series.objects.create(
-            series_id=4, api=self.api, title='Follow Series',
-            director=self.director, age_rating=self.age_rating,
-            start_year=2020, total_seasons=1
+        self.movie = Movie.objects.create(contingut=self.contingut_movie)
+        self.contingut_series = create_contingut(
+            api=self.api, director=self.director, age_rating=self.age_rating,
+            title='Follow Series', year=2020
         )
+        self.series = Series.objects.create(contingut=self.contingut_series, num_temporades=1)
 
     def test_followed_redirects_if_not_authenticated(self):
         """Comprueba que redirige a login si no está autenticado."""
@@ -614,10 +668,10 @@ class UserFollowedViewTest(TestCase):
         self.assertTemplateUsed(response, 'users/parts/followed.html')
 
     def test_followed_shows_favorites(self):
-        """Comprueba que el contexto muestra las películas y series marcadas como favoritas."""
+        """Comprueba que el contexto muestra los contenidos marcados como favoritos."""
         self.client.login(username='followuser', password='password123')
-        self.user.profile.favorite_movies.add(self.movie)
-        self.user.profile.favorite_series.add(self.series)
+        self.user.profile.preferits.add(self.contingut_movie)
+        self.user.profile.preferits.add(self.contingut_series)
         response = self.client.get(reverse('followed'))
         self.assertIn(self.movie, response.context['movies'])
         self.assertIn(self.series, response.context['series_list'])
