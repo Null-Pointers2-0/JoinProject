@@ -1,6 +1,6 @@
 from django.test import TestCase
 from django.utils import timezone
-from web_app.models import API, Director, Genre, AgeRating, Movie, Series, CustomUser, UserProfile, SyncLog
+from web_app.models import API, Director, Genre, AgeRating, Contingut, Movie, Series, CustomUser, UserProfile, SyncLog
 
 
 class APITest(TestCase):
@@ -16,7 +16,7 @@ class APITest(TestCase):
 
     def test_api_str_without_name(self):
         api_no_name = API.objects.create(port=9000)
-        self.assertEqual(str(api_no_name), 'API on port 9000')
+        self.assertEqual(str(api_no_name), '9000')
 
     def test_api_port_unique(self):
         with self.assertRaises(Exception):
@@ -85,25 +85,59 @@ class AgeRatingTest(TestCase):
         self.age_rating = AgeRating.objects.create(
             age_rating_id=1,
             api=self.api,
-            description='PG-13',
+            codi='PG-13',
             age=13
         )
 
     def test_age_rating_creation(self):
-        self.assertEqual(self.age_rating.description, 'PG-13')
+        self.assertEqual(self.age_rating.codi, 'PG-13')
         self.assertEqual(self.age_rating.age, 13)
 
     def test_age_rating_str(self):
         self.assertEqual(str(self.age_rating), 'PG-13')
+
+    def test_age_rating_description_property(self):
+        self.assertEqual(self.age_rating.description, 'PG-13')
 
     def test_age_rating_unique_together(self):
         with self.assertRaises(Exception):
             AgeRating.objects.create(
                 age_rating_id=1,
                 api=self.api,
-                description='Duplicate',
+                codi='Duplicate',
                 age=13
             )
+
+
+class ContingutTest(TestCase):
+    def setUp(self):
+        self.api = API.objects.create(port=8000, name='Netflix')
+        self.genre = Genre.objects.create(genre_id=1, api=self.api, name='Action')
+        self.director = Director.objects.create(
+            director_id=1, api=self.api, name='Director',
+            birth_date=timezone.now(), country='US'
+        )
+        self.age_rating = AgeRating.objects.create(
+            age_rating_id=1, api=self.api, codi='PG', age=10
+        )
+        self.contingut = Contingut.objects.create(
+            api_content_id=1,
+            titol='Inception',
+            data_estrena=2010,
+            director=self.director,
+            genere=self.genre,
+            age_rating=self.age_rating,
+            api=self.api,
+            rating=8.8
+        )
+
+    def test_contingut_creation(self):
+        self.assertEqual(self.contingut.titol, 'Inception')
+        self.assertEqual(self.contingut.data_estrena, 2010)
+        self.assertEqual(self.contingut.rating, 8.8)
+
+    def test_contingut_str(self):
+        self.assertEqual(str(self.contingut), 'Inception')
 
 
 class MovieTest(TestCase):
@@ -115,57 +149,41 @@ class MovieTest(TestCase):
             birth_date=timezone.now(), country='US'
         )
         self.age_rating = AgeRating.objects.create(
-            age_rating_id=1, api=self.api, description='PG', age=10
+            age_rating_id=1, api=self.api, codi='PG', age=10
         )
-        self.movie = Movie.objects.create(
-            movie_id=1,
-            api=self.api,
-            title='Inception',
-            genre=self.genre,
-            director=self.director,
-            age_rating=self.age_rating,
-            year=2010,
-            rating=8.8
+        self.contingut1 = Contingut.objects.create(
+            api_content_id=1, titol='Inception', data_estrena=2010,
+            director=self.director, genere=self.genre, age_rating=self.age_rating,
+            api=self.api, rating=8.8
         )
+        self.movie = Movie.objects.create(contingut=self.contingut1)
 
     def test_movie_creation(self):
-        self.assertEqual(self.movie.title, 'Inception')
-        self.assertEqual(self.movie.year, 2010)
-        self.assertEqual(self.movie.rating, 8.8)
+        self.assertEqual(self.movie.contingut, self.contingut1)
 
     def test_movie_str(self):
         self.assertEqual(str(self.movie), 'Inception')
 
-    def test_movie_unique_together(self):
-        with self.assertRaises(Exception):
-            Movie.objects.create(
-                movie_id=1,
-                api=self.api,
-                title='Duplicate',
-                genre=self.genre,
-                director=self.director,
-                age_rating=self.age_rating
-            )
+    def test_movie_title_property(self):
+        self.assertEqual(self.movie.title, 'Inception')
 
-    def test_get_similar_by_genre(self):
-        Movie.objects.create(
-            movie_id=2, api=self.api, title='Action Movie 2',
-            genre=self.genre, director=self.director, age_rating=self.age_rating
-        )
-        Movie.objects.create(
-            movie_id=3, api=self.api, title='Action Movie 3',
-            genre=self.genre, director=self.director, age_rating=self.age_rating
-        )
-        similar = self.movie.get_similar_by_genre()
-        self.assertEqual(similar.count(), 2)
+    def test_movie_year_property(self):
+        self.assertEqual(self.movie.year, 2010)
 
-    def test_get_similar_by_genre_no_genre(self):
-        movie_no_genre = Movie.objects.create(
-            movie_id=4, api=self.api, title='No Genre',
-            director=self.director, age_rating=self.age_rating
-        )
-        similar = movie_no_genre.get_similar_by_genre()
-        self.assertEqual(similar.count(), 0)
+    def test_movie_genre_property(self):
+        self.assertEqual(self.movie.genre, self.genre)
+
+    def test_movie_director_property(self):
+        self.assertEqual(self.movie.director, self.director)
+
+    def test_movie_age_rating_property(self):
+        self.assertEqual(self.movie.age_rating, self.age_rating)
+
+    def test_movie_synopsis_property(self):
+        self.assertIsNone(self.movie.synopsis)
+
+    def test_movie_rating_property(self):
+        self.assertEqual(self.movie.rating, 8.8)
 
 
 class SeriesTest(TestCase):
@@ -177,43 +195,39 @@ class SeriesTest(TestCase):
             birth_date=timezone.now(), country='US'
         )
         self.age_rating = AgeRating.objects.create(
-            age_rating_id=2, api=self.api, description='TV-MA', age=17
+            age_rating_id=2, api=self.api, codi='TV-MA', age=17
         )
-        self.series = Series.objects.create(
-            series_id=1,
-            api=self.api,
-            title='Breaking Bad',
-            genre=self.genre,
-            director=self.director,
-            age_rating=self.age_rating,
-            start_year=2008,
-            end_year=2013,
-            total_seasons=5,
-            rating=9.5
+        self.contingut2 = Contingut.objects.create(
+            api_content_id=2, titol='Breaking Bad', data_estrena=2008,
+            director=self.director, genere=self.genre, age_rating=self.age_rating,
+            api=self.api, rating=9.5
         )
+        self.series = Series.objects.create(contingut=self.contingut2, num_temporades=5)
 
     def test_series_creation(self):
-        self.assertEqual(self.series.title, 'Breaking Bad')
-        self.assertEqual(self.series.start_year, 2008)
-        self.assertEqual(self.series.end_year, 2013)
-        self.assertEqual(self.series.total_seasons, 5)
+        self.assertEqual(self.series.contingut, self.contingut2)
+        self.assertEqual(self.series.num_temporades, 5)
 
     def test_series_str(self):
         self.assertEqual(str(self.series), 'Breaking Bad')
 
+    def test_series_title_property(self):
+        self.assertEqual(self.series.title, 'Breaking Bad')
+
     def test_series_year_property(self):
         self.assertEqual(self.series.year, 2008)
 
-    def test_series_unique_together(self):
-        with self.assertRaises(Exception):
-            Series.objects.create(
-                series_id=1,
-                api=self.api,
-                title='Duplicate',
-                genre=self.genre,
-                director=self.director,
-                age_rating=self.age_rating
-            )
+    def test_series_start_year_property(self):
+        self.assertEqual(self.series.start_year, 2008)
+
+    def test_series_end_year_property(self):
+        self.assertIsNone(self.series.end_year)
+
+    def test_series_genre_property(self):
+        self.assertEqual(self.series.genre, self.genre)
+
+    def test_series_total_seasons_property(self):
+        self.assertEqual(self.series.total_seasons, 5)
 
 
 class CustomUserTest(TestCase):
@@ -227,31 +241,35 @@ class CustomUserTest(TestCase):
         user = CustomUser.objects.create_user(username='testuser2', password='password123')
         self.assertEqual(str(user), 'testuser2')
 
+    def test_user_type_default(self):
+        user = CustomUser.objects.create_user(username='testuser3', password='password123')
+        self.assertEqual(user.type, 'Consumer')
+
 
 class UserProfileTest(TestCase):
     def setUp(self):
         self.user = CustomUser.objects.create_user(username='profileuser', password='password123')
-        self.api = API.objects.create(port=8003, name='Prime')
         self.profile = self.user.profile
 
     def test_profile_creation(self):
         self.assertEqual(self.profile.user, self.user)
         self.assertEqual(str(self.profile), 'Perfil de profileuser')
 
-    def test_profile_favorite_movies(self):
+    def test_profile_preferits(self):
+        api = API.objects.create(port=8003, name='Prime')
         director = Director.objects.create(
-            director_id=3, api=self.api, name='Dir',
+            director_id=3, api=api, name='Dir',
             birth_date=timezone.now(), country='US'
         )
         age_rating = AgeRating.objects.create(
-            age_rating_id=3, api=self.api, description='G', age=0
+            age_rating_id=3, api=api, codi='G', age=0
         )
-        movie = Movie.objects.create(
-            movie_id=5, api=self.api, title='Fav Movie',
-            director=director, age_rating=age_rating
+        contingut = Contingut.objects.create(
+            api_content_id=3, titol='Fav Content', director=director,
+            age_rating=age_rating, api=api
         )
-        self.profile.favorite_movies.add(movie)
-        self.assertIn(movie, self.profile.favorite_movies.all())
+        self.profile.preferits.add(contingut)
+        self.assertIn(contingut, self.profile.preferits.all())
 
 
 class SyncLogTest(TestCase):
