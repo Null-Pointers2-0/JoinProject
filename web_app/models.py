@@ -233,7 +233,22 @@ class Valoracio(models.Model):
         return f"{self.user.username} -> {self.contingut.titol} ({self.puntuacio}/5)"
 
 
+class Visualitzacio(models.Model):
+    user = models.ForeignKey(CustomUser, on_delete=models.SET_NULL, null=True, blank=True, related_name='visualitzacions')
+    contingut = models.ForeignKey(Contingut, on_delete=models.CASCADE, related_name='visualitzacions')
+    data_visualitzacio = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        verbose_name = 'Visualització'
+        verbose_name_plural = 'Visualitzacions'
+
+    def __str__(self):
+        user_str = self.user.username if self.user else "Anònim"
+        return f"{user_str} -> {self.contingut.titol} ({self.data_visualitzacio})"
+
+
 class SyncLog(models.Model):
+
     """
     Records the operational status and statistical summary of background synchronization 
     processes, tracking the total number of created and updated database records.

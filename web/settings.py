@@ -30,13 +30,18 @@ SECRET_KEY = 'django-insecure-#hm@y9!i7z7nglcx+hivdx0j127mo2tw@1&*-esq62(o454t(y
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ.get('DJANGO_DEBUG', 'True') == 'True'
 
-ALLOWED_HOSTS = ['joinproject-23y7.onrender.com', 'joinproject-1.onrender.com', '127.0.0.1', 'localhost']
+render_host = os.environ.get('RENDER_EXTERNAL_HOSTNAME')
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost']
+
+
+if render_host:
+    ALLOWED_HOSTS.append(render_host)
 
 if not DEBUG:
-    CSRF_TRUSTED_ORIGINS = [
-        'https://joinproject-23y7.onrender.com',
-        'https://joinproject-1.onrender.com',
-    ]
+    if render_host:
+        CSRF_TRUSTED_ORIGINS = [
+            f'https://{render_host}',
+        ]
 
 # Application definition
 
