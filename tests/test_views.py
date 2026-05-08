@@ -39,49 +39,126 @@ class HomeViewTest(TestCase):
             start_year=2020, total_seasons=3
         )
 
+    # ------------------------------------------------------------------ #
+    #  HOME - BÁSICO                                                        #
+    # ------------------------------------------------------------------ #
+
     def test_home_status_code(self):
+        """Comprueba que la vista home responde con 200 OK."""
         response = self.client.get(reverse('home'))
         self.assertEqual(response.status_code, 200)
 
     def test_home_uses_correct_template(self):
+        """Comprueba que se renderiza el template correcto."""
         response = self.client.get(reverse('home'))
         self.assertTemplateUsed(response, 'home/home.html')
 
     def test_home_shows_movies_and_series(self):
+        """Comprueba que el context contiene 'items', 'genres' y 'directors'."""
         response = self.client.get(reverse('home'))
         self.assertIn('items', response.context)
         self.assertIn('genres', response.context)
         self.assertIn('directors', response.context)
 
+    def test_home_empty_results(self):
+        """Comprueba que home funciona aunque no haya películas ni series."""
+        Movie.objects.all().delete()
+        Series.objects.all().delete()
+        response = self.client.get(reverse('home'))
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(response.context['items']), 0)
+
+    # ------------------------------------------------------------------ #
+    #  HOME - FILTROS                                                       #
+    # ------------------------------------------------------------------ #
+
     def test_home_search_filter(self):
+        """Comprueba que el filtro por query 'q' devuelve solo los resultados coincidentes."""
         response = self.client.get(reverse('home'), {'q': 'Movie One'})
         titles = [item.title for item in response.context['items']]
         self.assertIn('Movie One', titles)
         self.assertNotIn('Series One', titles)
 
+    def test_home_search_no_results(self):
+        """Comprueba que una búsqueda sin resultados devuelve lista vacía."""
+        response = self.client.get(reverse('home'), {'q': 'Inexistente'})
+        self.assertEqual(len(response.context['items']), 0)
+
     def test_home_genre_filter(self):
+        """Comprueba que el filtro por género devuelve películas y series de ese género."""
         response = self.client.get(reverse('home'), {'genre': 'Action'})
         self.assertEqual(len(response.context['items']), 2)
 
+    def test_home_genre_filter_no_results(self):
+        """Comprueba que un género inexistente no devuelve resultados."""
+        response = self.client.get(reverse('home'), {'genre': 'Fantasía'})
+        self.assertEqual(len(response.context['items']), 0)
+
     def test_home_director_filter(self):
+        """Comprueba que el filtro por director devuelve contenido de ese director."""
         response = self.client.get(reverse('home'), {'director': 'Director'})
         self.assertEqual(len(response.context['items']), 2)
 
     def test_home_age_rating_filter(self):
+        """Comprueba que el filtro por clasificación por edades funciona correctamente."""
         response = self.client.get(reverse('home'), {'age_rating': 'PG'})
         self.assertEqual(len(response.context['items']), 2)
 
+    # ------------------------------------------------------------------ #
+    #  HOME - PAGINACIÓN                                                    #
+    # ------------------------------------------------------------------ #
+
+    def test_home_pagination_page_1(self):
+        """Comprueba que la página 1 tiene como máximo 10 items y hay siguiente página."""
+        for i in range(15):
+            Movie.objects.create(
+                movie_id=100 + i, api=self.api, title=f'Extra Movie {i}',
+                director=self.director, age_rating=self.age_rating, genre=self.genre, year=2020
+            )
+        response = self.client.get(reverse('home'))
+        page_obj = response.context['items']
+        self.assertTrue(page_obj.has_next())
+        self.assertEqual(page_obj.number, 1)
+
+    def test_home_pagination_page_2(self):
+        """Comprueba que se puede acceder a la segunda página de resultados."""
+        for i in range(15):
+            Movie.objects.create(
+                movie_id=100 + i, api=self.api, title=f'Extra Movie {i}',
+                director=self.director, age_rating=self.age_rating, genre=self.genre, year=2020
+            )
+        response = self.client.get(reverse('home'), {'page': 2})
+        page_obj = response.context['items']
+        self.assertTrue(page_obj.has_previous())
+        self.assertEqual(page_obj.number, 2)
+
+    def test_home_content_type_assigned(self):
+        """Comprueba que cada item tiene el atributo content_type ('movie' o 'series')."""
+        response = self.client.get(reverse('home'))
+        for item in response.context['items']:
+            self.assertIn(item.content_type, ['movie', 'series'])
+
 
 class RegisterViewTest(TestCase):
+    def setUp(self):
+        self.api = API.objects.create(port=9000, name='RegAPI')
+
+    # ------------------------------------------------------------------ #
+    #  REGISTER - BÁSICO                                                    #
+    # ------------------------------------------------------------------ #
+
     def test_register_get_status_code(self):
+        """Comprueba que el GET a register responde 200."""
         response = self.client.get(reverse('register'))
         self.assertEqual(response.status_code, 200)
 
     def test_register_uses_correct_template(self):
+        """Comprueba que se usa el template de registro correcto."""
         response = self.client.get(reverse('register'))
         self.assertTemplateUsed(response, 'identify/register.html')
 
     def test_register_success(self):
+        """Comprueba que un registro válido crea el usuario y redirige a home."""
         response = self.client.post(reverse('register'), {
             'username': 'newuser',
             'email': 'new@mail.com',
@@ -92,7 +169,12 @@ class RegisterViewTest(TestCase):
         self.assertRedirects(response, reverse('home'))
         self.assertTrue(CustomUser.objects.filter(username='newuser').exists())
 
+    # ------------------------------------------------------------------ #
+    #  REGISTER - ERRORES                                                   #
+    # ------------------------------------------------------------------ #
+
     def test_register_invalid_passwords(self):
+        """Comprueba que contraseñas distintas no crean el usuario."""
         response = self.client.post(reverse('register'), {
             'username': 'newuser',
             'email': 'new@mail.com',
@@ -103,12 +185,56 @@ class RegisterViewTest(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertFalse(CustomUser.objects.filter(username='newuser').exists())
 
+    def test_register_terms_not_accepted(self):
+        """Comprueba que sin aceptar términos no se crea el usuario."""
+        response = self.client.post(reverse('register'), {
+            'username': 'newuser',
+            'email': 'new@mail.com',
+            'password': 'password123',
+            'password2': 'password123',
+            'terms_accepted': False,
+        })
+        self.assertEqual(response.status_code, 200)
+        self.assertFalse(CustomUser.objects.filter(username='newuser').exists())
+
+    def test_register_duplicate_username(self):
+        """Comprueba que un username duplicado no permite el registro."""
+        CustomUser.objects.create_user(username='existing', password='password123')
+        response = self.client.post(reverse('register'), {
+            'username': 'existing',
+            'email': 'other@mail.com',
+            'password': 'password123',
+            'password2': 'password123',
+            'terms_accepted': True,
+        })
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(CustomUser.objects.filter(username='existing').count(), 1)
+
+    # ------------------------------------------------------------------ #
+    #  REGISTER - CON PLATAFORMAS                                           #
+    # ------------------------------------------------------------------ #
+
+    def test_register_with_platforms(self):
+        """Comprueba que las plataformas seleccionadas se guardan como suscripciones."""
+        response = self.client.post(reverse('register'), {
+            'username': 'platformuser',
+            'email': 'plat@mail.com',
+            'password': 'password123',
+            'password2': 'password123',
+            'terms_accepted': True,
+            'platforms': [self.api.id],
+        })
+        self.assertRedirects(response, reverse('home'))
+        user = CustomUser.objects.get(username='platformuser')
+        self.assertIn(self.api, user.subscriptions.all())
+
 
 class UserSettingViewTest(TestCase):
     def setUp(self):
         self.user = CustomUser.objects.create_user(username='testuser', password='password123')
 
     def test_user_setting_redirects_if_not_authenticated(self):
+        """Comprueba que redirige a /login/ si el usuario no está autenticado."""
         response = self.client.get(reverse('user_setting'))
         self.assertRedirects(response, '/login/', fetch_redirect_response=False)
 
@@ -130,25 +256,35 @@ class MovieDetailViewTest(TestCase):
         self.user = CustomUser.objects.create_user(username='movieuser', password='password123')
 
     def test_movie_detail_status_code(self):
+        """Comprueba que la vista de detalle de película responde 200."""
         response = self.client.get(reverse('movie_detail', args=[self.movie.id]))
         self.assertEqual(response.status_code, 200)
 
     def test_movie_detail_template(self):
+        """Comprueba que se usa el template de detalle de película."""
         response = self.client.get(reverse('movie_detail', args=[self.movie.id]))
         self.assertTemplateUsed(response, 'Details/details_movie.html')
 
+    def test_movie_detail_context(self):
+        """Comprueba que el contexto contiene 'content' y 'is_favorite'."""
+        response = self.client.get(reverse('movie_detail', args=[self.movie.id]))
+        self.assertIn('content', response.context)
+        self.assertIn('is_favorite', response.context)
+
     def test_movie_detail_404(self):
+        """Comprueba que un ID inexistente devuelve 404."""
         response = self.client.get(reverse('movie_detail', args=[99999]))
         self.assertEqual(response.status_code, 404)
 
     def test_movie_detail_not_favorite_for_anonymous(self):
+        """Comprueba que un usuario anónimo ve is_favorite=False."""
         response = self.client.get(reverse('movie_detail', args=[self.movie.id]))
         self.assertFalse(response.context['is_favorite'])
 
     def test_movie_detail_favorite_for_authenticated(self):
+        """Comprueba que un usuario autenticado con la peli en favoritos ve is_favorite=True."""
         self.client.login(username='movieuser', password='password123')
-        profile = self.user.profile
-        profile.favorite_movies.add(self.movie)
+        self.user.profile.favorite_movies.add(self.movie)
         response = self.client.get(reverse('movie_detail', args=[self.movie.id]))
         self.assertTrue(response.context['is_favorite'])
 
@@ -171,25 +307,35 @@ class SeriesDetailViewTest(TestCase):
         self.user = CustomUser.objects.create_user(username='seriesuser', password='password123')
 
     def test_series_detail_status_code(self):
+        """Comprueba que la vista de detalle de serie responde 200."""
         response = self.client.get(reverse('series_detail', args=[self.series.id]))
         self.assertEqual(response.status_code, 200)
 
     def test_series_detail_template(self):
+        """Comprueba que se usa el template de detalle de serie."""
         response = self.client.get(reverse('series_detail', args=[self.series.id]))
         self.assertTemplateUsed(response, 'Details/details_serie.html')
 
+    def test_series_detail_context(self):
+        """Comprueba que el contexto contiene 'content' y 'is_favorite'."""
+        response = self.client.get(reverse('series_detail', args=[self.series.id]))
+        self.assertIn('content', response.context)
+        self.assertIn('is_favorite', response.context)
+
     def test_series_detail_404(self):
+        """Comprueba que un ID inexistente devuelve 404."""
         response = self.client.get(reverse('series_detail', args=[99999]))
         self.assertEqual(response.status_code, 404)
 
     def test_series_detail_not_favorite_for_anonymous(self):
+        """Comprueba que un usuario anónimo ve is_favorite=False."""
         response = self.client.get(reverse('series_detail', args=[self.series.id]))
         self.assertFalse(response.context['is_favorite'])
 
     def test_series_detail_favorite_for_authenticated(self):
+        """Comprueba que un usuario autenticado con la serie en favoritos ve is_favorite=True."""
         self.client.login(username='seriesuser', password='password123')
-        profile = self.user.profile
-        profile.favorite_series.add(self.series)
+        self.user.profile.favorite_series.add(self.series)
         response = self.client.get(reverse('series_detail', args=[self.series.id]))
         self.assertTrue(response.context['is_favorite'])
 
@@ -202,6 +348,7 @@ class ApiUserProfileTest(TestCase):
         )
 
     def test_api_profile_redirects_if_not_authenticated(self):
+        """Comprueba que redirige a login si no está autenticado."""
         response = self.client.get(reverse('api_user_profile'))
         self.assertEqual(response.status_code, 302)
         self.assertIn('/login/', response.url)
@@ -224,11 +371,13 @@ class ToggleMovieFavoriteTest(TestCase):
         self.user = CustomUser.objects.create_user(username='favuser', password='password123')
 
     def test_toggle_redirects_if_not_authenticated(self):
+        """Comprueba que redirige a login si no está autenticado."""
         response = self.client.post(reverse('toggle_movie_favorite', args=[self.movie.id]))
         self.assertEqual(response.status_code, 302)
         self.assertIn('/login/', response.url)
 
     def test_toggle_add_favorite(self):
+        """Comprueba que POST añade la película a favoritos y devuelve status 'added'."""
         self.client.login(username='favuser', password='password123')
         response = self.client.post(reverse('toggle_movie_favorite', args=[self.movie.id]))
         self.assertEqual(response.status_code, 200)
@@ -237,6 +386,7 @@ class ToggleMovieFavoriteTest(TestCase):
         self.assertIn(self.movie, self.user.profile.favorite_movies.all())
 
     def test_toggle_remove_favorite(self):
+        """Comprueba que POST quita la película de favoritos y devuelve status 'removed'."""
         self.client.login(username='favuser', password='password123')
         self.user.profile.favorite_movies.add(self.movie)
         response = self.client.post(reverse('toggle_movie_favorite', args=[self.movie.id]))
@@ -245,11 +395,13 @@ class ToggleMovieFavoriteTest(TestCase):
         self.assertNotIn(self.movie, self.user.profile.favorite_movies.all())
 
     def test_toggle_get_method_not_allowed(self):
+        """Comprueba que GET devuelve 405 (solo se permite POST)."""
         self.client.login(username='favuser', password='password123')
         response = self.client.get(reverse('toggle_movie_favorite', args=[self.movie.id]))
         self.assertEqual(response.status_code, 405)
 
     def test_toggle_404_for_nonexistent(self):
+        """Comprueba que un ID de película inexistente devuelve 404."""
         self.client.login(username='favuser', password='password123')
         response = self.client.post(reverse('toggle_movie_favorite', args=[99999]))
         self.assertEqual(response.status_code, 404)
@@ -273,11 +425,13 @@ class ToggleSeriesFavoriteTest(TestCase):
         self.user = CustomUser.objects.create_user(username='favseriesuser', password='password123')
 
     def test_toggle_series_redirects_if_not_authenticated(self):
+        """Comprueba que redirige a login si no está autenticado."""
         response = self.client.post(reverse('toggle_series_favorite', args=[self.series.id]))
         self.assertEqual(response.status_code, 302)
         self.assertIn('/login/', response.url)
 
     def test_toggle_series_add_favorite(self):
+        """Comprueba que POST añade la serie a favoritos y devuelve status 'added'."""
         self.client.login(username='favseriesuser', password='password123')
         response = self.client.post(reverse('toggle_series_favorite', args=[self.series.id]))
         data = response.json()
@@ -285,6 +439,7 @@ class ToggleSeriesFavoriteTest(TestCase):
         self.assertIn(self.series, self.user.profile.favorite_series.all())
 
     def test_toggle_series_remove_favorite(self):
+        """Comprueba que POST quita la serie de favoritos y devuelve status 'removed'."""
         self.client.login(username='favseriesuser', password='password123')
         self.user.profile.favorite_series.add(self.series)
         response = self.client.post(reverse('toggle_series_favorite', args=[self.series.id]))
@@ -293,6 +448,7 @@ class ToggleSeriesFavoriteTest(TestCase):
         self.assertNotIn(self.series, self.user.profile.favorite_series.all())
 
     def test_toggle_series_get_method_not_allowed(self):
+        """Comprueba que GET devuelve 405 (solo se permite POST)."""
         self.client.login(username='favseriesuser', password='password123')
         response = self.client.get(reverse('toggle_series_favorite', args=[self.series.id]))
         self.assertEqual(response.status_code, 405)
@@ -300,18 +456,22 @@ class ToggleSeriesFavoriteTest(TestCase):
 
 class TermsAndPrivacyViewsTest(TestCase):
     def test_terms_use_status_code(self):
+        """Comprueba que la vista de términos responde 200."""
         response = self.client.get(reverse('terms_use'))
         self.assertEqual(response.status_code, 200)
 
     def test_terms_use_template(self):
+        """Comprueba que se usa el template de términos de uso."""
         response = self.client.get(reverse('terms_use'))
         self.assertTemplateUsed(response, 'footer_legal/terms_use.html')
 
     def test_privacy_policy_status_code(self):
+        """Comprueba que la vista de política de privacidad responde 200."""
         response = self.client.get(reverse('privacy_policy'))
         self.assertEqual(response.status_code, 200)
 
     def test_privacy_policy_template(self):
+        """Comprueba que se usa el template de política de privacidad."""
         response = self.client.get(reverse('privacy_policy'))
         self.assertTemplateUsed(response, 'footer_legal/privacy_policy.html')
 
@@ -321,16 +481,25 @@ class UserProfileViewTest(TestCase):
         self.user = CustomUser.objects.create_user(username='profileuser', password='password123', email='prof@mail.com')
 
     def test_profile_redirects_if_not_authenticated(self):
+        """Comprueba que redirige a login si no está autenticado."""
         response = self.client.get(reverse('profile'))
         self.assertEqual(response.status_code, 302)
         self.assertIn('/login/', response.url)
 
     def test_profile_get_status_code(self):
+        """Comprueba que GET responde 200 con el formulario pre-rellenado."""
         self.client.login(username='profileuser', password='password123')
         response = self.client.get(reverse('profile'))
         self.assertEqual(response.status_code, 200)
 
+    def test_profile_template(self):
+        """Comprueba que se usa el template de perfil correcto."""
+        self.client.login(username='profileuser', password='password123')
+        response = self.client.get(reverse('profile'))
+        self.assertTemplateUsed(response, 'users/profile/profile.html')
+
     def test_profile_post_updates_user(self):
+        """Comprueba que POST actualiza los campos del usuario correctamente."""
         self.client.login(username='profileuser', password='password123')
         response = self.client.post(reverse('profile'), {
             'username': 'profileuser',
@@ -342,6 +511,7 @@ class UserProfileViewTest(TestCase):
         self.assertEqual(self.user.last_name, 'Name')
 
     def test_profile_post_with_avatar(self):
+        """Comprueba que se puede subir un avatar válido junto con otros campos."""
         self.client.login(username='profileuser', password='password123')
         img_buffer = create_test_image()
         from django.core.files.uploadedfile import SimpleUploadedFile
@@ -371,19 +541,37 @@ class UserHistoryViewTest(TestCase):
         )
 
     def test_history_redirects_if_not_authenticated(self):
+        """Comprueba que redirige a login si no está autenticado."""
         response = self.client.get(reverse('history'))
         self.assertEqual(response.status_code, 302)
         self.assertIn('/login/', response.url)
 
     def test_history_get_status_code(self):
+        """Comprueba que GET responde 200 para usuario autenticado."""
         self.client.login(username='histuser', password='password123')
         response = self.client.get(reverse('history'))
         self.assertEqual(response.status_code, 200)
 
+    def test_history_template(self):
+        """Comprueba que se usa el template de historial correcto."""
+        self.client.login(username='histuser', password='password123')
+        response = self.client.get(reverse('history'))
+        self.assertTemplateUsed(response, 'users/parts/history.html')
+
     def test_history_shows_movies(self):
+        """Comprueba que el contexto contiene 'movies' con las películas existentes."""
         self.client.login(username='histuser', password='password123')
         response = self.client.get(reverse('history'))
         self.assertIn('movies', response.context)
+        self.assertGreaterEqual(response.context['movies'].count(), 1)
+
+    def test_history_empty_movies(self):
+        """Comprueba que funciona aunque no haya películas."""
+        Movie.objects.all().delete()
+        self.client.login(username='histuser', password='password123')
+        response = self.client.get(reverse('history'))
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.context['movies'].count(), 0)
 
 
 class UserFollowedViewTest(TestCase):
@@ -408,22 +596,38 @@ class UserFollowedViewTest(TestCase):
         )
 
     def test_followed_redirects_if_not_authenticated(self):
+        """Comprueba que redirige a login si no está autenticado."""
         response = self.client.get(reverse('followed'))
         self.assertEqual(response.status_code, 302)
         self.assertIn('/login/', response.url)
 
     def test_followed_get_status_code(self):
+        """Comprueba que GET responde 200 para usuario autenticado."""
         self.client.login(username='followuser', password='password123')
         response = self.client.get(reverse('followed'))
         self.assertEqual(response.status_code, 200)
 
+    def test_followed_template(self):
+        """Comprueba que se usa el template de seguidos correcto."""
+        self.client.login(username='followuser', password='password123')
+        response = self.client.get(reverse('followed'))
+        self.assertTemplateUsed(response, 'users/parts/followed.html')
+
     def test_followed_shows_favorites(self):
+        """Comprueba que el contexto muestra las películas y series marcadas como favoritas."""
         self.client.login(username='followuser', password='password123')
         self.user.profile.favorite_movies.add(self.movie)
         self.user.profile.favorite_series.add(self.series)
         response = self.client.get(reverse('followed'))
         self.assertIn(self.movie, response.context['movies'])
         self.assertIn(self.series, response.context['series_list'])
+
+    def test_followed_empty_favorites(self):
+        """Comprueba que funciona aunque el usuario no tenga favoritos."""
+        self.client.login(username='followuser', password='password123')
+        response = self.client.get(reverse('followed'))
+        self.assertEqual(response.context['movies'].count(), 0)
+        self.assertEqual(response.context['series_list'].count(), 0)
 
 
 class UserSubscriptionViewTest(TestCase):
@@ -433,22 +637,40 @@ class UserSubscriptionViewTest(TestCase):
         self.api2 = API.objects.create(port=8008, name='Sub2')
 
     def test_subscription_redirects_if_not_authenticated(self):
+        """Comprueba que redirige a login si no está autenticado."""
         response = self.client.get(reverse('suscription'))
         self.assertEqual(response.status_code, 302)
         self.assertIn('/login/', response.url)
 
     def test_subscription_get_status_code(self):
+        """Comprueba que GET responde 200 para usuario autenticado."""
         self.client.login(username='subuser', password='password123')
         response = self.client.get(reverse('suscription'))
         self.assertEqual(response.status_code, 200)
 
+    def test_subscription_template(self):
+        """Comprueba que se usa el template de suscripciones correcto."""
+        self.client.login(username='subuser', password='password123')
+        response = self.client.get(reverse('suscription'))
+        self.assertTemplateUsed(response, 'users/parts/subscription.html')
+
     def test_subscription_get_shows_apis(self):
+        """Comprueba que el contexto contiene 'all_apis' ordenadas por port."""
         self.client.login(username='subuser', password='password123')
         response = self.client.get(reverse('suscription'))
         self.assertIn('all_apis', response.context)
         self.assertEqual(response.context['all_apis'].count(), 2)
 
+    def test_subscription_user_subscription_ids(self):
+        """Comprueba que el contexto incluye los IDs de las suscripciones del usuario."""
+        self.client.login(username='subuser', password='password123')
+        self.user.subscriptions.add(self.api1)
+        response = self.client.get(reverse('suscription'))
+        self.assertIn(self.api1.id, response.context['user_subscription_ids'])
+        self.assertNotIn(self.api2.id, response.context['user_subscription_ids'])
+
     def test_subscription_post_updates_subscriptions(self):
+        """Comprueba que POST actualiza las suscripciones del usuario correctamente."""
         self.client.login(username='subuser', password='password123')
         response = self.client.post(reverse('suscription'), {
             'subscriptions': [self.api1.id],
@@ -459,6 +681,7 @@ class UserSubscriptionViewTest(TestCase):
         self.assertNotIn(self.api2, self.user.subscriptions.all())
 
     def test_subscription_post_clears_subscriptions(self):
+        """Comprueba que enviar lista vacía limpia todas las suscripciones."""
         self.client.login(username='subuser', password='password123')
         self.user.subscriptions.add(self.api1, self.api2)
         response = self.client.post(reverse('suscription'), {
@@ -467,3 +690,15 @@ class UserSubscriptionViewTest(TestCase):
         self.assertRedirects(response, reverse('suscription'))
         self.user.refresh_from_db()
         self.assertEqual(self.user.subscriptions.count(), 0)
+
+    def test_subscription_post_switches_selection(self):
+        """Comprueba que cambiar la selección reemplaza las suscripciones anteriores."""
+        self.client.login(username='subuser', password='password123')
+        self.user.subscriptions.add(self.api1)
+        response = self.client.post(reverse('suscription'), {
+            'subscriptions': [self.api2.id],
+        })
+        self.assertRedirects(response, reverse('suscription'))
+        self.user.refresh_from_db()
+        self.assertNotIn(self.api1, self.user.subscriptions.all())
+        self.assertIn(self.api2, self.user.subscriptions.all())
