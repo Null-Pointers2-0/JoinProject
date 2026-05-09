@@ -1,0 +1,3 @@
+[submodule "service/apis"]
+	path = service/apis
+	url = https://github.com/xemyst/Models-de-proc-s-26.git

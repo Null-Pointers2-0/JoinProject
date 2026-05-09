@@ -1,0 +1,143 @@
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=Syne:wght@400;600;700&display=swap');
+:root {
+    --bg-deep: #0B0C10;
+    --bg-glass: #1F2833;
+    --bg-glass-2: rgba(31, 40, 51, 0.7);
+    --neon-cyan: #66FCF1;
+    --neon-glow: rgba(102, 252, 241, 0.15);
+    --neon-glow-strong: rgba(102, 252, 241, 0.3);
+    --text-primary: #E0E6ED;
+    --text-muted: #8A8D91;
+    --border-glass: rgba(102, 252, 241, 0.08);
+    --border-glass-hover: rgba(102, 252, 241, 0.2);
+}
+
+/* ---- Reset contenedor ---- */
+.main-container {
+    padding: 0 !important;
+    align-items: flex-start !important;
+    background-color: var(--bg-deep);
+    font-family: 'DM Sans', sans-serif;
+    min-height: 100vh;
+}
+
+.content-div {
+    background: transparent !important;
+    background-color: transparent !important;
+    backdrop-filter: none !important;
+    border: none !important;
+    border-radius: 0 !important;
+    margin-top: 0 !important;
+    padding: 0 !important;
+    width: 100% !important;
+}
+
+/* ---- Banner ---- */
+.profile-banner {
+    width: 100%;
+    height: 220px;
+    background-color: var(--bg-glass);
+    background-image: 
+        radial-gradient(ellipse at 70% 50%, rgba(102, 252, 241, 0.07) 0%, transparent 65%),
+        radial-gradient(ellipse at 20% 80%, rgba(102, 252, 241, 0.04) 0%, transparent 50%);
+    position: relative;
+    overflow: hidden;
+}
+
+.profile-banner::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--neon-cyan), transparent);
+    opacity: 0.3;
+}
+
+/* ---- Avatar ---- */
+.profile-avatar-wrapper {
+    position: relative;
+    margin-left: 2.5rem;
+    margin-top: -60px;
+    display: inline-block;
+    z-index: 10;
+}
+
+.profile-avatar {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    border: 2px solid var(--neon-cyan);
+    object-fit: cover;
+    box-shadow: 0 0 0 4px rgba(11, 12, 16, 1), 0 0 20px rgba(102, 252, 241, 0.25);
+    display: block;
+}
+
+/* ---- Info nombre y email ---- */
+.profile-info {
+    padding: 0.75rem 2.5rem 1.5rem;
+}
+
+.profile-username {
+    font-family: 'Syne', sans-serif;
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 4px;
+    letter-spacing: -0.02em;
+}
+
+.profile-useremail {
+    font-size: 13px;
+    color: var(--text-muted);
+    font-weight: 300;
+}
+
+/* ---- Contenedor settings ---- */
+.user_settings {
+    padding: 0 1.5rem 3rem;
+}
+
+/* ---- Cards glassmorphism ---- */
+.glass-card {
+    background: var(--bg-glass);
+    border: 1px solid var(--border-glass);
+    border-radius: 8px;
+    padding: 1rem 1.25rem;
+    margin-bottom: 10px;
+    transition: border-color 0.25s, box-shadow 0.25s;
+}
+
+.glass-card:hover {
+    border-color: var(--border-glass-hover);
+    box-shadow: 0 0 12px rgba(102, 252, 241, 0.05);
+}
+
+.glass-card-label {
+    font-size: 10px;
+    color: var(--neon-cyan);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: 6px;
+    opacity: 0.7;
+}
+
+.glass-card p {
+    margin: 0;
+    color: var(--text-muted);
+    font-size: 13px;
+    line-height: 1.6;
+}
+
+/* ---- Rows sidebar ---- */
+.row-description,
+.row-stats,
+.row-location {
+    border: none !important;
+}
+
+.profile-banner {
+    /* el banner ocupa todo el ancho, sin margen */
+    width: 100%;
+}

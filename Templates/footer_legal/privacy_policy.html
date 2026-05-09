@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+{% load i18n static %}
+
+{% block extra_css %}
+{{ block.super }}
+    <link rel="stylesheet" href="{% static 'css/privacy_policy.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="container my-5 privacy-container">
+    <div class="privacy-card">
+        <h1 class="privacy-title">{% trans 'Política de Privacidad' %}</h1>
+        <p class="privacy-date">{% trans 'Última actualización' %}: {% now "F Y" %}</p>
+
+        <h2 class="privacy-subtitle">1. {% trans 'Información que Recopilamos' %}</h2>
+        <p class="privacy-text">
+            {% trans 'Al ser StreamSync un proyecto universitario, recopilamos información únicamente para simular un entorno real y brindar una buena experiencia dentro de la aplicación. Esto incluye datos básicos al registrarte (como tu correo o nombre de usuario) y datos de uso de la plataforma.' %}
+        </p>
+
+        <h2 class="privacy-subtitle">2. {% trans 'Uso de la Información' %}</h2>
+        <ul class="privacy-list">
+            <li>{% trans 'Para mantener, mejorar y desarrollar nuevos servicios.' %}</li>
+            <li>{% trans 'Para personalizar las recomendaciones de series y películas.' %}</li>
+            <li>{% trans 'Para comunicarnos contigo sobre novedades, soporte o alertas de seguridad.' %}</li>
+        </ul>
+
+        <h2 class="privacy-subtitle">3. {% trans 'Protección de Datos' %}</h2>
+        <p class="privacy-text">
+            {% trans 'Implementamos sólidas medidas de seguridad diseñadas para proteger tu información personal contra el acceso, la alteración o la destrucción no autorizados.' %}
+        </p>
+
+        <h2 class="privacy-subtitle">4. {% trans 'Compartir Información con Terceros' %}</h2>
+        <p class="privacy-text">
+            {% trans 'No vendemos tu información personal. Únicamente la compartimos con terceros bajo circunstancias muy específicas, como para cumplir con una obligación legal, proteger nuestros derechos o en caso de integración con servicios suscritos por ti.' %}
+        </p>
+
+        <h2 class="privacy-subtitle">5. {% trans 'Tus Derechos' %}</h2>
+        <p class="privacy-text">
+            {% trans 'Tienes derecho a acceder, rectificar o eliminar tu información personal en cualquier momento accediendo a la configuración de tu perfil, o contactando directamente con nuestro equipo de soporte técnico.' %}
+        </p>
+    </div>
+</div>
+{% endblock %}

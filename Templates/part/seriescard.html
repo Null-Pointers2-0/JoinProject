@@ -1,0 +1,14 @@
+<div class="col-md-3 col-sm-6 mb-4">
+    <div class="movie-card"
+    data-url="{% url 'series_detail' series.id %}" 
+    onclick="window.location.href=this.dataset.url"    
+    style="cursor: pointer;">
+        <div class="movie-card-body">
+            <h5 class="movie-title">{{ series.title }}</h5>
+            <p class="movie-year">{{ series.start_year }}</p>
+            <p class="movie-genre">{{ series.genre }}</p>
+            <div class="movie-rating">★ {{ series.rating }}</div>
+            <p class="movie-synopsis">{{ series.synopsis|truncatewords:15 }}</p>
+        </div>
+    </div>
+</div>
