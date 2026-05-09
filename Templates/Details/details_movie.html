@@ -1,0 +1,10 @@
+{% extends 'Details/details_base.html' %}
+
+{% block content_metadata %}
+<div class="data-card">
+    <div class="data-card-label">Lanzamiento</div>
+    <div class="data-card-value">{{ content.year }}</div>
+</div>
+{% endblock %}
+
+{% block favorite_url %}{% url 'toggle_movie_favorite' content.id %}{% endblock %}
