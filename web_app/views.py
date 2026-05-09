@@ -35,8 +35,8 @@ def home(request):
         series = series.filter(contingut__age_rating__codi=age_rating_filter)
 
     if platform_filter:
-        movies = movies.filter(api__port=platform_filter)
-        series = series.filter(api__port=platform_filter)
+        movies = movies.filter(contingut__api__port=platform_filter)
+        series = series.filter(contingut__api__port=platform_filter)
 
     unique_results = []
     seen_keys = set()

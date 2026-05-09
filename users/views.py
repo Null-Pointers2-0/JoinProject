@@ -5,7 +5,7 @@ from .services import get_content_analytics, format_analytics_for_csv
 from django.shortcuts import render, redirect
 from django.contrib import messages
 from web_app.forms import CustomUserChangeForm
-from web_app.models import Movie
+from web_app.models import Movie, Series, Contingut
 
 # Create your views here.
 def profile(request):
@@ -32,12 +32,10 @@ def history(request):
 def followed(request):
     if not request.user.is_authenticated:
         return redirect('login')
-    try:
-        movies = request.user.profile.favorite_movies.all()
-        series_list = request.user.profile.favorite_series.all()
-    except:
-        movies = []
-        series_list = []
+    profile, _ = request.user.profile, True
+    preferits_ids = profile.preferits.values_list('id', flat=True)
+    movies = Movie.objects.filter(contingut_id__in=preferits_ids)
+    series_list = Series.objects.filter(contingut_id__in=preferits_ids)
     return render(request, 'users/parts/followed.html', {'movies': movies, 'series_list': series_list})
 
 

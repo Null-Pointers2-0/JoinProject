@@ -1,3 +1,5 @@
+from time import timezone
+
 from apscheduler.schedulers.background import BackgroundScheduler
 from django_apscheduler.jobstores import DjangoJobStore
 from .services import download_catalog_data
@@ -5,9 +7,6 @@ import sys
 
 
 def start():
-    if "runserver" not in sys.argv:
-        return
-
     scheduler = BackgroundScheduler(timezone="Europe/Madrid")
     scheduler.add_jobstore(DjangoJobStore(), "default")
 
@@ -21,5 +20,6 @@ def start():
         replace_existing=True,
     )
 
+    download_catalog_data()
+
     scheduler.start()
-    #print("Cron Job configured at 03:00 AM.")
