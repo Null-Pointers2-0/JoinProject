@@ -5,5 +5,6 @@ urlpatterns = [
     path('user/profile', views.profile, name='profile'),
     path('user/history', views.history, name='history'),
     path('user/subscription', views.subscription, name='suscription'),
-    path('user/followed', views.followed, name='followed')
+    path('user/followed', views.followed, name='followed'),
+    path('admin/export', views.export_analytics_csv, name='export_csv')
 ]
