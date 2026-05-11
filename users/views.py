@@ -9,7 +9,7 @@ from web_app.models import Movie, Series, Contingut, API
 
 # Create your views here.
 @login_required(login_url='login')
-def profile(request):
+def user_profile(request):
         
     if request.method == 'POST':
         form = CustomUserChangeForm(request.POST, request.FILES, instance=request.user)
@@ -20,7 +20,11 @@ def profile(request):
     else:
         form = CustomUserChangeForm(instance=request.user)
 
-    return render(request, 'users/profile/profile.html', {'form': form})
+    return render(request, 'users/profile/user_profile.html', {'form': form})
+
+@login_required(login_url='login')
+def admin_profile(request):
+    return render(request, 'users/profile/admin_profile.html')
 
 @login_required(login_url='login')
 def history(request):
@@ -90,5 +94,5 @@ def export_analytics_csv(request):
 
 @login_required(login_url='login')
 @user_passes_test(is_admin_or_staff)
-def hola(request):
-    pass
+def admin_dashboard(request):
+    return render(request, 'users/parts/dashboard_platform.html')
