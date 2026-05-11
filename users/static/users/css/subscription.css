@@ -1,0 +1,157 @@
+/* ---- Subscription Header ---- */
+.subscription-header {
+    margin-bottom: 1.5rem;
+}
+
+.subscription-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 4px;
+    letter-spacing: -0.01em;
+}
+
+.subscription-subtitle {
+    font-size: 12px;
+    color: var(--text-muted);
+    margin: 0;
+    font-family: 'DM Sans', sans-serif;
+}
+
+/* ---- Platforms Grid ---- */
+.platforms-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+/* ---- Platform Card ---- */
+.platform-card {
+    position: relative;
+    background: rgba(11, 12, 16, 0.7);
+    border: 1px solid var(--border-glass);
+    border-radius: 10px;
+    padding: 1.1rem 1rem;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.6rem;
+    transition: border-color 0.25s, box-shadow 0.25s, transform 0.2s, background 0.25s;
+    user-select: none;
+}
+
+.platform-card:hover {
+    border-color: rgba(102, 252, 241, 0.3);
+    box-shadow: 0 4px 20px rgba(102, 252, 241, 0.06);
+    transform: translateY(-2px);
+}
+
+.platform-card--active {
+    border-color: rgba(102, 252, 241, 0.5) !important;
+    background: rgba(102, 252, 241, 0.04) !important;
+    box-shadow: 0 0 20px rgba(102, 252, 241, 0.08) !important;
+}
+
+/* ---- Platform Icon ---- */
+.platform-icon {
+    width: 54px;
+    height: 54px;
+    border-radius: 50%;
+    background: rgba(102, 252, 241, 0.06);
+    border: 1px solid rgba(102, 252, 241, 0.15);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.25s, border-color 0.25s;
+}
+
+.platform-card--active .platform-icon {
+    background: rgba(102, 252, 241, 0.12);
+    border-color: rgba(102, 252, 241, 0.35);
+}
+
+.platform-port {
+    font-family: 'Syne', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--neon-cyan);
+    letter-spacing: 0.02em;
+}
+
+/* ---- Platform Info ---- */
+.platform-info {
+    text-align: center;
+}
+
+.platform-name {
+    font-family: 'Syne', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 2px;
+}
+
+.platform-port-label {
+    font-size: 11px;
+    color: var(--text-muted);
+    font-family: 'DM Sans', sans-serif;
+}
+
+/* ---- Platform Badge ---- */
+.platform-badge {
+    font-size: 11px;
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 500;
+    color: var(--text-muted);
+    padding: 4px 10px;
+    border-radius: 20px;
+    border: 1px solid var(--border-glass);
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    transition: color 0.2s, border-color 0.2s, background 0.2s;
+}
+
+.platform-badge--active {
+    color: var(--neon-cyan) !important;
+    border-color: rgba(102, 252, 241, 0.35) !important;
+    background: rgba(102, 252, 241, 0.07) !important;
+}
+
+.badge-icon {
+    font-size: 12px;
+}
+
+/* ---- Hidden checkbox ---- */
+.platform-checkbox {
+    display: none;
+}
+
+/* ---- Actions ---- */
+.subscription-actions {
+    display: flex;
+    justify-content: flex-end;
+    padding-top: 0.5rem;
+}
+
+/* ---- Empty State ---- */
+.subscription-empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 180px;
+    color: var(--text-muted);
+    font-size: 14px;
+    gap: 8px;
+    font-family: 'DM Sans', sans-serif;
+}
+
+.subscription-empty-icon {
+    font-size: 32px;
+    opacity: 0.3;
+    margin-bottom: 8px;
+}

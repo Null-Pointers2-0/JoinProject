@@ -1,0 +1,19 @@
+{% extends 'Details/details_base.html' %}
+
+{% block content_metadata %}
+<div class="data-card">
+    <div class="data-card-label">Periodo</div>
+    <div class="data-card-value">
+        {{ content.start_year }} - {{ content.end_year|default:"Actualidad" }}
+    </div>
+</div>
+
+{% if content.total_seasons %}
+<div class="data-card">
+    <div class="data-card-label">Temporadas</div>
+    <div class="data-card-value">{{ content.total_seasons }} Seasons</div>
+</div>
+{% endif %}
+{% endblock %}
+
+{% block favorite_url %}{% url 'toggle_series_favorite' content.id %}{% endblock %}

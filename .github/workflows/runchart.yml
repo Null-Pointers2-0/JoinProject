@@ -1,0 +1,47 @@
+name: Run Chart Action
+
+on:  
+  workflow_dispatch: 
+  schedule:
+    - cron: '0 0 * * 2'
+  #push:
+  #  branches: master
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      issues: read
+  
+    steps:
+      - name: Cechout repo
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.head_ref }}
+          persist-credentials: true
+
+      - name: Fetch all issues and their creation dates
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh issue list --state all --limit 10000 --json createdAt > issues.json
+
+      - name: Setup python
+        uses: actions/setup-python@v3
+        with:
+          python-version: "3.12"
+          
+      - name: Install dependencies
+        run: python -m pip install --upgrade pip && pip install matplotlib>=3.7.3
+  
+      - name: Run script
+        
+        run: python ./runchart_prova.py
+
+      - name: Upload histogram artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: runchart-img
+          path: issue_runchart.png
+  
