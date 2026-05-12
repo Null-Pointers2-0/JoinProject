@@ -115,17 +115,7 @@ def admin_dashboard_overview(request):
 
     # 2. Obtener los ports de las plataformas suscritas
     subscribed_ports = list(request.user.subscriptions.values_list('port', flat=True))
-
-    # 3. Si hay filtro de plataforma en la URL, verificar que pertenece a sus suscripciones
-    if platform_id:
-        try:
-            platform_port = int(platform_id)
-            # Solo usar ese filtro si el usuario tiene acceso
-            active_ports = platform_port if platform_port in subscribed_ports else subscribed_ports
-        except ValueError:
-            active_ports = subscribed_ports[0]
-    else:
-        active_ports = API.objects.get(port=subscribed_ports[0]).id
+    active_ports = API.objects.get(port=subscribed_ports[0]).id
 
 
     # 4. Obtener datos filtrados por las plataformas activas
@@ -158,9 +148,11 @@ def admin_dashboard_genres(request):
     start_date = request.GET.get('start')
     end_date = request.GET.get('end')
     platform_id = request.GET.get('platform')
-    print(API.objects.all())
     
-    genre_stats = get_genre_distribution(start_date, end_date, platform_id)
+    subscribed_ports = list(request.user.subscriptions.values_list('port', flat=True))
+    active_ports = API.objects.get(port=subscribed_ports[0]).id
+    
+    genre_stats = get_genre_distribution(start_date, end_date, active_ports)
     
     return render(request, 'users/parts/dashboard_genres.html', {
         'genre_stats': genre_stats,
@@ -175,7 +167,10 @@ def admin_dashboard_age_ratings(request):
     end_date = request.GET.get('end')
     platform_id = request.GET.get('platform')
     
-    age_stats = get_age_rating_distribution(start_date, end_date, platform_id)
+    subscribed_ports = list(request.user.subscriptions.values_list('port', flat=True))
+    active_ports = API.objects.get(port=subscribed_ports[0]).id
+    
+    age_stats = get_age_rating_distribution(start_date, end_date, active_ports)
     
     return render(request, 'users/parts/dashboard_age_ratings.html', {
         'age_stats': age_stats,
@@ -189,8 +184,12 @@ def admin_dashboard_directors(request):
     start_date = request.GET.get('start')
     end_date = request.GET.get('end')
     platform_id = request.GET.get('platform')
+
+    subscribed_ports = list(request.user.subscriptions.values_list('port', flat=True))
+    active_ports = API.objects.get(port=subscribed_ports[0]).id
     
-    director_stats = get_director_top_list(start_date, end_date, platform_id)
+    
+    director_stats = get_director_top_list(start_date, end_date, active_ports)
     
     return render(request, 'users/parts/dashboard_directors.html', {
         'director_stats': director_stats,
