@@ -20,6 +20,4 @@ def start():
         replace_existing=True,
     )
 
-    download_catalog_data()
-
     scheduler.start()

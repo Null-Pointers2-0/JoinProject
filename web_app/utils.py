@@ -33,11 +33,12 @@ def get_poster(content_title,url_search):
         response = requests.get(f"{url_search}{content_title}")
         response.raise_for_status()
         poster_path = response.json()['results'][0]['poster_path']
+        if not poster_path:
+            return None
         if poster_path.startswith('/'):
             poster_path = poster_path[1:]
         return f"{TMDB_POSTER_URL}{poster_path}"
-    except Exception as e:
-        print(f"Error getting poster for '{content_title}': {e}")
+    except:
         return None
 
 

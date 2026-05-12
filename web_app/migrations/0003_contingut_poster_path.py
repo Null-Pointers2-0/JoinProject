@@ -6,7 +6,7 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('web_app', '0002_contingut_api_content_id'),
+        ('web_app', '0002_visualitzacio'),
     ]
 
     operations = [
