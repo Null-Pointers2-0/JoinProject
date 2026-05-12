@@ -43,7 +43,6 @@ if not DEBUG:
             f'https://{render_host}',
         ]
 
-# Application definition
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -96,7 +95,7 @@ WSGI_APPLICATION = 'web.wsgi.application'
 
 DATABASE_URL = os.getenv("DATABASE_URL")
 
-if DATABASE_URL:
+if DATABASE_URL and DEBUG == False:
     print("DATABASE_URL encontrado, configurando PostgreSQL")
     tmpPostgres = urlparse(DATABASE_URL)
     DATABASES = {
@@ -111,7 +110,7 @@ if DATABASE_URL:
         }
     }
 else:
-    print("DATABASE_URL no encontrado, usando SQLite por defecto")
+    print("DATABASE_URL no encontrado o DEBUG activo, usando SQLite")
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.sqlite3',
