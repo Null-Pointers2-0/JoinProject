@@ -10,6 +10,7 @@ urlpatterns = [
     path("register/", views.register_view, name="register"),
     path("login/", auth_views.LoginView.as_view(template_name="identify/login.html"), name="login"),
     path("logout/", LogoutView.as_view(), name="logout"),
+    path('dashboard_redirect/', views.redirect_by_role, name='go_to_dashboard'),
 
     path("user_setting/", views.user_setting, name="user_setting"),
     path("movie/<int:pk>/", views.movie_detail, name="movie_detail"),

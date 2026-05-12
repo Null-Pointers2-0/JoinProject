@@ -1,0 +1,76 @@
+{% extends 'users/types/user_admin.html' %}
+
+{% block parts_content %}
+<div class="container-fluid mt-4">
+    <div class="row">
+        <div class="col-md-8 mb-4">
+            <div class="card shadow-sm border-0">
+                <div class="card-header bg-warning text-dark py-3">
+                    <h5 class="card-title mb-0"><i class="fas fa-user-tie"></i> Top Directors</h5>
+                </div>
+                <div class="card-body p-4">
+                    <div style="height: 400px; position: relative;">
+                        <canvas id="directorChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 mb-4">
+            <div class="card shadow-sm border-0">
+                <div class="card-header bg-light py-3">
+                    <h5 class="card-title mb-0">Top Directors Table</h5>
+                </div>
+                <div class="card-body p-0">
+                    <div class="table-responsive">
+                        <table class="table table-hover mb-0">
+                            <thead class="table-light">
+                                <tr>
+                                    <th class="ps-3">Director</th>
+                                    <th class="text-end pe-3">Views</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for label, value in director_stats.items %}
+                                <tr>
+                                    <td class="ps-3">{{ label }}</td>
+                                    <td class="text-end pe-3 fw-bold">{{ value }}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const ctx = document.getElementById('directorChart').getContext('2d');
+    new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: {{ director_stats.labels|safe }},
+            datasets: [{
+                label: 'Views',
+                data: {{ director_stats.values|safe }},
+                backgroundColor: '#2c3e50',
+                borderRadius: 5
+            }]
+        },
+        options: { 
+            responsive: true, 
+            maintainAspectRatio: false,
+            plugins: {
+                legend: { display: false }
+            },
+            scales: {
+                y: { beginAtZero: true, grid: { display: false } },
+                x: { grid: { display: false } }
+            }
+        }
+    });
+});
+</script>
+{% endblock %}

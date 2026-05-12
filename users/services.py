@@ -1,9 +1,8 @@
 import hashlib
 from django.db.models import Count, Q
-from web_app.models import Contingut, Visualitzacio, Preferits
+from web_app.models import Contingut, Visualitzacio, Preferits, API, Genre, AgeRating, Director
 
 def get_content_analytics(start_date=None, end_date=None, plataform_id=None):
-
     queryset = Contingut.objects.select_related('genere', 'age_rating', 'api', 'director')
 
     filters = Q()
@@ -25,7 +24,7 @@ def get_content_analytics(start_date=None, end_date=None, plataform_id=None):
         results.append(
             {
                 'title': item.titol,
-                'genre': item.genere if item.genere else 'N/A',
+                'genre': item.genere.name if item.genere else 'N/A',
                 'age_rating': item.age_rating.codi if item.age_rating else 'N/A',
                 'year': item.data_estrena,
                 'director': item.director.name if item.director else 'N/A',
@@ -50,3 +49,51 @@ def format_analytics_for_csv (data_list, is_b2b_report = False):
         formatted_data.append(row)
         
     return formatted_data
+
+def get_genre_distribution(start_date=None, end_date=None, platform_id=None):
+    filters = Q()
+    if start_date and end_date:
+        filters &= Q(visualitzacions__data_visualitzacio__range=(start_date,end_date))
+    if platform_id:
+        filters &= Q(api__id=platform_id)
+
+    data = Genre.objects.filter(contingut__in=Contingut.objects.filter(filters)).annotate(
+        total_views=Count('contingut__visualitzacions', distinct=True)
+    ).order_by('-total_views')
+
+    return {
+        'labels': [g.name for g in data],
+        'values': [g.total_views for g in data]
+    }
+
+def get_age_rating_distribution(start_date=None, end_date=None, platform_id=None):
+    filters = Q()
+    if start_date and end_date:
+        filters &= Q(visualitzacions__data_visualitzacio__range=(start_date,end_date))
+    if platform_id:
+        filters &= Q(api__id=platform_id)
+
+    data = AgeRating.objects.filter(contingut__in=Contingut.objects.filter(filters)).annotate(
+        total_views=Count('contingut__visualitzacions', distinct=True)
+    ).order_by('-total_views')
+
+    return {
+        'labels': [ar.codi for ar in data],
+        'values': [ar.total_views for ar in data]
+    }
+
+def get_director_top_list(start_date=None, end_date=None, platform_id=None):
+    filters = Q()
+    if start_date and end_date:
+        filters &= Q(visualitzacions__data_visualitzacio__range=(start_date,end_date))
+    if platform_id:
+        filters &= Q(api__id=platform_id)
+
+    data = Director.objects.filter(contingut__in=Contingut.objects.filter(filters)).annotate(
+        total_views=Count('contingut__visualitzacions', distinct=True)
+    ).order_by('-total_views')[:10]
+
+    return {
+        'labels': [d.name for d in data],
+        'values': [d.total_views for d in data]
+    }
