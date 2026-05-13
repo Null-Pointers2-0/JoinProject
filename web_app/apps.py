@@ -7,7 +7,10 @@ class WebAppConfig(AppConfig):
     def ready(self):
         import os
         import sys
+        from django.db.models.signals import post_migrate
         
+        post_migrate.connect(create_default_user, sender=self)
+
         if any(cmd in sys.argv for cmd in ['collectstatic', 'migrate', 'makemigrations', 'check']):
             return 
 
@@ -19,3 +22,22 @@ class WebAppConfig(AppConfig):
             scheduler.start()
         except Exception as e:
             print(f"Scheduler no pudo arrancar (ignorar si es build): {e}")
+
+def create_default_user(sender, **kwargs):
+    from django.contrib.auth import get_user_model
+    from .models import UserType
+    
+    User = get_user_model()
+
+    username = 'admin'
+    email = 'admin@admin.com'
+    password = 'adminpassword'
+
+    if not User.objects.filter(username=username).exists():
+        User.objects.create_superuser(
+            username=username,
+            email=email,
+            password=password,
+            type=UserType.ADMIN # Usando tu clase UserType
+        )
+        print(f"✅ Superusuario '{username}' creado correctamente.")

@@ -186,3 +186,11 @@ LOGIN_REDIRECT_URL = 'home'
 LOGOUT_REDIRECT_URL = 'home'
 
 AUTH_USER_MODEL = 'web_app.CustomUser'
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = os.getenv('MAIL')
+EMAIL_HOST_PASSWORD = os.getenv('MAIL_PW')
+DEFAULT_FROM_EMAIL = f'StreamSync <{EMAIL_HOST_USER}>'

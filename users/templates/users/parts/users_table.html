@@ -1,0 +1,85 @@
+{% extends 'users/types/user_client.html' %}
+{% load i18n %}
+{% load static %}
+
+{% block extra_css %}
+    {{ block.super }}
+    <link rel="stylesheet" href="{% static 'users/css/admin_management.css' %}">
+{% endblock %}
+
+{% block parts_content %}
+<div class="admin-container">
+    <div class="admin-header d-flex justify-content-between align-items-center mb-4">
+        <div class="header-text">
+            <h2 class="title-neon">{% trans 'Gestión de Usuarios' %}</h2>
+            <p class="subtitle mb-0">{% trans 'Control de acceso y roles de la plataforma' %}</p>
+        </div>
+        <a href="{% url 'crear_usuario_admin' %}" class="btn-neon">
+            <i class="bi bi-person-plus-fill me-2"></i>{% trans 'Añadir Usuario' %}
+        </a>
+    </div>
+
+    <div class="glass-card filter-section mb-4">
+        <form method="GET" class="filter-form d-flex align-items-center gap-3">
+            <div class="filter-group d-flex align-items-center">
+                <i class="bi bi-funnel-fill me-2 text-neon"></i>
+                <select name="tipo" class="filter-select">
+                    <option value="">{% trans 'Todos los Roles' %}</option>
+                    <option value="Admin" {% if request.GET.tipo == 'Admin' %}selected{% endif %}>Admin</option>
+                    <option value="Consumer" {% if request.GET.tipo == 'Consumer' %}selected{% endif %}>Consumer</option>
+                    <option value="Staff" {% if request.GET.tipo == 'Staff' %}selected{% endif %}>Staff</option>
+                </select>
+            </div>
+            <button type="submit" class="btn-ghost">
+                <i class="bi bi-check2-circle me-1"></i>{% trans 'Aplicar Filtro' %}
+            </button>
+        </form>
+    </div>
+
+    <div class="glass-card table-container p-0">
+        <div class="table-responsive">
+            <table class="table-sync w-100">
+                <thead>
+                    <tr>
+                        <th>{% trans 'Usuario' %}</th>
+                        <th>{% trans 'Email' %}</th>
+                        <th>{% trans 'Rol' %}</th>
+                        <th class="text-center">{% trans 'Acciones' %}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for u in users %}
+                    <tr>
+                        <td class="user-name">
+                            <div class="d-flex align-items-center">
+                                <i class="bi bi-person-circle me-2 text-muted"></i>
+                                {{ u.username }}
+                            </div>
+                        </td>
+                        <td class="user-email text-muted">{{ u.email }}</td>
+                        <td>
+                            <span class="badge-neon">{{ u.type }}</span>
+                        </td>
+                        <td class="text-center">
+                            <form action="{% url 'eliminar_usuario' u.id %}" method="POST" class="d-inline">
+                                {% csrf_token %}
+                                <button type="submit" class="btn-delete" title="{% trans 'Eliminar usuario' %}" onclick="return confirm('¿Estás seguro de eliminar a {{ u.username }}?')">
+                                    <i class="bi bi-trash3-fill">Eliminar</i>
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="4" class="empty-state text-center py-5">
+                            <i class="bi bi-search mb-2 d-block fs-2 text-muted"></i>
+                            {% trans 'No se han encontrado usuarios con estos criterios.' %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

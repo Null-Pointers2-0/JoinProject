@@ -1,7 +1,15 @@
 from django.shortcuts import render, redirect
 from django.contrib import messages
 from web_app.forms import CustomUserChangeForm
-from web_app.models import Movie, Series, Contingut
+from web_app.models import Movie, Series
+from django.core.mail import send_mail
+from django.conf import settings
+from django.utils.crypto import get_random_string
+from django.shortcuts import render, redirect, get_object_or_404
+from web_app.forms import CustomUserAdminCreationForm
+from web_app.models import CustomUser, Movie, UserProfile, Series
+from django.contrib.auth.decorators import login_required, user_passes_test
+from django.contrib import messages
 
 # Create your views here.
 def profile(request):
@@ -55,3 +63,63 @@ def subscription(request):
         'all_apis': all_apis,
         'user_subscription_ids': user_subscription_ids,
     })
+
+@user_passes_test(lambda u: u.is_superuser)
+def gestion_usuarios(request):
+    if not request.user.is_authenticated:
+        return redirect('login')
+    users = CustomUser.objects.all()
+    return render(request, 'users/parts/users_table.html', {'users': users})
+
+@user_passes_test(lambda u: u.is_superuser)
+def eliminar_usuario(request, user_id):
+    user = get_object_or_404(CustomUser, id=user_id)
+    if request.method == 'POST':
+        user.delete()
+        messages.success(request, f"Usuario '{user.username}' eliminado correctamente.")
+        return redirect('gestion_usuarios')
+
+
+@user_passes_test(lambda u: u.is_superuser)
+def crear_usuario_admin(request):
+    if request.method == 'POST':
+        form = CustomUserAdminCreationForm(request.POST)
+        if form.is_valid():
+            user = form.save(commit=False)
+            
+            temp_password = get_random_string(length=12)
+            user.set_password(temp_password)
+            user.save()
+            
+            UserProfile.objects.get_or_create(user=user)
+            
+            asunto = 'Bienvenido a StreamSync - Tus Credenciales'
+            mensaje = f"""
+            Hola {user.username},
+            
+            Se ha creado una cuenta para ti en StreamSync.
+            Aquí tienes tus credenciales de acceso:
+            
+            Usuario: {user.username}
+            Contraseña temporal: {temp_password}
+            
+            Por seguridad, te recomendamos cambiarla en tu perfil tras iniciar sesión.
+            """
+            
+            try:
+                send_mail(
+                    asunto,
+                    mensaje,
+                    settings.DEFAULT_FROM_EMAIL,
+                    [user.email],
+                    fail_silently=False,
+                )
+                messages.success(request, f"Usuario creado y correo enviado a {user.email}")
+            except Exception as e:
+                messages.warning(request, "Usuario creado, pero hubo un error al enviar el correo.")
+
+            return redirect('gestion_usuarios')
+    else:
+        form = CustomUserAdminCreationForm()
+    
+    return render(request, 'users/parts/create_user.html', {'form': form})
