@@ -4,6 +4,7 @@ from .services import download_catalog_data
 
 
 def start():
+    return
     scheduler = BackgroundScheduler(timezone="Europe/Madrid")
     scheduler.add_jobstore(DjangoJobStore(), "default")
 
