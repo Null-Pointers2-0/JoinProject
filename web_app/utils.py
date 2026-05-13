@@ -6,7 +6,13 @@ load_dotenv()
 
 from web_app.models import Movie, API, Director, Genre, AgeRating, Series, Contingut
 
+TMDB_API_KEY = os.getenv('THEMOVIEDB_API_KEY')
+
 SERIES_ID_OFFSET = 100000
+TMDB_MOVIE_URL = f"https://api.themoviedb.org/3/search/movie?api_key={TMDB_API_KEY}&query="
+TMDB_SERIES_URL = f"https://api.themoviedb.org/3/search/tv?api_key={TMDB_API_KEY}&query="
+
+TMDB_POSTER_URL = f"https://image.tmdb.org/t/p/w185/"  
 
 def store_data():
     for port in ['8080', '8081', '8082']:
@@ -22,9 +28,23 @@ def store_data():
 def store_api(port):
     API.objects.get_or_create(port=port)
 
+def get_poster(content_title,url_search):
+    try:
+        response = requests.get(f"{url_search}{content_title}")
+        response.raise_for_status()
+        poster_path = response.json()['results'][0]['poster_path']
+        if not poster_path:
+            return None
+        if poster_path.startswith('/'):
+            poster_path = poster_path[1:]
+        return f"{TMDB_POSTER_URL}{poster_path}"
+    except:
+        return None
+
+
 def Call(endpoint, params=None):
     result = {'8080': None, '8081': None, '8082': None}
-    APIs = [('8080', os.getenv('API_KEY_8080')), ('8081', os.getenv('API_KEY_8081')), ('8082', os.getenv('API_KEY_8082'))]
+    APIs = [('8080', os.getenv('API_KEY_8080')), ('8081', os.getenv('API_KEY_8081')), ('8082', os.getenv('API_KEY_8082')), ('tmdb', os.getenv('THEMOVIEDB_API_KEY'))]
 
     print(f"Calling endpoint '{endpoint}' with params: {params}")
     for port, api_key in APIs:
@@ -126,6 +146,7 @@ def get_movies(params=None):
                     'director': director,
                     'genere': genre,
                     'age_rating': age_rating,
+                    'poster_path': get_poster(json['title'], TMDB_MOVIE_URL),
                 }
             )
 
@@ -163,6 +184,7 @@ def get_series(params=None):
                     'director': director,
                     'genere': genre,
                     'age_rating': age_rating,
+                    'poster_path': get_poster(json['title'], TMDB_SERIES_URL),
                 }
             )
 

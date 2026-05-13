@@ -47,36 +47,21 @@ def home(request):
         key = (cont.title.lower(), type_str)
         if key not in seen_keys:
             cont.content_type = type_str
-            cont.available_platforms = [cont.contingut.api] if cont.contingut.api else []
+            if is_movie:
+                related_continguts = Contingut.objects.filter(
+                    titol__iexact=cont.title,
+                    movie__isnull=False
+                )
+            else:
+                related_continguts = Contingut.objects.filter(
+                    titol__iexact=cont.title,
+                    series__isnull=False
+                )
+            cont.available_platforms = list(
+                API.objects.filter(contingut__in=related_continguts).distinct()
+            )
             unique_results.append(cont)
             seen_keys.add(key)
-    '''
-    for m in movies:
-        key = (m.title.lower(), 'movie')
-        if key not in seen_keys:
-            m.content_type = 'movie'
-            # Collect all platforms (API objects) this title is available on
-            m.available_platforms = list(
-                API.objects.filter(
-                    contingut__titol__iexact=m.title
-                ).distinct()
-            )
-            unique_results.append(m)
-            seen_keys.add(key)
-
-    for s in series:
-        key = (s.title.lower(), 'series')
-        if key not in seen_keys:
-            s.content_type = 'series'
-            # Collect all platforms (API objects) this title is available on
-            s.available_platforms = list(
-                API.objects.filter(
-                    contingut__titol__iexact=s.title
-                ).distinct()
-            )
-            unique_results.append(s)
-            seen_keys.add(key)
-'''
     paginator = Paginator(unique_results, 20)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
