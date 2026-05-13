@@ -6,7 +6,7 @@
 <link rel="stylesheet" href="{% static 'css/home/home.css' %}?v=1.3">
 <link rel="stylesheet" href="{% static 'css/home/filter.css' %}?v=1.3">
 <style>
-    /* Estilo para el estado de carga */
+    /* Estilos para el estado de carga */
     .loading-container {
         display: flex;
         flex-direction: column;
@@ -20,7 +20,7 @@
         width: 36px;
         height: 36px;
         border-radius: 50%;
-        border-left-color: #e50914; /* Color rojo estilo streaming */
+        border-left-color: #e50914;
         animation: spin 1s linear infinite;
     }
     @keyframes spin {
@@ -40,7 +40,7 @@
                 <line x1="21" y1="21" x2="16.65" y2="16.65" />
             </svg>
             <input type="text" id="search" name="q" class="search-input" placeholder="{% trans 'Search...' %}"
-                value="{{ request.GET.q }}">
+                value="{{ request.GET.q|default:'' }}">
         </div>
         <div class="filter-group">
             <div class="genre-filter">
@@ -59,6 +59,18 @@
                     <option value="">{% trans "All" %}</option>
                     {% for d in directors %}
                     <option value="{{ d }}" {% if request.GET.director == d %}selected{% endif %}>{{ d }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="age-rating-filter">
+                <label for="age_rating">{% trans "Age Rating" %}:</label>
+                <select name="age_rating" id="age_rating">
+                    <option value="">{% trans "All" %}</option>
+                    {% for ar in age_ratings %}
+                    <option value="{{ ar }}" {% if request.GET.age_rating == ar %}selected{% endif %}>
+                        {{ ar }}
+                    </option>
                     {% endfor %}
                 </select>
             </div>
@@ -88,7 +100,7 @@
 <div class="container home-container">
     <div class="row">
         <div class="col-12 home-container-left">
-            <h2 class="results-title" id="results-header">
+            <h2 class="results-title">
                 {% if request.GET.q %}
                     {% trans "Results for" %}: {{ request.GET.q }}
                 {% else %}
@@ -104,7 +116,7 @@
                     </div>
                 </div>
                 
-                <div id="pagination-container">
+                <div id="pagination-container" style="margin-top: 30px;">
                     </div>
             </div>
         </div>
@@ -115,43 +127,33 @@
 document.addEventListener('DOMContentLoaded', function() {
     const resultsContainer = document.getElementById('results-container');
     const paginationContainer = document.getElementById('pagination-container');
-    
-    // Capturamos los parámetros actuales de la URL (filtros y página)
     const urlParams = new URLSearchParams(window.location.search);
     
-    // Función para cargar los datos
     function loadContent(params) {
-        resultsContainer.innerHTML = `
-            <div class="loading-container">
-                <div class="spinner"></div>
-                <p style="margin-top: 15px;">{% trans "Buscando..." %}</p>
-            </div>`;
-
         fetch(`/api/search-content/?${params.toString()}`)
             .then(response => {
-                if (!response.ok) throw new Error('Network response was not ok');
+                if (!response.ok) throw new Error('Error en la respuesta del servidor');
                 return response.json();
             })
             .then(data => {
-                // Inyectamos las cards
+                // Inyectar cards
                 if (data.html.trim() === "") {
                     resultsContainer.innerHTML = '<p class="no-results">{% trans "No se han encontrado resultados." %}</p>';
                 } else {
                     resultsContainer.innerHTML = data.html;
                 }
                 
-                // Inyectamos el paginador si viene en el JSON (necesitas enviarlo desde la vista)
+                // Inyectar paginación
                 if (data.pagination_html) {
                     paginationContainer.innerHTML = data.pagination_html;
                 }
             })
             .catch(error => {
-                console.error('Error fetching content:', error);
-                resultsContainer.innerHTML = '<p>{% trans "Error al conectar con el servidor." %}</p>';
+                console.error('Error:', error);
+                resultsContainer.innerHTML = '<p>{% trans "Error al cargar los datos." %}</p>';
             });
     }
 
-    // Ejecución inicial
     loadContent(urlParams);
 });
 </script>

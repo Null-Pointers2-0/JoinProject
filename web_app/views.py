@@ -15,7 +15,6 @@ def home(request):
         'genres': Genre.objects.values_list('name', flat=True).distinct(),
         'directors': Director.objects.values_list('name', flat=True).distinct(),
         'platforms': API.objects.all(),
-        # Añadimos age_ratings que faltaba en tu home.html
         'age_ratings': AgeRating.objects.values_list('codi', flat=True).distinct(),
     }
     return render(request, "home/home.html", context)
@@ -23,11 +22,12 @@ def home(request):
 def search_content_ajax(request):
     """Procesamiento asíncrono optimizado."""
     try:
-        # 1. Filtros
         search_query = request.GET.get('q', '')
         genre_filter = request.GET.get('genre', '')
         director_filter = request.GET.get('director', '')
         platform_filter = request.GET.get('platform', '')
+        age_rating_filter = request.GET.get('age_rating', '')
+
 
         movies = Movie.objects.select_related('contingut__genere', 'contingut__director', 'contingut__age_rating', 'contingut__api').all()
         series = Series.objects.select_related('contingut__genere', 'contingut__director', 'contingut__age_rating', 'contingut__api').all()
@@ -35,26 +35,34 @@ def search_content_ajax(request):
         if search_query:
             movies = movies.filter(contingut__titol__icontains=search_query)
             series = series.filter(contingut__titol__icontains=search_query)
-        # ... aplicar otros filtros si es necesario ...
+        if genre_filter:
+            movies = movies.filter(contingut__genere__name=genre_filter)
+            series = series.filter(contingut__genere__name=genre_filter)
+        if director_filter:
+            movies = movies.filter(contingut__director__name=director_filter)
+            series = series.filter(contingut__director__name=director_filter)
+        if platform_filter: 
+            movies = movies.filter(contingut__api__port=platform_filter)
+            series = series.filter(contingut__api__port=platform_filter)
+        if age_rating_filter:
+            movies = movies.filter(contingut__age_rating__codi=age_rating_filter)
+            series = series.filter(contingut__age_rating__codi=age_rating_filter)
 
-        # 2. Unión y deduplicación
         all_content = list(chain(movies, series))
         unique_results = []
         seen = set()
+
         for item in all_content:
             title_key = item.contingut.titol.lower()
             if title_key not in seen:
                 item.content_type = 'movie' if isinstance(item, Movie) else 'series'
-                # Calculamos las plataformas para este item específico
                 item.available_platforms = [m.contingut.api for m in type(item).objects.filter(contingut__titol__iexact=item.title).select_related('contingut__api') if m.contingut.api]
                 unique_results.append(item)
                 seen.add(title_key)
 
-        # 3. Paginación
         paginator = Paginator(unique_results, 20)
         page_obj = paginator.get_page(request.GET.get('page', 1))
 
-        # 4. Renderizado (RUTAS CORREGIDAS SEGÚN TU CAPTURA)
         html_cards = render_to_string('home/includes/result_fragment.html', {'items': page_obj}, request=request)
         html_pagination = render_to_string('home/home_parts/paginator.html', {'items': page_obj}, request=request)
 
@@ -62,6 +70,7 @@ def search_content_ajax(request):
             'html': html_cards,
             'pagination_html': html_pagination
         })
+
     except Exception as e:
         import logging
         logging.error(f"Error en AJAX: {str(e)}")
