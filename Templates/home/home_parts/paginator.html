@@ -13,15 +13,15 @@
         {% endif %}
 
         <div class="pagination-info">
-            <span class="current-label">{% trans "Pàgina" %}</span>
+            <span class="current-label">{% trans "Página" %}</span>
             <span class="current-page">{{ items.number }}</span>
             <span class="divider">{% trans "de" %}</span>
             <span class="total-pages">{{ items.paginator.num_pages }}</span>
         </div>
 
         {% if items.has_next %}
-            <a href="?page={{ items.next_page_number }}{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}" class="pagination-btn" title="{% trans 'següent' %}">
-                <span class="btn-text">{% trans "següent" %}</span>
+            <a href="?page={{ items.next_page_number }}{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}" class="pagination-btn" title="{% trans 'siguiente' %}">
+                <span class="btn-text">{% trans "siguiente" %}</span>
                 <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none"><polyline points="9 18 15 12 9 6"></polyline></svg>
             </a>
             <a href="?page={{ items.paginator.num_pages }}{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}" class="pagination-btn icon-btn" title="{% trans 'última' %}">
