@@ -12,4 +12,4 @@ EXPOSE 8000
 
 RUN python manage.py collectstatic --noinput
 
-CMD python3 -m pip install --no-cache-dir setuptools &&  python3 manage.py migrate --fake-initial && gunicorn web.wsgi:application --bind 0.0.0.0:${PORT:-8000}
+CMD python3 manage.py migrate --fake-initial && gunicorn web.wsgi:application --bind 0.0.0.0:${PORT:-8000}
