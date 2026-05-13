@@ -93,6 +93,17 @@ def register_view(request):
         return redirect('home')
     return render(request, 'identify/register.html', {'form': form})
 
+@login_required(login_url='login')
+def redirect_by_role(request):
+    user = request.user
+
+    if user.type == 'Admin':
+        return redirect('admin_dashboard')
+    elif user.type == 'Staff':
+        pass
+    elif user.type == 'Consumer':
+        return redirect('home')
+
 
 def user_setting(request):
     if not request.user.is_authenticated:

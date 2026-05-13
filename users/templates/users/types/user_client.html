@@ -7,7 +7,7 @@
     <ul class="nav nav-tabs">
         <li class="nav-item">
             <a class="nav-link {% if request.resolver_match.url_name == 'profile' %}active{% endif %}"
-               href="{% url 'profile' %}">{% trans 'Profile' %}</a>
+               href="{% url 'user_profile' %}">{% trans 'Profile' %}</a>
         </li>
         <li class="nav-item">
             <a class="nav-link {% if request.resolver_match.url_name == 'history' %}active{% endif %}"
