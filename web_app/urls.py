@@ -14,6 +14,7 @@ urlpatterns = [
     path("user_setting/", views.user_setting, name="user_setting"),
     path("movie/<int:pk>/", views.movie_detail, name="movie_detail"),
     path("series/<int:pk>/", views.series_detail, name="series_detail"),
+    path('review/submit/<int:contingut_id>/', views.submit_review, name='submit_review'),
 
     path("api/user/profile/", views.api_user_profile, name="api_user_profile"),
     path('favorite/movie/<int:pk>/', views.toggle_movie_favorite, name='toggle_movie_favorite'),
