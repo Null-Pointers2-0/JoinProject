@@ -1,12 +1,13 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from web_app.forms import CustomUserCreationForm
-from web_app.models import AgeRating, API, Director, Genre, Movie, UserProfile, Series, Contingut
+from web_app.models import AgeRating, API, Director, Genre, Movie, UserProfile, Series, Contingut, Valoracio
 from web_app import utils
 from itertools import chain
 from django.http import JsonResponse
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import login
 from django.core.paginator import Paginator
+from django.db.models import Avg, Count
 from django.template.loader import render_to_string
 
 def home(request):
@@ -114,10 +115,17 @@ def movie_detail(request, pk):
         profile, _ = UserProfile.objects.get_or_create(user=request.user)
         is_favorite = movie.contingut in profile.preferits.all()
 
+    reviews = Valoracio.objects.filter(contingut=movie.contingut).order_by('-creada_a')
+    review_stats = reviews.aggregate(avg_rating=Avg('puntuacio'), total_reviews=Count('id'))
+
     return render(request, 'Details/details_movie.html', {
         'content': movie,
         'is_favorite': is_favorite,
-        'available_apis': available_apis
+        'available_apis': available_apis,
+        'reviews': reviews,
+        'avg_rating': review_stats['avg_rating'],
+        'total_reviews': review_stats['total_reviews'],
+        'recommendations': movie.get_similar_by_genre(limit=4)
     })
 
 def series_detail(request, pk):
@@ -130,10 +138,16 @@ def series_detail(request, pk):
         profile, _ = UserProfile.objects.get_or_create(user=request.user)
         is_favorite = series.contingut in profile.preferits.all()
 
+    reviews = Valoracio.objects.filter(contingut=series.contingut).order_by('-creada_a')
+    review_stats = reviews.aggregate(avg_rating=Avg('puntuacio'), total_reviews=Count('id'))
+
     return render(request, 'Details/details_serie.html', {
         'content': series,
         'is_favorite': is_favorite,
-        'available_apis': available_apis
+        'available_apis': available_apis,
+        'reviews': reviews,
+        'avg_rating': review_stats['avg_rating'],
+        'total_reviews': review_stats['total_reviews'],
     })
 
 
@@ -185,6 +199,27 @@ def toggle_series_favorite(request, pk):
             status = "added"
         return JsonResponse({'status': status})
     return JsonResponse({'error': 'Método no permitido'}, status=405)
+
+
+@login_required
+def submit_review(request, contingut_id):
+    if request.method == 'POST':
+        puntuacio = request.POST.get('rating')
+        comentari = request.POST.get('comment', '')
+
+        contingut = get_object_or_404(Contingut, id=contingut_id)
+
+        if puntuacio:
+            Valoracio.objects.update_or_create(
+                user=request.user,
+                contingut=contingut,
+                defaults={
+                    'puntuacio': int(puntuacio),
+                    'comentari': comentari
+                }
+            )
+
+    return redirect(request.META.get('HTTP_REFERER', 'home'))
 
 def terms_use(request):
     return render(request, 'footer_legal/terms_use.html')

@@ -71,39 +71,71 @@
                 {% endif %}
             </div>
         </section>
+
+        <section class="community-reviews-section" style="margin-top: 40px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 20px;">
+            <h2 class="section-title">Valoracions de la comunitat</h2>
+
+            <div class="rating-summary" style="margin-bottom: 20px;">
+                {% if total_reviews > 0 %}
+                    <span class="stars-avg" style="color: #f5c518; font-size: 1.5rem; font-weight: bold;">★ {{ avg_rating|floatformat:1 }}</span>
+                    <span class="count" style="color: rgba(255,255,255,0.6);">({{ total_reviews }})</span>
+                {% else %}
+                    <span class="count" style="font-style: italic; color: rgba(255,255,255,0.6);">Sense valoracions encara</span>
+                {% endif %}
+            </div>
+
+            {% if user.is_authenticated %}
+            <div class="review-form-container" style="background: rgba(255,255,255,0.03); padding: 20px; border-radius: 8px; margin-bottom: 30px;">
+                <h4 style="margin-bottom: 15px; font-size: 1.1rem;">Deixa la teva opinió</h4>
+                <form action="{% url 'submit_review' content.contingut.id %}" method="POST">
+                    {% csrf_token %}
+                    <div class="star-rating-input" style="display: flex; flex-direction: row-reverse; justify-content: flex-end; gap: 5px; font-size: 2rem; margin-bottom: 15px;">
+                        {% for i in "54321" %}
+                        <input type="radio" id="star{{i}}" name="rating" value="{{i}}" required style="display:none;" />
+                        <label for="star{{i}}" style="cursor:pointer; color: rgba(255,255,255,0.2);">★</label>
+                        {% endfor %}
+                    </div>
+                    <textarea name="comment" class="review-textarea" style="width: 100%; min-height: 100px; background: rgba(0,0,0,0.3); color: white; border: 1px solid rgba(255,255,255,0.1); padding: 15px; border-radius: 6px;" placeholder="Què t'ha semblat?"></textarea>
+                    <button type="submit" class="submit-btn mt-3" style="width: auto; padding: 10px 24px; background: var(--cyan); border: none; color: black; font-weight: bold; border-radius: 4px; cursor: pointer;">Publicar valoració</button>
+                </form>
+            </div>
+            {% endif %}
+
+            <div class="reviews-list">
+                {% for review in reviews %}
+                <div class="review-card" style="background: rgba(255,255,255,0.02); padding: 15px; border-radius: 8px; margin-bottom: 15px; border-left: 3px solid var(--cyan);">
+                    <div class="review-header" style="display: flex; justify-content: space-between; margin-bottom: 10px;">
+                        <span class="review-user" style="font-weight: bold;">{{ review.user.username }}</span>
+                        <span class="review-stars" style="color: #f5c518;">
+                            {% for i in "12345" %}{% if forloop.counter <= review.puntuacio %}★{% else %}<span style="opacity:0.3">★</span>{% endif %}{% endfor %}
+                        </span>
+                    </div>
+                    <p class="review-text" style="color: rgba(255,255,255,0.9); margin: 0;">{{ review.comentari }}</p>
+                </div>
+                {% empty %}
+                <p style="color: rgba(255,255,255,0.5);">Sigues el primer en valorar aquest contingut!</p>
+                {% endfor %}
+            </div>
+        </section>
     </div>
 </div>
 
 <script>
 document.addEventListener('DOMContentLoaded', () => {
     const favoriteBtn = document.getElementById('btn-save');
-    
     if (favoriteBtn) {
         favoriteBtn.addEventListener('click', function() {
             const targetUrl = this.getAttribute('data-url');
             const btn = this;
-
             fetch(targetUrl, {
                 method: 'POST',
-                headers: {
-                    'X-CSRFToken': '{{ csrf_token }}',
-                    'Content-Type': 'application/json'
-                }
+                headers: { 'X-CSRFToken': '{{ csrf_token }}', 'Content-Type': 'application/json' }
             })
-            .then(response => {
-                if (!response.ok) throw new Error('Error en la petición');
-                return response.json();
-            })
+            .then(response => response.json())
             .then(data => {
-                if (data.status === 'added') {
-                    btn.innerText = 'Quitar de la lista';
-                    btn.style.color = 'var(--cyan)';
-                } else {
-                    btn.innerText = 'Seguir';
-                    btn.style.color = 'var(--tm)';
-                }
-            })
-            .catch(error => console.error('Error:', error));
+                btn.innerText = (data.status === 'added') ? 'Dejar de seguir' : 'Seguir';
+                btn.style.color = (data.status === 'added') ? 'var(--cyan)' : 'var(--tm)';
+            });
         });
     }
 });
