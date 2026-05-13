@@ -2,10 +2,11 @@
 
 {% block parts_content %}
 <div class="container-fluid mt-4">
+    {% include 'users/parts/filter_form.html' %}
     <div class="card shadow">
         <div class="card-header bg-dark text-white d-flex justify-content-between align-items-center">
             <h5 class="card-title mb-0">Global Content Analytics Summary</h5>
-            <a href="{% url 'export_analytics_csv' %}" 
+            <a href="{% url 'export_analytics_csv' %}?start={{ filters.start }}&end={{ filters.end }}" 
                class="btn btn-sm btn-light">
                 <i class="fas fa-download me-1"></i> Export CSV
             </a>

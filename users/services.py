@@ -1,15 +1,22 @@
 import hashlib
 from django.db.models import Count, Q
 from web_app.models import Contingut, Visualitzacio, Preferits, API, Genre, AgeRating, Director
+from django.utils import timezone
 
 def get_content_analytics(start_date=None, end_date=None, plataform_id=None):
     queryset = Contingut.objects.select_related('genere', 'age_rating', 'api', 'director')
+
+    if start_date and not end_date:
+        end_date = timezone.now().date()
 
     filters = Q()
     if start_date and end_date:
         filters &= Q(visualitzacions__data_visualitzacio__range=(start_date,end_date))
         filters &= Q(preferits__afegit_a__range=(start_date,end_date))
-    
+    elif end_date:  
+        filters &= Q(visualitzacions__data_visualitzacio__lte=end_date)
+        filters &= Q(preferits__afegit_a__lte=end_date)
+
     if plataform_id:
         filters &= Q(api__id=plataform_id)
 
@@ -51,9 +58,14 @@ def format_analytics_for_csv (data_list, is_b2b_report = False):
     return formatted_data
 
 def get_genre_distribution(start_date=None, end_date=None, platform_id=None):
+    if start_date and not end_date:
+        end_date = timezone.now().date()
+
     filters = Q()
     if start_date and end_date:
         filters &= Q(visualitzacions__data_visualitzacio__range=(start_date,end_date))
+    elif end_date:
+        filters &= Q(visualitzacions__data_visualitzacio__lte=end_date)
     if platform_id:
         filters &= Q(api__id=platform_id)
 
@@ -67,9 +79,15 @@ def get_genre_distribution(start_date=None, end_date=None, platform_id=None):
     }
 
 def get_age_rating_distribution(start_date=None, end_date=None, platform_id=None):
+    if start_date and not end_date:
+        end_date = timezone.now().date()
+        
     filters = Q()
     if start_date and end_date:
         filters &= Q(visualitzacions__data_visualitzacio__range=(start_date,end_date))
+    elif end_date:
+        filters &= Q(visualitzacions__data_visualitzacio__lte=end_date)
+
     if platform_id:
         filters &= Q(api__id=platform_id)
 
@@ -83,9 +101,15 @@ def get_age_rating_distribution(start_date=None, end_date=None, platform_id=None
     }
 
 def get_director_top_list(start_date=None, end_date=None, platform_id=None):
+    if start_date and not end_date:
+        end_date = timezone.now().date()
+
     filters = Q()
     if start_date and end_date:
         filters &= Q(visualitzacions__data_visualitzacio__range=(start_date,end_date))
+    elif end_date:
+        filters &= Q(visualitzacions__data_visualitzacio__lte=end_date)
+
     if platform_id:
         filters &= Q(api__id=platform_id)
 

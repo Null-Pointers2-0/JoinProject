@@ -74,16 +74,20 @@ def is_admin_or_staff(user):
 @login_required(login_url='login')
 @user_passes_test(is_admin_or_staff)
 def export_analytics_csv(request):
-    platform_id = request.GET.get('platform')
     start_date = request.GET.get('start')
     end_date = request.GET.get('end')
     report_type = request.GET.get('type', 'internal') 
+    
+    # Obtener la plataforma del usuario (ya que solo tiene una)
+    subscribed_ports = list(request.user.subscriptions.values_list('port', flat=True))
+    platform_id = API.objects.get(port=subscribed_ports[0]).id if subscribed_ports else None
 
     raw_data = get_content_analytics(
         start_date=start_date,
         end_date=end_date,
         plataform_id=platform_id
     )
+
 
     is_b2b = (report_type == 'b2b')
     clean_data = format_analytics_for_csv(raw_data, is_b2b_report=is_b2b)
@@ -111,12 +115,10 @@ def admin_dashboard_overview(request):
     # 1. Capturar filtros de la URL
     start_date = request.GET.get('start')
     end_date = request.GET.get('end')
-    platform_id = request.GET.get('platform')
 
-    # 2. Obtener los ports de las plataformas suscritas
+    # 2. Obtener el port de la plataforma suscrita
     subscribed_ports = list(request.user.subscriptions.values_list('port', flat=True))
-    active_ports = API.objects.get(port=subscribed_ports[0]).id
-
+    active_ports = API.objects.get(port=subscribed_ports[0]).id if subscribed_ports else None
 
     # 4. Obtener datos filtrados por las plataformas activas
     content_list = get_content_analytics(start_date, end_date, active_ports)
@@ -124,7 +126,7 @@ def admin_dashboard_overview(request):
     age_stats = get_age_rating_distribution(start_date, end_date, active_ports)
     director_stats = get_director_top_list(start_date, end_date, active_ports)
 
-    # 5. Pasar al template las plataformas suscritas (para el selector de filtros)
+    # 5. Pasar al template las plataformas suscritas
     subscribed_apis = request.user.subscriptions.all()
 
     context = {
@@ -132,11 +134,10 @@ def admin_dashboard_overview(request):
         'genre_stats': genre_stats,
         'age_stats': age_stats,
         'director_stats': director_stats,
-        'platforms': subscribed_apis,       # Para el <select> del template
+        'platforms': subscribed_apis,
         'filters': {
             'start': start_date,
             'end': end_date,
-            'platform': platform_id,        # El valor seleccionado actualmente
         }
     }
 
@@ -147,16 +148,15 @@ def admin_dashboard_overview(request):
 def admin_dashboard_genres(request):
     start_date = request.GET.get('start')
     end_date = request.GET.get('end')
-    platform_id = request.GET.get('platform')
     
     subscribed_ports = list(request.user.subscriptions.values_list('port', flat=True))
-    active_ports = API.objects.get(port=subscribed_ports[0]).id
+    active_ports = API.objects.get(port=subscribed_ports[0]).id if subscribed_ports else None
     
     genre_stats = get_genre_distribution(start_date, end_date, active_ports)
     
     return render(request, 'users/parts/dashboard_genres.html', {
         'genre_stats': genre_stats,
-        'filters': {'start': start_date, 'end': end_date, 'platform': platform_id},
+        'filters': {'start': start_date, 'end': end_date},
         'platforms': API.objects.all()
     })
 
@@ -165,16 +165,15 @@ def admin_dashboard_genres(request):
 def admin_dashboard_age_ratings(request):
     start_date = request.GET.get('start')
     end_date = request.GET.get('end')
-    platform_id = request.GET.get('platform')
     
     subscribed_ports = list(request.user.subscriptions.values_list('port', flat=True))
-    active_ports = API.objects.get(port=subscribed_ports[0]).id
+    active_ports = API.objects.get(port=subscribed_ports[0]).id if subscribed_ports else None
     
     age_stats = get_age_rating_distribution(start_date, end_date, active_ports)
     
     return render(request, 'users/parts/dashboard_age_ratings.html', {
         'age_stats': age_stats,
-        'filters': {'start': start_date, 'end': end_date, 'platform': platform_id},
+        'filters': {'start': start_date, 'end': end_date},
         'platforms': API.objects.all()
     })
 
@@ -183,16 +182,14 @@ def admin_dashboard_age_ratings(request):
 def admin_dashboard_directors(request):
     start_date = request.GET.get('start')
     end_date = request.GET.get('end')
-    platform_id = request.GET.get('platform')
 
     subscribed_ports = list(request.user.subscriptions.values_list('port', flat=True))
-    active_ports = API.objects.get(port=subscribed_ports[0]).id
-    
+    active_ports = API.objects.get(port=subscribed_ports[0]).id if subscribed_ports else None
     
     director_stats = get_director_top_list(start_date, end_date, active_ports)
     
     return render(request, 'users/parts/dashboard_directors.html', {
         'director_stats': director_stats,
-        'filters': {'start': start_date, 'end': end_date, 'platform': platform_id},
+        'filters': {'start': start_date, 'end': end_date},
         'platforms': API.objects.all()
     })
