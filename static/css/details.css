@@ -260,9 +260,21 @@
     margin: 0;
 }
 
+.star-label {
+    color: rgba(255, 255, 255, 0.2);
+    cursor: pointer;
+    transition: color 0.2s ease-in-out;
+}
+
+.star-rating-input label:hover,
+.star-rating-input label:hover ~ label,
+.star-rating-input input:checked ~ label {
+    color: #f5c518 !important;
+}
+
 /* Responsive */
 @media (max-width: 900px) {
-    .details-wrapper { 
-        grid-template-columns: 1fr; 
+    .details-wrapper {
+        grid-template-columns: 1fr;
     }
 }
