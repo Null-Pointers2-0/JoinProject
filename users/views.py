@@ -77,7 +77,6 @@ def subscription(request):
         'user_subscription_ids': user_subscription_ids,
     })
 
-<<<<<<< HEAD
 @user_passes_test(lambda u: u.is_superuser)
 def gestion_usuarios(request):
     if not request.user.is_authenticated:
@@ -137,7 +136,6 @@ def crear_usuario_admin(request):
         form = CustomUserAdminCreationForm()
     
     return render(request, 'users/parts/create_user.html', {'form': form})
-=======
 def is_admin_or_staff(user):
     return user.type == 'Staff' or user.type == 'Admin'
 
@@ -263,4 +261,3 @@ def admin_dashboard_directors(request):
         'filters': {'start': start_date, 'end': end_date},
         'platforms': API.objects.all()
     })
->>>>>>> origin/dev
