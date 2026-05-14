@@ -5,6 +5,8 @@ class WebAppConfig(AppConfig):
     name = 'web_app'
     
     def ready(self):
+        from . import signals
+
         import os
         import sys
         
