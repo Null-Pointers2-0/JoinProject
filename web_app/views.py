@@ -3,7 +3,7 @@ from django.conf import settings
 from django.utils.crypto import get_random_string
 from django.shortcuts import render, redirect, get_object_or_404
 from web_app.forms import CustomUserAdminCreationForm, CustomUserCreationForm
-from web_app.models import AgeRating, API, CustomUser, Director, Genre, Movie, UserProfile, Series, Contingut
+from web_app.models import AgeRating, API, CustomUser, Director, Genre, Movie, UserProfile, Series, Contingut, AgeRating, Valoracio
 from web_app import utils
 from itertools import chain
 from django.http import JsonResponse
@@ -11,80 +11,75 @@ from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib import messages
 from django.contrib.auth import login
 from django.core.paginator import Paginator
+from django.db.models import Avg, Count
+from django.template.loader import render_to_string
 
 def home(request):
-    movies = Movie.objects.select_related('contingut', 'contingut__genere', 'contingut__director', 'contingut__age_rating').prefetch_related('contingut__api').all()
-    series = Series.objects.select_related('contingut', 'contingut__genere', 'contingut__director', 'contingut__age_rating').prefetch_related('contingut__api').all()
-
-    search_query = request.GET.get('q', '')
-    genre_filter = request.GET.get('genre', '')
-    director_filter = request.GET.get('director', '')
-    age_rating_filter = request.GET.get('age_rating', '')
-    platform_filter = request.GET.get('platform', '')  # value = API port
-
-    if search_query:
-        movies = movies.filter(contingut__titol__icontains=search_query)
-        series = series.filter(contingut__titol__icontains=search_query)
-
-    if genre_filter:
-        movies = movies.filter(contingut__genere__name=genre_filter)
-        series = series.filter(contingut__genere__name=genre_filter)
-
-    if director_filter:
-        movies = movies.filter(contingut__director__name=director_filter)
-        series = series.filter(contingut__director__name=director_filter)
-
-    if age_rating_filter:
-        movies = movies.filter(contingut__age_rating__codi=age_rating_filter)
-        series = series.filter(contingut__age_rating__codi=age_rating_filter)
-
-    if platform_filter:
-        movies = movies.filter(contingut__api__port=platform_filter)
-        series = series.filter(contingut__api__port=platform_filter)
-
-    unique_results = []
-    seen_keys = set()
-
-    for cont in chain(movies, series):
-        is_movie = isinstance(cont, Movie)
-        type_str = 'movie' if is_movie else 'series'
-        key = (cont.title.lower(), type_str)
-        if key not in seen_keys:
-            cont.content_type = type_str
-            if is_movie:
-                related_continguts = Contingut.objects.filter(
-                    titol__iexact=cont.title,
-                    movie__isnull=False
-                )
-            else:
-                related_continguts = Contingut.objects.filter(
-                    titol__iexact=cont.title,
-                    series__isnull=False
-                )
-            cont.available_platforms = list(
-                API.objects.filter(contingut__in=related_continguts).distinct()
-            )
-            unique_results.append(cont)
-            seen_keys.add(key)
-    paginator = Paginator(unique_results, 20)
-    page_number = request.GET.get('page')
-    page_obj = paginator.get_page(page_number)
-
-    genres = Genre.objects.values_list('name', flat=True).distinct()
-    directors = Director.objects.values_list('name', flat=True).distinct()
-    age_ratings = AgeRating.objects.values_list('codi', flat=True).distinct()
-    platforms = API.objects.all()
-
+    """Carga instantánea del esqueleto de la página."""
     context = {
-        'items': page_obj,
-        'genres': genres,
-        'directors': directors,
-        'age_ratings': age_ratings,
-        'platforms': platforms,
-        'search_query': search_query,
+        'genres': Genre.objects.values_list('name', flat=True).distinct(),
+        'directors': Director.objects.values_list('name', flat=True).distinct(),
+        'platforms': API.objects.all(),
+        'age_ratings': AgeRating.objects.values_list('codi', flat=True).distinct(),
     }
-
     return render(request, "home/home.html", context)
+
+def search_content_ajax(request):
+    """Procesamiento asíncrono optimizado."""
+    try:
+        search_query = request.GET.get('q', '')
+        genre_filter = request.GET.get('genre', '')
+        director_filter = request.GET.get('director', '')
+        platform_filter = request.GET.get('platform', '')
+        age_rating_filter = request.GET.get('age_rating', '')
+
+
+        movies = Movie.objects.select_related('contingut__genere', 'contingut__director', 'contingut__age_rating', 'contingut__api').all()
+        series = Series.objects.select_related('contingut__genere', 'contingut__director', 'contingut__age_rating', 'contingut__api').all()
+
+        if search_query:
+            movies = movies.filter(contingut__titol__icontains=search_query)
+            series = series.filter(contingut__titol__icontains=search_query)
+        if genre_filter:
+            movies = movies.filter(contingut__genere__name=genre_filter)
+            series = series.filter(contingut__genere__name=genre_filter)
+        if director_filter:
+            movies = movies.filter(contingut__director__name=director_filter)
+            series = series.filter(contingut__director__name=director_filter)
+        if platform_filter: 
+            movies = movies.filter(contingut__api__port=platform_filter)
+            series = series.filter(contingut__api__port=platform_filter)
+        if age_rating_filter:
+            movies = movies.filter(contingut__age_rating__codi=age_rating_filter)
+            series = series.filter(contingut__age_rating__codi=age_rating_filter)
+
+        all_content = list(chain(movies, series))
+        unique_results = []
+        seen = set()
+
+        for item in all_content:
+            title_key = item.contingut.titol.lower()
+            if title_key not in seen:
+                item.content_type = 'movie' if isinstance(item, Movie) else 'series'
+                item.available_platforms = [m.contingut.api for m in type(item).objects.filter(contingut__titol__iexact=item.title).select_related('contingut__api') if m.contingut.api]
+                unique_results.append(item)
+                seen.add(title_key)
+
+        paginator = Paginator(unique_results, 20)
+        page_obj = paginator.get_page(request.GET.get('page', 1))
+
+        html_cards = render_to_string('home/includes/result_fragment.html', {'items': page_obj}, request=request)
+        html_pagination = render_to_string('home/home_parts/paginator.html', {'items': page_obj}, request=request)
+
+        return JsonResponse({
+            'html': html_cards,
+            'pagination_html': html_pagination
+        })
+
+    except Exception as e:
+        import logging
+        logging.error(f"Error en AJAX: {str(e)}")
+        return JsonResponse({'error': str(e)}, status=500)
 
 def register_view(request):
     form = CustomUserCreationForm(request.POST or None)
@@ -128,10 +123,17 @@ def movie_detail(request, pk):
         profile, _ = UserProfile.objects.get_or_create(user=request.user)
         is_favorite = movie.contingut in profile.preferits.all()
 
+    reviews = Valoracio.objects.filter(contingut=movie.contingut).order_by('-creada_a')
+    review_stats = reviews.aggregate(avg_rating=Avg('puntuacio'), total_reviews=Count('id'))
+
     return render(request, 'Details/details_movie.html', {
         'content': movie,
         'is_favorite': is_favorite,
-        'available_apis': available_apis
+        'available_apis': available_apis,
+        'reviews': reviews,
+        'avg_rating': review_stats['avg_rating'],
+        'total_reviews': review_stats['total_reviews'],
+        'recommendations': movie.get_similar_by_genre(limit=4)
     })
 
 def series_detail(request, pk):
@@ -144,10 +146,16 @@ def series_detail(request, pk):
         profile, _ = UserProfile.objects.get_or_create(user=request.user)
         is_favorite = series.contingut in profile.preferits.all()
 
+    reviews = Valoracio.objects.filter(contingut=series.contingut).order_by('-creada_a')
+    review_stats = reviews.aggregate(avg_rating=Avg('puntuacio'), total_reviews=Count('id'))
+
     return render(request, 'Details/details_serie.html', {
         'content': series,
         'is_favorite': is_favorite,
-        'available_apis': available_apis
+        'available_apis': available_apis,
+        'reviews': reviews,
+        'avg_rating': review_stats['avg_rating'],
+        'total_reviews': review_stats['total_reviews'],
     })
 
 
@@ -199,6 +207,27 @@ def toggle_series_favorite(request, pk):
             status = "added"
         return JsonResponse({'status': status})
     return JsonResponse({'error': 'Método no permitido'}, status=405)
+
+
+@login_required
+def submit_review(request, contingut_id):
+    if request.method == 'POST':
+        puntuacio = request.POST.get('rating')
+        comentari = request.POST.get('comment', '')
+
+        contingut = get_object_or_404(Contingut, id=contingut_id)
+
+        if puntuacio:
+            Valoracio.objects.update_or_create(
+                user=request.user,
+                contingut=contingut,
+                defaults={
+                    'puntuacio': int(puntuacio),
+                    'comentari': comentari
+                }
+            )
+
+    return redirect(request.META.get('HTTP_REFERER', 'home'))
 
 def terms_use(request):
     return render(request, 'footer_legal/terms_use.html')

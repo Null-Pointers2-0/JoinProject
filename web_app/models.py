@@ -125,6 +125,13 @@ class Movie(models.Model):
     def poster_path(self):
         return self.contingut.poster_path
 
+    def get_similar_by_genre(self, limit=4):
+        if not self.contingut.genere:
+            return Movie.objects.none()
+
+        return Movie.objects.filter(
+            contingut__genere=self.contingut.genere
+        ).exclude(id=self.id).order_by('?')[:limit]
 
 class Series(models.Model):
     contingut = models.OneToOneField(Contingut, on_delete=models.CASCADE, related_name='series')

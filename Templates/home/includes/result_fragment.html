@@ -1,0 +1,6 @@
+{% load i18n %}
+{% for item in items %}
+    {% include 'part/card.html' with item=item %}
+{% empty %}
+    <p>{% trans "No se han encontrado resultados." %}</p>
+{% endfor %}
