@@ -149,9 +149,132 @@
     box-shadow: 0 0 20px var(--cyan-glow);
 }
 
+/* Sistema de Ressenyes */
+
+.community-reviews-section {
+    margin-top: 40px;
+    padding-top: 20px;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.rating-summary {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 1.2rem;
+    margin-bottom: 25px;
+}
+
+.rating-summary .stars-avg {
+    color: #f5c518;
+    font-weight: bold;
+    font-size: 1.5rem;
+}
+
+.rating-summary .count {
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 1rem;
+}
+
+.review-form-container {
+    background: rgba(255, 255, 255, 0.03);
+    padding: 20px;
+    border-radius: 8px;
+    margin-bottom: 30px;
+}
+
+.star-rating-input {
+    display: flex;
+    flex-direction: row-reverse;
+    justify-content: flex-end;
+    gap: 5px;
+    font-size: 2rem;
+    margin-bottom: 15px;
+}
+
+.star-rating-input input {
+    display: none;
+}
+
+.star-rating-input label {
+    color: rgba(255, 255, 255, 0.2);
+    cursor: pointer;
+    transition: color 0.2s;
+}
+
+.star-rating-input label:hover,
+.star-rating-input label:hover ~ label,
+.star-rating-input input:checked ~ label {
+    color: #f5c518;
+}
+
+.review-textarea {
+    width: 100%;
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: white;
+    padding: 15px;
+    border-radius: 6px;
+    resize: vertical;
+    min-height: 100px;
+}
+
+.review-textarea:focus {
+    outline: none;
+    border-color: #00ffff;
+}
+
+.review-card {
+    background: rgba(255, 255, 255, 0.02);
+    border-left: 3px solid #00ffff;
+    padding: 15px 20px;
+    margin-bottom: 15px;
+    border-radius: 4px;
+}
+
+.review-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+}
+
+.review-user {
+    font-weight: bold;
+    color: #fff;
+}
+
+.review-stars {
+    color: #f5c518;
+}
+
+.review-date {
+    font-size: 0.8rem;
+    color: rgba(255, 255, 255, 0.5);
+    margin-bottom: 10px;
+}
+
+.review-text {
+    line-height: 1.5;
+    color: rgba(255, 255, 255, 0.9);
+    margin: 0;
+}
+
+.star-label {
+    color: rgba(255, 255, 255, 0.2);
+    cursor: pointer;
+    transition: color 0.2s ease-in-out;
+}
+
+.star-rating-input label:hover,
+.star-rating-input label:hover ~ label,
+.star-rating-input input:checked ~ label {
+    color: #f5c518 !important;
+}
+
 /* Responsive */
 @media (max-width: 900px) {
-    .details-wrapper { 
-        grid-template-columns: 1fr; 
+    .details-wrapper {
+        grid-template-columns: 1fr;
     }
 }

@@ -1,22 +1,16 @@
 {% load i18n %}
 {% if item.content_type == 'movie' %}
-<div class="movie-card" 
-data-url="{% url 'movie_detail' item.id %}" 
-onclick="window.location.href=this.dataset.url"    
-style="cursor: pointer;">
+<div class="movie-card" data-url="{% url 'movie_detail' item.id %}" onclick="window.location.href=this.dataset.url" style="cursor: pointer;">
 {% elif item.content_type == 'series' %}
-<div class="movie-card" 
-data-url="{% url 'series_detail' item.id %}" 
-onclick="window.location.href=this.dataset.url"    
-style="cursor: pointer;">
+<div class="movie-card" data-url="{% url 'series_detail' item.id %}" onclick="window.location.href=this.dataset.url" style="cursor: pointer;">
+{% else %}
+<div class="movie-card">
 {% endif %}
     <div class="card-poster">
         {% if item.poster_path %}
         <img src="{{ item.poster_path }}" alt="{{ item.title }}" loading="lazy">
         {% else %}
-        <div class="no-poster">
-            <span>{{ item.title|slice:":1" }}</span>
-        </div>
+        <div class="no-poster"><span>{{ item.title|slice:":1" }}</span></div>
         {% endif %}
         <div class="card-title-overlay">
             <h3 class="movie-title">{{ item.title }}</h3>
@@ -28,12 +22,8 @@ style="cursor: pointer;">
             <h4 class="hover-title">{{ item.title }}</h4>
             {% if item.year %}<span class="hover-year">{{ item.year }}</span>{% endif %}
             <div class="hover-info">
-                {% if item.genre %}
-                <p><strong>{% trans "Genre" %}:</strong> {{ item.genre.name|default:_("N/A") }}</p>
-                {% endif %}
-                {% if item.director %}
-                <p><strong>{% trans "Director" %}:</strong> {{ item.director.name|default:_("N/A") }}</p>
-                {% endif %}
+                <p><strong>{% trans "Género" %}:</strong> {{ item.genre.name|default:"N/A" }}</p>
+                <p><strong>{% trans "Director" %}:</strong> {{ item.director.name|default:"N/A" }}</p>
             </div>
             <div class="hover-meta">
                 {% if item.rating %}
@@ -46,12 +36,11 @@ style="cursor: pointer;">
                 <span class="age-badge">{{ item.age_rating.description }}</span>
                 {% endif %}
             </div>
-            {% if item.synopsis %}
-            <p class="hover-synopsis">{{ item.synopsis|truncatewords:15 }}</p>
-            {% endif %}
+            {% if item.synopsis %}<p class="hover-synopsis">{{ item.synopsis|truncatewords:15 }}</p>{% endif %}
+            
             {% if item.available_platforms %}
             <div class="hover-platforms">
-                <span>{% trans "Available on" %}:</span>
+                <span>{% trans "Disponible en" %}:</span>
                 <div class="platforms-list">
                     {% for platform in item.available_platforms %}
                     <span class="platform-badge">{{ platform.name|default:platform.port }}</span>
