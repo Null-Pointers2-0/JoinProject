@@ -113,7 +113,6 @@ def test_env_vars(request):
 @user_passes_test(lambda u: u.is_superuser)
 def crear_usuario_admin(request):
     if request.method == 'POST':
-        test_env_vars(request)  # Llamada a la función de prueba para verificar las variables de entorno
         form = CustomUserAdminCreationForm(request.POST)
         if form.is_valid():
             user = form.save(commit=False)
