@@ -83,6 +83,9 @@ def gestion_usuarios(request):
         return redirect('login')
     users = CustomUser.objects.all()
     exclude_staff_admin = users.exclude(type='Staff Admin')
+    filter_type = request.GET.get('tipo')
+    if filter_type:
+        exclude_staff_admin = exclude_staff_admin.filter(type=filter_type)
     return render(request, 'users/parts/users_table.html', {'users': exclude_staff_admin})
 
 @user_passes_test(lambda u: u.is_superuser)
