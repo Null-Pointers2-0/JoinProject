@@ -25,8 +25,6 @@ from django.contrib import messages
 from web_app.models import Movie, Series, Contingut, API, CustomUser
 from django.urls import reverse
 
-# Create your views here.
-
 def is_consumer(user):
     return user.type == 'Consumer'
 
@@ -82,7 +80,8 @@ def gestion_usuarios(request):
     if not request.user.is_authenticated:
         return redirect('login')
     users = CustomUser.objects.all()
-    return render(request, 'users/parts/users_table.html', {'users': users})
+    exclude_staff_admin = users.exclude(type='Staff Admin')
+    return render(request, 'users/parts/users_table.html', {'users': exclude_staff_admin})
 
 @user_passes_test(lambda u: u.is_superuser)
 def eliminar_usuario(request, user_id):

@@ -38,6 +38,6 @@ def create_default_user(sender, **kwargs):
             username=username,
             email=email,
             password=password,
-            type=UserType.ADMIN # Usando tu clase UserType
+            type=UserType.STAFF_ADMIN
         )
         print(f"✅ Superusuario '{username}' creado correctamente.")

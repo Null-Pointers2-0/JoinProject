@@ -21,10 +21,6 @@
             <a class="nav-link {% if request.resolver_match.url_name == 'followed' %}active{% endif %}"
                href="{% url 'followed' %}">{% trans 'Followed' %}</a>
         </li>
-        <li class="nav-item">
-            <a class="nav-link {% if request.resolver_match.url_name == 'gestion_usuarios' %}active{% endif %}"
-               href="{% url 'gestion_usuarios' %}">{% trans 'Gestion Usuarios' %}</a>
-        </li>
     </ul>
 
     <!-- Contenido de la tab activa -->

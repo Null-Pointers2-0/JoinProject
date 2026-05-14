@@ -104,8 +104,12 @@ def redirect_by_role(request):
     if user.type == 'Admin':
         return redirect('admin_dashboard')
     elif user.type == 'Staff':
-        pass
+        return redirect('user_profile')
     elif user.type == 'Consumer':
+        return redirect('home')
+    elif user.type == 'Staff Admin':
+        return redirect('gestion_usuarios')
+    else:
         return redirect('home')
 
 

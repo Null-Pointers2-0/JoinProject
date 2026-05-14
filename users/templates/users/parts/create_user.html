@@ -1,4 +1,4 @@
-{% extends 'users/types/user_client.html' %}
+{% extends 'users/types/staff_admin.html' %}
 {% load i18n %}
 {% load static %}
 
@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="{% static 'users/css/admin_management.css' %}">
 {% endblock %}
 
-{% block parts_content %}
+{% block content_staff_admin %}
 <div class="admin-container">
     <div class="admin-header mb-4">
         <h2 class="title-neon">{% trans 'Registrar Nuevo Miembro' %}</h2>
@@ -26,7 +26,6 @@
                             {% trans field.label %}
                         </label>
                         
-                        {# Django insertará aquí el input con la clase 'form-control' #}
                         {{ field }}
 
                         {% if field.help_text %}
