@@ -14,6 +14,10 @@ TMDB_SERIES_URL = f"https://api.themoviedb.org/3/search/tv?api_key={TMDB_API_KEY
 
 TMDB_POSTER_URL = f"https://image.tmdb.org/t/p/w185/"  
 
+DB_DATA = {
+    
+}
+
 def store_data():
     for port in ['8080', '8081', '8082']:
         store_api(port)
