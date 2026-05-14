@@ -1,5 +1,5 @@
 import csv
-import os
+import os, resend
 from django.http import HttpResponse
 import csv
 from django.http import HttpResponse
@@ -25,6 +25,7 @@ from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib import messages
 from web_app.models import Movie, Series, Contingut, API, CustomUser
 from django.urls import reverse
+
 
 def is_consumer(user):
     return user.type == 'Consumer'
@@ -92,39 +93,6 @@ def eliminar_usuario(request, user_id):
         messages.success(request, f"Usuario '{user.username}' eliminado correctamente.")
         return redirect('gestion_usuarios')
 
-import smtplib
-import os
-from django.http import HttpResponse
-
-def test_smtp_directo(request):
-    correo = os.getenv('MAIL')
-    password = os.getenv('MAIL_PW')
-    
-    if not correo or not password:
-        return HttpResponse("ERROR: Las variables de entorno no están cargadas.")
-
-    resultado = "Iniciando prueba...\n"
-    
-    try:
-        # Usamos puerto 465 (SSL implícito) y un timeout de 5 segundos
-        resultado += f"Intentando conectar a smtp.gmail.com:465 con {correo}...\n"
-        servidor = smtplib.SMTP_SSL('smtp.gmail.com', 465, timeout=5)
-        
-        resultado += "Conexión SSL establecida. Intentando login...\n"
-        servidor.login(correo, password)
-        
-        resultado += "LOGIN EXITOSO. Las credenciales y la red funcionan perfectamente."
-        servidor.quit()
-        
-    except smtplib.SMTPAuthenticationError as e:
-        resultado += f"\nERROR DE AUTENTICACIÓN: Google ha rechazado la contraseña o bloqueado la IP de Render.\nDetalle: {e}"
-    except TimeoutError:
-        resultado += "\nERROR DE TIMEOUT: El servidor de Render no puede alcanzar a Google por el puerto 465. Firewall bloqueando."
-    except Exception as e:
-        resultado += f"\nERROR DESCONOCIDO: {type(e).__name__} - {str(e)}"
-        
-    return HttpResponse(f"<pre>{resultado}</pre>")
-
 @user_passes_test(lambda u: u.is_superuser)
 def crear_usuario_admin(request):
     if request.method == 'POST':
@@ -137,29 +105,26 @@ def crear_usuario_admin(request):
             user.save()
             
             UserProfile.objects.get_or_create(user=user)
-            
-            asunto = 'Bienvenido a StreamSync - Tus Credenciales'
-            mensaje = f"""
-            Hola {user.username},
-            
-            Se ha creado una cuenta para ti en StreamSync.
-            Aquí tienes tus credenciales de acceso:
-            
-            Usuario: {user.username}
-            Contraseña temporal: {temp_password}
-            
-            Por seguridad, te recomendamos cambiarla en tu perfil tras iniciar sesión.
-            """
+
+            resend.api_key = os.getenv('RESEND_KEY')
             
             try:
-                send_mail(
-                    asunto,
-                    mensaje,
-                    settings.DEFAULT_FROM_EMAIL,
-                    [user.email],
-                    fail_silently=False,
-                )
-                messages.success(request, f"Usuario creado y correo enviado a {user.email}")
+                r = resend.Emails.send({
+                    "from": "onboarding@resend.dev",
+                    "to": [user.email],
+                    "subject": "Bienvenido a StreamSync - Tus Credenciales",
+                    "html": f"""
+                    <p>Hola {user.username},</p>
+                    <p>Se ha creado una cuenta para ti en StreamSync.</p>
+                    <p>Aquí tienes tus credenciales de acceso:</p>
+                    <ul>
+                        <li>Usuario: {user.username}</li>
+                        <li>Contraseña temporal: {temp_password}</li>
+                    </ul>
+                    <p>Por seguridad, te recomendamos cambiarla en tu perfil tras iniciar sesión.</p>
+                    """
+                })
+                messages.success(request, f"Usuario '{user.username}' creado correctamente y correo enviado.")
             except Exception as e:
                 messages.warning(request, "Usuario creado, pero hubo un error al enviar el correo.")
 
