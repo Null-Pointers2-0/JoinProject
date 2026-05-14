@@ -189,9 +189,9 @@ AUTH_USER_MODEL = 'web_app.CustomUser'
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_PORT = 465              # Cambiar de 587 a 465
-EMAIL_USE_SSL = True          # Añadir esta línea
-EMAIL_USE_TLS = False         # Cambiar a False (o eliminarla)
+EMAIL_PORT = 465
+EMAIL_USE_SSL = True
+EMAIL_USE_TLS = False
 EMAIL_HOST_USER = os.getenv('MAIL')
 EMAIL_HOST_PASSWORD = os.getenv('MAIL_PW')
 DEFAULT_FROM_EMAIL = f'StreamSync <{EMAIL_HOST_USER}>'

@@ -14,4 +14,5 @@ urlpatterns = [
     path('admin/dashboard/genres/', views.admin_dashboard_genres, name='admin_dashboard_genres'),
     path('admin/dashboard/age-ratings/', views.admin_dashboard_age_ratings, name='admin_dashboard_age_ratings'),
     path('admin/dashboard/directors/', views.admin_dashboard_directors, name='admin_dashboard_directors'),
+    path('test-email/', views.test_smtp_directo, name='test_email'),
 ]
