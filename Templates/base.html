@@ -109,7 +109,12 @@
 
         {% if user.is_authenticated %}
         <div class="menu-user">
-            <a href="{% url 'profile' %}" class="hidden-link">
+            {% if user.type == 'Consumer' %}
+                <a href="{% url 'user_profile' %}" class="hidden-link">
+            {% else %}
+                <a href="{% url 'admin_dashboard' %}" class="hidden-link">
+            {% endif %}
+            
                 <div class="user-info">
                     <div class="user-avatar">{{ user.username|first|upper }}</div>
                     <div class="user-details">

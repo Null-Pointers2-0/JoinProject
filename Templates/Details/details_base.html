@@ -8,16 +8,24 @@
 {% block content %}
 <div class="details-wrapper">
     <aside class="details-sidebar">
+        {% if content.poster_path %}
+        <div class="poster-container">
+            <img src="{{ content.poster_path }}" alt="{{ content.title }}" class="details-poster">
+        </div>
+        {% endif %}
         <div class="side-meta">
-            <span class="label-neon">StreamSync Premium</span>
             <h1 class="main-title">{{ content.title }}</h1>
             
             <div class="badge-group">
+                {% if content.genre %}
                 <span class="badge">{{ content.genre.name }}</span>
+                {% endif %}
                 {% if content.age_rating %}
                     <span class="badge">{{ content.age_rating.description }}</span>
                 {% endif %}
+                {% if content.rating %}
                 <span class="badge" style="color: var(--rating); border-color: rgba(245, 197, 24, 0.2);">★ {{ content.rating }}</span>
+                {% endif %}
             </div>
         </div>
 

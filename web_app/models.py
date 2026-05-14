@@ -70,6 +70,7 @@ class Contingut(models.Model):
     genere = models.ForeignKey(Genre, on_delete=models.SET_NULL, blank=True, null=True)
     age_rating = models.ForeignKey(AgeRating, on_delete=models.SET_NULL, blank=True, null=True)
     api = models.ForeignKey(API, on_delete=models.SET_NULL, blank=True, null=True)
+    poster_path = models.TextField(blank=True, null=True)
 
     synopsis = models.TextField(blank=True, null=True)
     rating = models.FloatField(blank=True, null=True)
@@ -119,6 +120,10 @@ class Movie(models.Model):
     @property
     def rating(self):
         return self.contingut.rating
+
+    @property
+    def poster_path(self):
+        return self.contingut.poster_path
 
 
 class Series(models.Model):
@@ -171,6 +176,10 @@ class Series(models.Model):
     @property
     def total_seasons(self):
         return self.num_temporades
+
+    @property
+    def poster_path(self):
+        return self.contingut.poster_path
 
 
 class CustomUser(AbstractUser):
