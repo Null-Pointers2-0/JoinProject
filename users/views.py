@@ -1,5 +1,5 @@
 import csv
-import threading
+import os
 from django.http import HttpResponse
 import csv
 from django.http import HttpResponse
@@ -92,10 +92,28 @@ def eliminar_usuario(request, user_id):
         messages.success(request, f"Usuario '{user.username}' eliminado correctamente.")
         return redirect('gestion_usuarios')
 
+def test_env_vars(request):
+    # Esto leerá las variables directamente del servidor de Render
+    mail_user = os.getenv('MAIL')
+    mail_pw = os.getenv('MAIL_PW')
+    
+    # Comprobamos la longitud de la contraseña por seguridad en lugar de imprimirla
+    pw_status = "NO CONFIGURADA" if not mail_pw else f"Configurada ({len(mail_pw)} caracteres)"
+    
+    debug_info = f"""
+    ESTADO DE VARIABLES DE ENTORNO EN PRODUCCIÓN:
+    ---------------------------------------------
+    MAIL: {mail_user}
+    MAIL_PW: {pw_status}
+    DEFAULT_FROM_EMAIL: {settings.DEFAULT_FROM_EMAIL}
+    """
+    
+    return HttpResponse(debug_info, content_type="text/plain")
 
 @user_passes_test(lambda u: u.is_superuser)
 def crear_usuario_admin(request):
     if request.method == 'POST':
+        test_env_vars(request)  # Llamada a la función de prueba para verificar las variables de entorno
         form = CustomUserAdminCreationForm(request.POST)
         if form.is_valid():
             user = form.save(commit=False)
@@ -106,47 +124,38 @@ def crear_usuario_admin(request):
             
             UserProfile.objects.get_or_create(user=user)
             
-            # 2. Reemplazas todo tu bloque de correo y el try/except por esto:
-            hilo_correo = threading.Thread(
-                target=enviar_correo_bienvenida_async, 
-                args=(user.email, user.username, temp_password)
-            )
-            hilo_correo.start() # Lanza el hilo y continúa inmediatamente
+            asunto = 'Bienvenido a StreamSync - Tus Credenciales'
+            mensaje = f"""
+            Hola {user.username},
             
-            # 3. El mensaje asume que el proceso en background se ha lanzado
-            messages.success(request, f"Usuario creado. Las credenciales se están enviando a {user.email}")
+            Se ha creado una cuenta para ti en StreamSync.
+            Aquí tienes tus credenciales de acceso:
+            
+            Usuario: {user.username}
+            Contraseña temporal: {temp_password}
+            
+            Por seguridad, te recomendamos cambiarla en tu perfil tras iniciar sesión.
+            """
+            
+            try:
+                send_mail(
+                    asunto,
+                    mensaje,
+                    settings.DEFAULT_FROM_EMAIL,
+                    [user.email],
+                    fail_silently=False,
+                )
+                messages.success(request, f"Usuario creado y correo enviado a {user.email}")
+            except Exception as e:
+                messages.warning(request, "Usuario creado, pero hubo un error al enviar el correo.")
+
             return redirect('gestion_usuarios')
     else:
         form = CustomUserAdminCreationForm()
     
     return render(request, 'users/parts/create_user.html', {'form': form})
 
-def enviar_correo_bienvenida_async(email, username, temp_password):
-    asunto = 'Bienvenido a StreamSync - Tus Credenciales'
-    mensaje = f"""
-    Hola {username},
-    
-    Se ha creado una cuenta para ti en StreamSync.
-    Aquí tienes tus credenciales de acceso:
-    
-    Usuario: {username}
-    Contraseña temporal: {temp_password}
-    
-    Por seguridad, te recomendamos cambiarla en tu perfil tras iniciar sesión.
-    """
-    try:
-        send_mail(
-            asunto,
-            mensaje,
-            settings.DEFAULT_FROM_EMAIL,
-            [email],
-            fail_silently=False,
-        )
-        print(f"Correo enviado exitosamente a {email}")
-    except Exception as e:
-        # En un hilo secundario no puedes usar 'messages.warning' hacia el request
-        # Solo puedes registrar el error en los logs del servidor
-        print(f"Error crítico enviando correo a {email}: {e}")
+
 
 def is_admin_or_staff(user):
     return user.type == 'Staff' or user.type == 'Admin'
