@@ -18,3 +18,4 @@ Pillow==12.2.0
 whitenoise==6.4.0
 gunicorn==21.2.0
 setuptools==79.0.1
+resend==2.30.0
