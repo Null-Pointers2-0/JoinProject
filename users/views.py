@@ -1,4 +1,5 @@
 import csv
+import threading
 from django.http import HttpResponse
 import csv
 from django.http import HttpResponse
@@ -105,36 +106,48 @@ def crear_usuario_admin(request):
             
             UserProfile.objects.get_or_create(user=user)
             
-            asunto = 'Bienvenido a StreamSync - Tus Credenciales'
-            mensaje = f"""
-            Hola {user.username},
+            # 2. Reemplazas todo tu bloque de correo y el try/except por esto:
+            hilo_correo = threading.Thread(
+                target=enviar_correo_bienvenida_async, 
+                args=(user.email, user.username, temp_password)
+            )
+            hilo_correo.start() # Lanza el hilo y continúa inmediatamente
             
-            Se ha creado una cuenta para ti en StreamSync.
-            Aquí tienes tus credenciales de acceso:
-            
-            Usuario: {user.username}
-            Contraseña temporal: {temp_password}
-            
-            Por seguridad, te recomendamos cambiarla en tu perfil tras iniciar sesión.
-            """
-            
-            try:
-                send_mail(
-                    asunto,
-                    mensaje,
-                    settings.DEFAULT_FROM_EMAIL,
-                    [user.email],
-                    fail_silently=False,
-                )
-                messages.success(request, f"Usuario creado y correo enviado a {user.email}")
-            except Exception as e:
-                messages.warning(request, "Usuario creado, pero hubo un error al enviar el correo.")
-
+            # 3. El mensaje asume que el proceso en background se ha lanzado
+            messages.success(request, f"Usuario creado. Las credenciales se están enviando a {user.email}")
             return redirect('gestion_usuarios')
     else:
         form = CustomUserAdminCreationForm()
     
     return render(request, 'users/parts/create_user.html', {'form': form})
+
+def enviar_correo_bienvenida_async(email, username, temp_password):
+    asunto = 'Bienvenido a StreamSync - Tus Credenciales'
+    mensaje = f"""
+    Hola {username},
+    
+    Se ha creado una cuenta para ti en StreamSync.
+    Aquí tienes tus credenciales de acceso:
+    
+    Usuario: {username}
+    Contraseña temporal: {temp_password}
+    
+    Por seguridad, te recomendamos cambiarla en tu perfil tras iniciar sesión.
+    """
+    try:
+        send_mail(
+            asunto,
+            mensaje,
+            settings.DEFAULT_FROM_EMAIL,
+            [email],
+            fail_silently=False,
+        )
+        print(f"Correo enviado exitosamente a {email}")
+    except Exception as e:
+        # En un hilo secundario no puedes usar 'messages.warning' hacia el request
+        # Solo puedes registrar el error en los logs del servidor
+        print(f"Error crítico enviando correo a {email}: {e}")
+
 def is_admin_or_staff(user):
     return user.type == 'Staff' or user.type == 'Admin'
 
