@@ -92,24 +92,6 @@ def eliminar_usuario(request, user_id):
         messages.success(request, f"Usuario '{user.username}' eliminado correctamente.")
         return redirect('gestion_usuarios')
 
-def test_env_vars(request):
-    # Esto leerá las variables directamente del servidor de Render
-    mail_user = os.getenv('MAIL')
-    mail_pw = os.getenv('MAIL_PW')
-    
-    # Comprobamos la longitud de la contraseña por seguridad en lugar de imprimirla
-    pw_status = "NO CONFIGURADA" if not mail_pw else f"Configurada ({len(mail_pw)} caracteres)"
-    
-    debug_info = f"""
-    ESTADO DE VARIABLES DE ENTORNO EN PRODUCCIÓN:
-    ---------------------------------------------
-    MAIL: {mail_user}
-    MAIL_PW: {pw_status}
-    DEFAULT_FROM_EMAIL: {settings.DEFAULT_FROM_EMAIL}
-    """
-    
-    return HttpResponse(debug_info, content_type="text/plain")
-
 @user_passes_test(lambda u: u.is_superuser)
 def crear_usuario_admin(request):
     if request.method == 'POST':
