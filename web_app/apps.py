@@ -19,9 +19,8 @@ class WebAppConfig(AppConfig):
 
         try:
             from . import scheduler
-            if not sys.stdin.isatty():
-                scheduler.start()
-                print("Scheduler arrancado con éxito en producción.")
+            scheduler.start()
+            print("Scheduler arrancado con éxito en producción.")
         except Exception as e:
             print(f"Scheduler no pudo arrancar (ignorar si es build): {e}")
 

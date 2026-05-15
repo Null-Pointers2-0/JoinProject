@@ -10,8 +10,7 @@ def download_catalog_data():
     )
 
     try:
-        store_data()
-
+        store_data()    
         log.status = "Success"
         log.summary = "Sincronización completada exitosamente para todos los puertos (8080, 8081, 8082)."
     
