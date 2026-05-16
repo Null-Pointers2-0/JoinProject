@@ -121,13 +121,12 @@ class ContingutTest(TestCase):
             age_rating_id=1, api=self.api, codi='PG', age=10
         )
         self.contingut = Contingut.objects.create(
-            api_content_id=1,
             titol='Inception',
             data_estrena=2010,
             director=self.director,
             genere=self.genre,
             age_rating=self.age_rating,
-            api=self.api,
+            apis=[self.api],
             rating=8.8
         )
 
@@ -152,9 +151,9 @@ class MovieTest(TestCase):
             age_rating_id=1, api=self.api, codi='PG', age=10
         )
         self.contingut1 = Contingut.objects.create(
-            api_content_id=1, titol='Inception', data_estrena=2010,
+            titol='Inception', data_estrena=2010,
             director=self.director, genere=self.genre, age_rating=self.age_rating,
-            api=self.api, rating=8.8
+            apis=[self.api], rating=8.8
         )
         self.movie = Movie.objects.create(contingut=self.contingut1)
 
@@ -198,9 +197,9 @@ class SeriesTest(TestCase):
             age_rating_id=2, api=self.api, codi='TV-MA', age=17
         )
         self.contingut2 = Contingut.objects.create(
-            api_content_id=2, titol='Breaking Bad', data_estrena=2008,
+            titol='Breaking Bad', data_estrena=2008,
             director=self.director, genere=self.genre, age_rating=self.age_rating,
-            api=self.api, rating=9.5
+            apis=[self.api], rating=9.5
         )
         self.series = Series.objects.create(contingut=self.contingut2, num_temporades=5)
 
@@ -265,8 +264,8 @@ class UserProfileTest(TestCase):
             age_rating_id=3, api=api, codi='G', age=0
         )
         contingut = Contingut.objects.create(
-            api_content_id=3, titol='Fav Content', director=director,
-            age_rating=age_rating, api=api
+            titol='Fav Content', director=director,
+            age_rating=age_rating, apis=[api]
         )
         self.profile.preferits.add(contingut)
         self.assertIn(contingut, self.profile.preferits.all())
