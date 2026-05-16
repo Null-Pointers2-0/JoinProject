@@ -1,6 +1,6 @@
-import sys
+import sys, logging, time
 import requests, os
-
+from requests.exceptions import RequestException, HTTPError, Timeout
 from dotenv import load_dotenv
 load_dotenv()
 
@@ -28,19 +28,60 @@ def store_data():
 def store_api(port):
     API.objects.get_or_create(port=port)
 
-def get_poster(content_title,url_search):
-    try:
-        response = requests.get(f"{url_search}{content_title}")
-        response.raise_for_status()
-        poster_path = response.json()['results'][0]['poster_path']
-        if not poster_path:
-            return None
-        if poster_path.startswith('/'):
-            poster_path = poster_path[1:]
-        return f"{TMDB_POSTER_URL}{poster_path}"
-    except:
-        return None
 
+logger = logging.getLogger(__name__)
+
+def get_poster(content_title, url_search, retries=3):
+    """
+    Busca el póster en TMDB con manejo de timeouts, rate limits y reintentos.
+    """
+    url = f"{url_search}{content_title}"
+    
+    for attempt in range(retries):
+        try:
+            response = requests.get(url, timeout=5)
+            response.raise_for_status()
+            
+            data = response.json()
+            
+            if not data.get('results'):
+                return None
+                
+            poster_path = data['results'][0].get('poster_path')
+            
+            if not poster_path:
+                return None
+                
+            if poster_path.startswith('/'):
+                poster_path = poster_path[1:]
+                
+            return f"{TMDB_POSTER_URL}{poster_path}"
+
+        except HTTPError as e:
+            if response.status_code == 429:
+                wait_time = int(response.headers.get('Retry-After', 2))
+                logger.warning(f"TMDB Rate Limit alcanzado (429). Esperando {wait_time}s... (Intento {attempt + 1}/{retries})")
+                time.sleep(wait_time)
+                continue
+            else:
+                logger.error(f"Error HTTP {response.status_code} buscando {content_title}: {e}")
+                return None
+
+        except Timeout:
+            logger.warning(f"Timeout conectando con TMDB para {content_title}. (Intento {attempt + 1}/{retries})")
+            time.sleep(1)
+            continue
+            
+        except RequestException as e:
+            logger.error(f"Fallo de red crítico con TMDB para {content_title}: {e}")
+            return None
+            
+        except Exception as e:
+            logger.error(f"Error inesperado procesando póster de {content_title}: {e}")
+            return None
+            
+    logger.error(f"Se agotaron los {retries} reintentos para descargar el póster de {content_title}.")
+    return None
 
 def Call(endpoint, params=None):
     result = {'8080': None, '8081': None, '8082': None}
