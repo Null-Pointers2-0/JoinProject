@@ -25,7 +25,7 @@ def home(request):
     return render(request, "home/home.html", context)
 
 def search_content_ajax(request):
-    """Procesamiento asíncrono optimizado."""
+    """Procesamiento asíncrono y paginación delegados a la base de datos."""
     try:
         search_query = request.GET.get('q', '')
         genre_filter = request.GET.get('genre', '')
@@ -33,40 +33,35 @@ def search_content_ajax(request):
         platform_filter = request.GET.get('platform', '')
         age_rating_filter = request.GET.get('age_rating', '')
 
-
-        movies = Movie.objects.select_related('contingut__genere', 'contingut__director', 'contingut__age_rating', 'contingut__api').all()
-        series = Series.objects.select_related('contingut__genere', 'contingut__director', 'contingut__age_rating', 'contingut__api').all()
+        content_queryset = Contingut.objects.select_related(
+            'genere', 'director', 'age_rating', 'movie', 'series'
+        ).prefetch_related('apis').all().order_by('titol')
 
         if search_query:
-            movies = movies.filter(contingut__titol__icontains=search_query)
-            series = series.filter(contingut__titol__icontains=search_query)
+            content_queryset = content_queryset.filter(titol__icontains=search_query)
         if genre_filter:
-            movies = movies.filter(contingut__genere__name=genre_filter)
-            series = series.filter(contingut__genere__name=genre_filter)
+            content_queryset = content_queryset.filter(genere__name=genre_filter)
         if director_filter:
-            movies = movies.filter(contingut__director__name=director_filter)
-            series = series.filter(contingut__director__name=director_filter)
+            content_queryset = content_queryset.filter(director__name=director_filter)
         if platform_filter: 
-            movies = movies.filter(contingut__api__port=platform_filter)
-            series = series.filter(contingut__api__port=platform_filter)
+            content_queryset = content_queryset.filter(apis__port=platform_filter)
         if age_rating_filter:
-            movies = movies.filter(contingut__age_rating__codi=age_rating_filter)
-            series = series.filter(contingut__age_rating__codi=age_rating_filter)
+            content_queryset = content_queryset.filter(age_rating__codi=age_rating_filter)
 
-        all_content = list(chain(movies, series))
-        unique_results = []
-        seen = set()
+        paginator = Paginator(content_queryset, 20)
+        page_number = request.GET.get('page', 1)
+        
+        page_obj = paginator.get_page(page_number)
 
-        for item in all_content:
-            title_key = item.contingut.titol.lower()
-            if title_key not in seen:
-                item.content_type = 'movie' if isinstance(item, Movie) else 'series'
-                item.available_platforms = [m.contingut.api for m in type(item).objects.filter(contingut__titol__iexact=item.title).select_related('contingut__api') if m.contingut.api]
-                unique_results.append(item)
-                seen.add(title_key)
-
-        paginator = Paginator(unique_results, 20)
-        page_obj = paginator.get_page(request.GET.get('page', 1))
+        for item in page_obj:
+            if hasattr(item, 'movie'):
+                item.content_type = 'movie'
+            elif hasattr(item, 'series'):
+                item.content_type = 'series'
+            else:
+                item.content_type = 'unknown'
+            
+            item.available_platforms = item.apis.all()
 
         html_cards = render_to_string('home/includes/result_fragment.html', {'items': page_obj}, request=request)
         html_pagination = render_to_string('home/home_parts/paginator.html', {'items': page_obj}, request=request)
@@ -114,10 +109,13 @@ def user_setting(request):
     return render(request, 'User/user_types/user_client.html')
 
 def movie_detail(request, pk):
-    movie = get_object_or_404(Movie, id=pk)
-    
-    available_apis = [m.contingut.api for m in Movie.objects.filter(contingut__titol__iexact=movie.title).select_related('contingut__api') if m.contingut.api]
-    
+    movie = get_object_or_404(
+        Movie.objects.select_related('contingut__genere', 'contingut__director', 'contingut__age_rating').prefetch_related('contingut__apis'), 
+        id=pk
+    )
+
+    available_apis = movie.contingut.apis.all()
+
     is_favorite = False
     if request.user.is_authenticated:
         profile, _ = UserProfile.objects.get_or_create(user=request.user)
@@ -137,9 +135,12 @@ def movie_detail(request, pk):
     })
 
 def series_detail(request, pk):
-    series = get_object_or_404(Series, id=pk)
+    series = get_object_or_404(
+        Series.objects.select_related('contingut__genere', 'contingut__director', 'contingut__age_rating').prefetch_related('contingut__apis'), 
+        id=pk
+    )
 
-    available_apis = [s.contingut.api for s in Series.objects.filter(contingut__titol__iexact=series.title).select_related('contingut__api') if s.contingut.api]
+    available_apis = series.contingut.apis.all()
 
     is_favorite = False
     if request.user.is_authenticated:

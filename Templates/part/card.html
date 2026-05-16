@@ -1,28 +1,28 @@
 {% load i18n %}
-{% if item.content_type == 'movie' %}
-<div class="movie-card" data-url="{% url 'movie_detail' item.id %}" onclick="window.location.href=this.dataset.url" style="cursor: pointer;">
-{% elif item.content_type == 'series' %}
-<div class="movie-card" data-url="{% url 'series_detail' item.id %}" onclick="window.location.href=this.dataset.url" style="cursor: pointer;">
+{% if item.content_type == 'movie' and item.movie %}
+<div class="movie-card" data-url="{% url 'movie_detail' item.movie.id %}" onclick="window.location.href=this.dataset.url" style="cursor: pointer;">
+{% elif item.content_type == 'series' and item.series %}
+<div class="movie-card" data-url="{% url 'series_detail' item.series.id %}" onclick="window.location.href=this.dataset.url" style="cursor: pointer;">
 {% else %}
 <div class="movie-card">
 {% endif %}
     <div class="card-poster">
         {% if item.poster_path %}
-        <img src="{{ item.poster_path }}" alt="{{ item.title }}" loading="lazy">
+        <img src="{{ item.poster_path }}" alt="{{ item.titol }}" loading="lazy">
         {% else %}
-        <div class="no-poster"><span>{{ item.title|slice:":1" }}</span></div>
+        <div class="no-poster"><span>{{ item.titol|slice:":1" }}</span></div>
         {% endif %}
         <div class="card-title-overlay">
-            <h3 class="movie-title">{{ item.title }}</h3>
-            {% if item.year %}<span class="movie-year">{{ item.year }}</span>{% endif %}
+            <h3 class="movie-title">{{ item.titol }}</h3>
+            {% if item.data_estrena %}<span class="movie-year">{{ item.data_estrena }}</span>{% endif %}
         </div>
     </div>
     <div class="card-hover-overlay">
         <div class="card-hover-content">
-            <h4 class="hover-title">{{ item.title }}</h4>
-            {% if item.year %}<span class="hover-year">{{ item.year }}</span>{% endif %}
+            <h4 class="hover-title">{{ item.titol }}</h4>
+            {% if item.data_estrena %}<span class="hover-year">{{ item.data_estrena }}</span>{% endif %}
             <div class="hover-info">
-                <p><strong>{% trans "Género" %}:</strong> {{ item.genre.name|default:"N/A" }}</p>
+                <p><strong>{% trans "Género" %}:</strong> {{ item.genere.name|default:"N/A" }}</p>
                 <p><strong>{% trans "Director" %}:</strong> {{ item.director.name|default:"N/A" }}</p>
             </div>
             <div class="hover-meta">
