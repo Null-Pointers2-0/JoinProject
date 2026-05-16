@@ -29,15 +29,19 @@ class SyncLogAdmin(admin.ModelAdmin):
 
 @admin.register(Contingut)
 class ContingutAdmin(admin.ModelAdmin):
-    list_display = ('titol', 'data_estrena', 'genere', 'director', 'age_rating', 'api')
-    list_filter = ('api', 'genere', 'director', 'age_rating')
+    list_display = ('titol', 'data_estrena', 'genere', 'director', 'age_rating', 'display_apis')
+    list_filter = ('apis', 'genere', 'director', 'age_rating')
     search_fields = ('titol',)
+
+    def display_apis(self, obj):
+        return ", ".join([api.name or str(api.port) for api in obj.apis.all()])
+    display_apis.short_description = 'Plataformas'
 
 
 @admin.register(Movie)
 class MovieAdmin(admin.ModelAdmin):
     list_display = ('title', 'year', 'genre_name', 'director_name', 'api_name')
-    list_filter = ('contingut__api', 'contingut__genere', 'contingut__director')
+    list_filter = ('contingut__apis', 'contingut__genere', 'contingut__director')
     search_fields = ('contingut__titol',)
 
     def title(self, obj):
@@ -48,14 +52,15 @@ class MovieAdmin(admin.ModelAdmin):
         return obj.contingut.genere.name if obj.contingut.genere else '-'
     def director_name(self, obj):
         return obj.contingut.director.name if obj.contingut.director else '-'
+    
     def api_name(self, obj):
-        return obj.contingut.api.name if obj.contingut.api else '-'
+        return ", ".join([api.name or str(api.port) for api in obj.contingut.apis.all()]) if obj.contingut.apis.exists() else '-'
 
 
 @admin.register(Series)
 class SeriesAdmin(admin.ModelAdmin):
     list_display = ('title', 'year', 'num_temporades', 'genre_name', 'director_name')
-    list_filter = ('contingut__api', 'contingut__genere', 'contingut__director')
+    list_filter = ('contingut__apis', 'contingut__genere', 'contingut__director')
     search_fields = ('contingut__titol',)
 
     def title(self, obj):
@@ -66,6 +71,9 @@ class SeriesAdmin(admin.ModelAdmin):
         return obj.contingut.genere.name if obj.contingut.genere else '-'
     def director_name(self, obj):
         return obj.contingut.director.name if obj.contingut.director else '-'
+    
+    def api_name(self, obj):
+        return ", ".join([api.name or str(api.port) for api in obj.contingut.apis.all()]) if obj.contingut.apis.exists() else '-'
 
 
 @admin.register(Director)
