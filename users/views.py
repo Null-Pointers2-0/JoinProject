@@ -124,12 +124,20 @@ def crear_usuario_admin(request):
     if request.method == 'POST':
         form = CustomUserAdminCreationForm(request.POST)
         if form.is_valid():
+            # 1. Creamos la instancia en memoria (sin enviarla a PostgreSQL aún)
             user = form.save(commit=False)
             
+            # 2. Generamos y encriptamos la contraseña temporal
             temp_password = get_random_string(length=12)
             user.set_password(temp_password)
+            
+            # 3. Guardamos el usuario en la BD (ahora ya tiene un ID asignado)
             user.save()
             
+            # 4. MAGIA DE DJANGO: Ejecutamos el guardado de la relación ManyToMany (Suscripciones)
+            form.save_m2m()
+            
+            # 5. Creamos su perfil base
             UserProfile.objects.get_or_create(user=user)
 
             resend.api_key = os.getenv('RESEND_KEY')
@@ -152,6 +160,8 @@ def crear_usuario_admin(request):
                 })
                 messages.success(request, f"Usuario '{user.username}' creado correctamente y correo enviado.")
             except Exception as e:
+                import logging
+                logging.error(f"Fallo enviando correo Resend: {e}")
                 messages.warning(request, "Usuario creado, pero hubo un error al enviar el correo.")
 
             return redirect('gestion_usuarios')
@@ -159,7 +169,6 @@ def crear_usuario_admin(request):
         form = CustomUserAdminCreationForm()
     
     return render(request, 'users/parts/create_user.html', {'form': form})
-
 
 # --- DASHBOARDS Y ANALÍTICAS ---
 

@@ -6,6 +6,61 @@
 {{ block.super }}
     <link rel="stylesheet" href="{% static 'users/css/profile.css' %}">
     <link rel="stylesheet" href="{% static 'users/css/admin_management.css' %}">
+    <style>
+        .platform-selection {
+            background: rgba(0, 0, 0, 0.2);
+            padding: 12px 15px; /* Reducido para que encaje mejor en la columna */
+            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            height: 100%; /* Para que iguale la altura de la columna */
+        }
+        
+        .platform-title {
+            color: rgba(255, 255, 255, 0.5); /* Igualado al color del label de Type */
+            font-weight: bold;
+            margin-bottom: 10px;
+            font-size: 0.875em; /* Igualado al tamaño small */
+        }
+
+        .platform-icons {
+            display: flex;
+            gap: 10px; /* Reducido ligeramente para evitar desbordes */
+            flex-wrap: wrap;
+        }
+
+        .platform-icon {
+            cursor: pointer;
+            display: block;
+        }
+
+        .platform-icon-content {
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            padding: 10px;
+            text-align: center;
+            transition: all 0.3s ease;
+            color: rgba(255, 255, 255, 0.6);
+            width: 85px; /* Reducido para formato columna */
+        }
+
+        .platform-svg {
+            width: 24px; /* Reducido */
+            height: 24px;
+            margin-bottom: 4px;
+        }
+
+        .platform-label {
+            display: block;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+
+        .platform-icon.selected .platform-icon-content {
+            border-color: #00ffcc; 
+            color: #00ffcc;
+            background: rgba(0, 255, 204, 0.05);
+        }
+    </style>
 {% endblock %}
 
 {% block content_staff_admin %}
@@ -20,41 +75,109 @@
 
             <div class="row">
                 {% for field in form %}
+                    {% if field.name != 'subscriptions' %}
+                        <div class="col-md-6 mb-3">
+                            <div class="form-group h-100">
+                                <label class="text-white-50 small fw-bold mb-1">
+                                    {% trans field.label %}
+                                </label>
+                                
+                                {{ field }}
+
+                                {% if field.help_text %}
+                                    <small class="text-muted d-block mt-1" style="font-size: 0.7rem;">
+                                        {{ field.help_text|safe }}
+                                    </small>
+                                {% endif %}
+
+                                {% if field.errors %}
+                                    {% for error in field.errors %}
+                                        <div class="text-danger small mt-1">
+                                            <i class="bi bi-excluir-circle me-1"></i>{{ error }}
+                                        </div>
+                                    {% endfor %}
+                                {% endif %}
+                            </div>
+                        </div>
+                    {% endif %}
+                {% endfor %}
+
                 <div class="col-md-6 mb-3">
-                    <div class="form-group">
-                        <label class="text-white-50 small fw-bold mb-1">
-                            {% trans field.label %}
-                        </label>
-                        
-                        {{ field }}
-
-                        {% if field.help_text %}
-                            <small class="text-muted d-block mt-1" style="font-size: 0.7rem;">
-                                {{ field.help_text|safe }}
-                            </small>
-                        {% endif %}
-
-                        {% if field.errors %}
-                            {% for error in field.errors %}
-                                <div class="text-danger small mt-1">
-                                    <i class="bi bi-excluir-circle me-1"></i>{{ error }}
+                    <div id="platforms-container" class="platform-selection" style="display: none;">
+                        <label class="platform-title d-block">{% trans "Asignar plataformas de gestión" %}</label>
+                        <div class="platform-icons">
+                            {% for api in form.subscriptions.field.queryset %}
+                            <label class="platform-icon" data-port="{{ api.port }}">
+                                <input type="checkbox" name="subscriptions" value="{{ api.pk }}" hidden>
+                                <div class="platform-icon-content">
+                                    <svg class="platform-svg" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <rect x="2" y="3" width="20" height="14" rx="2" stroke="currentColor" stroke-width="2"></rect>
+                                        <path d="M8 21h8" stroke="currentColor" stroke-width="2" stroke-linecap="round"></path>
+                                        <path d="M12 17v4" stroke="currentColor" stroke-width="2" stroke-linecap="round"></path>
+                                    </svg>
+                                    <span class="platform-label">Port {{ api.port }}</span>
                                 </div>
+                            </label>
                             {% endfor %}
-                        {% endif %}
+                        </div>
+                        {% for error in form.subscriptions.errors %}
+                        <small style="color: #e50914; font-size: 12px; display: block; margin-top: 5px;">{{ error }}</small>
+                        {% endfor %}
                     </div>
                 </div>
-                {% endfor %}
             </div>
 
             <div class="admin-actions mt-4 d-flex gap-2">
                 <button type="submit" class="btn-neon">
                     <i class="bi bi-shield-check me-2"></i>{% trans 'Crear Usuario y Enviar Email' %}
                 </button>
-                <a href="{% url 'gestion_usuarios' %}" class="btn-ghost d-flex align-items-center">
+                <a href="{% url 'gestion_usuarios' %}" class="btn-ghost d-flex align-items-center" style="text-decoration: none; color: white;">
                     {% trans 'Cancelar' %}
                 </a>
             </div>
         </form>
     </div>
 </div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const roleSelect = document.querySelector('select[name="type"]');
+        const platformsContainer = document.getElementById('platforms-container');
+        const platformIcons = document.querySelectorAll('.platform-icon');
+
+        function togglePlatformsVisibility() {
+            if (!roleSelect) return;
+            const selectedRole = roleSelect.value;
+            
+            if (selectedRole === 'Admin' || selectedRole === 'Staff' || selectedRole === 'Staff Admin') {
+                platformsContainer.style.display = 'block';
+            } else {
+                platformsContainer.style.display = 'none';
+                
+                platformIcons.forEach(icon => {
+                    const checkbox = icon.querySelector('input[type="checkbox"]');
+                    checkbox.checked = false;
+                    icon.classList.remove('selected');
+                });
+            }
+        }
+
+        if (roleSelect) {
+            roleSelect.addEventListener('change', togglePlatformsVisibility);
+            togglePlatformsVisibility();
+        }
+
+        platformIcons.forEach(icon => {
+            const checkbox = icon.querySelector('input[type="checkbox"]');
+
+            if (checkbox.checked) {
+                icon.classList.add('selected');
+            }
+
+            checkbox.addEventListener('change', () => {
+                icon.classList.toggle('selected', checkbox.checked);
+            });
+        });
+    });
+</script>
 {% endblock %}
