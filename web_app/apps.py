@@ -21,6 +21,10 @@ class WebAppConfig(AppConfig):
 
         if os.environ.get('RUN_MAIN') != 'true' and 'runserver' in sys.argv:
             return
+        
+        if os.environ.get('DISABLE_SCHEDULER') == 'True':
+            print("Scheduler no s'ha executat doncs s'ha especificat DISABLE_SCHEDULER=True")
+            return
 
         try:
             from . import scheduler

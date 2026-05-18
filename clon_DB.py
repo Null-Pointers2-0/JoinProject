@@ -68,7 +68,7 @@ def main():
         sys.exit(1)
 
     # Variables d'entorn per executar les comandes com si estiguéssim en producció
-    prod_env = {"DJANGO_DEBUG": "False"} #per a fer que s'accedeixi a la base de dades de producció
+    prod_env = {"DJANGO_DEBUG": "False", "DISABLE_SCHEDULER": "True"} #per a fer que s'accedeixi a la base de dades de producció
     
 
     # Executa el dumpdata per extreure totes les dades de la base de dades de producció# PAS 1: Exporta totes les dades del PostgreSQL remot a un fitxer JSON
@@ -88,7 +88,7 @@ def main():
         sys.exit(1)
 
     # Força que Django canviï a l'entorn local (SQLite) activant el mode DEBUG
-    local_env = {"DJANGO_DEBUG": "True"}
+    local_env = {"DJANGO_DEBUG": "True", "DISABLE_SCHEDULER": "True"}
 
     db_path = BASE_DIR / "db.sqlite3"
     if db_path.exists():
