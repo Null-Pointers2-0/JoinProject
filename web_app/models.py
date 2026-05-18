@@ -5,9 +5,9 @@ from web import settings
 
 class UserType(models.TextChoices):
     STAFF = 'Staff', 'Staff'
+    STAFF_ADMIN = 'Staff Admin', 'Staff Admin'
     ADMIN = 'Admin', 'Admin'
     CONSUMER = 'Consumer', 'Consumer'
-
 
 class API(models.Model):
     port = models.IntegerField(unique=True)
@@ -198,7 +198,6 @@ class CustomUser(AbstractUser):
     bio = models.TextField(blank=True, null=True)
     location = models.CharField(max_length=255, blank=True, null=True)
     type = models.CharField(
-        max_length=10,
         choices=UserType.choices,
         default=UserType.CONSUMER,
     )

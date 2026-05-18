@@ -1,10 +1,14 @@
+from django.core.mail import send_mail
+from django.conf import settings
+from django.utils.crypto import get_random_string
 from django.shortcuts import render, redirect, get_object_or_404
-from web_app.forms import CustomUserCreationForm
-from web_app.models import AgeRating, API, Director, Genre, Movie, UserProfile, Series, Contingut, Valoracio
+from web_app.forms import CustomUserAdminCreationForm, CustomUserCreationForm
+from web_app.models import AgeRating, API, CustomUser, Director, Genre, Movie, UserProfile, Series, Contingut, AgeRating, Valoracio
 from web_app import utils
 from itertools import chain
 from django.http import JsonResponse
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, user_passes_test
+from django.contrib import messages
 from django.contrib.auth import login
 from django.core.paginator import Paginator
 from django.db.models import Avg, Count
@@ -95,8 +99,12 @@ def redirect_by_role(request):
     if user.type == 'Admin':
         return redirect('admin_dashboard')
     elif user.type == 'Staff':
-        pass
+        return redirect('user_profile')
     elif user.type == 'Consumer':
+        return redirect('home')
+    elif user.type == 'Staff Admin':
+        return redirect('gestion_usuarios')
+    else:
         return redirect('home')
 
 
