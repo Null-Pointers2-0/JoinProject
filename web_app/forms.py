@@ -1,6 +1,6 @@
 from django import forms
 from django.utils.translation import gettext_lazy as _
-from django.contrib.auth.forms import UserChangeForm
+from django.contrib.auth.forms import UserChangeForm, UserCreationForm
 from django.core.exceptions import ValidationError
 from django.core.validators import MaxLengthValidator
 
@@ -86,3 +86,27 @@ class CustomUserChangeForm(UserChangeForm):
                 raise ValidationError('Solo se permiten archivos JPG o PNG.')
 
         return avatar
+
+class CustomUserAdminCreationForm(UserCreationForm):
+    class Meta:
+        model = CustomUser
+        fields = ("username", "email", "type", "location")
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        
+        if 'password1' in self.fields:
+            del self.fields['password1']
+        if 'password2' in self.fields:
+            del self.fields['password2']
+    
+    def save(self, commit=True):
+        """
+        Sobrescribimos save para evitar que Django busque 'password1'.
+        Simplemente creamos la instancia del modelo con los datos del form.
+        """
+        # No llamamos a super().save() porque ahí es donde explota el KeyError
+        user = CustomUser(**self.cleaned_data)
+        if commit:
+            user.save()
+        return user

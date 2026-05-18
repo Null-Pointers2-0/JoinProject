@@ -26,11 +26,17 @@
             <div class="profile-useremail">{{ user.email }}</div>
         </div>
 
-        <!-- Contenido settings -->
         <div class="user_settings">
-            {% block content_user_setings %}{% endblock %}
+            {% if user.type == 'Staff' %}
+                {% block content_staff %}{% endblock %}
+            {% elif user.type == 'Consumer' %}
+                {% block content_user %}{% endblock %}
+            {% elif user.type == 'Staff Admin' %}
+                {% block content_staff_admin %}{% endblock %}
+            {% elif user.type == 'Admin' %}
+                {% block content_admin %}{% endblock %}
+            {% endif %}
         </div>
-
     </div>
 
 {% endblock %}
