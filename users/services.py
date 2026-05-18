@@ -1,7 +1,10 @@
 import hashlib
+import hmac
+import re
 from django.db.models import Count, Q
 from web_app.models import Contingut, Visualitzacio, Preferits, API, Genre, AgeRating, Director
 from django.utils import timezone
+from django.conf import settings
 
 PII_COLUMNS = frozenset({
     'username', 'email', 'ip_address', 'id_address',
@@ -9,8 +12,36 @@ PII_COLUMNS = frozenset({
     'avatar', 'password',
 })
 
+GDPR_ANONYMIZE_FIELDS = frozenset({
+    'username', 'email', 'first_name', 'last_name',
+    'user_id', 'ip_address', 'id_address',
+})
+
+EMAIL_RE = re.compile(r'[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}')
+
+def anonymize_user_id(identifier, salt=None):
+    salt = salt or settings.SECRET_KEY
+    h = hmac.new(salt.encode(), str(identifier).encode(), hashlib.sha256)
+    return f"UID_{h.hexdigest()[:12]}"
+
 def _strip_pii(row):
     return {k: v for k, v in row.items() if k not in PII_COLUMNS}
+
+def validate_gdpr_compliance(data_list, is_b2b_report=False):
+    for row in data_list:
+        for key, value in row.items():
+            if key in PII_COLUMNS:
+                if is_b2b_report and key in GDPR_ANONYMIZE_FIELDS and isinstance(value, str) and value.startswith('UID_'):
+                    continue
+                raise ValueError(f"GDPR violation: PII column '{key}' found in report data")
+            if isinstance(value, str) and EMAIL_RE.search(value):
+                raise ValueError(f"GDPR violation: email pattern found in field '{key}': {value}")
+        if is_b2b_report:
+            for field in GDPR_ANONYMIZE_FIELDS & row.keys():
+                if not isinstance(row[field], str) or not row[field].startswith('UID_'):
+                    raise ValueError(
+                        f"GDPR violation: field '{field}' in B2B report is not anonymized: {row[field]}"
+                    )
 
 def get_content_analytics(start_date=None, end_date=None, plataform_id=None):
     queryset = Contingut.objects.select_related('genere', 'age_rating', 'api', 'director')
@@ -57,9 +88,8 @@ def format_analytics_for_csv (data_list, is_b2b_report = False):
         safe_row = _strip_pii(row)
 
         if is_b2b_report:
-            if 'username' in row and row['username']:
-                user_hash = hashlib.sha256(row['username'].encode()).hexdigest()[:10]
-                safe_row['username'] = f"USER_{user_hash}"
+            for field in GDPR_ANONYMIZE_FIELDS & row.keys():
+                safe_row[field] = anonymize_user_id(row[field])
         
         formatted_data.append(safe_row)
         
