@@ -7,6 +7,11 @@ class WebAppConfig(AppConfig):
     name = 'web_app'
     
     def ready(self):
+
+        from . import signals
+
+        import os
+        import sys
         from django.db.models.signals import post_migrate
         
         post_migrate.connect(create_default_user, sender=self)
