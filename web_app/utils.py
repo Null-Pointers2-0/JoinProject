@@ -14,6 +14,10 @@ TMDB_SERIES_URL = f"https://api.themoviedb.org/3/search/tv?api_key={TMDB_API_KEY
 
 TMDB_POSTER_URL = f"https://image.tmdb.org/t/p/w185/"  
 
+DB_DATA = {
+    
+}
+
 def store_data():
     for port in ['8080', '8081', '8082']:
         store_api(port)
@@ -199,6 +203,13 @@ def get_movies(params=None):
             
             status = "creada" if created else "vinculada a nueva plataforma"
             print(f"Movie '{movie.title}' {status} desde el puerto {port}.")
+            
+        current_ids = {json['id'] for json in unique_data}
+        stale = Contingut.objects.filter(api=api_instance, movie__isnull=False).exclude(api_content_id__in=current_ids)
+        if stale.exists():
+            print(f"Cleaning {stale.count()} movies no longer in API {port}.")
+            stale.update(api=None)
+
 
 def get_series(params=None):
     series_data = Call('series', params=params)
@@ -244,6 +255,12 @@ def get_series(params=None):
             
             status = "creada" if created else "vinculada a nueva plataforma"
             print(f"Series '{series.title}' {status} desde el puerto {port}.")
+
+        current_ids = {json['id'] + SERIES_ID_OFFSET for json in unique_data}
+        stale = Contingut.objects.filter(api=api_instance, series__isnull=False).exclude(api_content_id__in=current_ids)
+        if stale.exists():
+            print(f"Cleaning {stale.count()} series no longer in API {port}.")
+            stale.update(api=None)
 
 if __name__ == '__main__':
     store_data()
