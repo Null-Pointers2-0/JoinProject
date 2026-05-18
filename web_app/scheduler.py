@@ -16,6 +16,7 @@ def start():
         max_instances=1,
         replace_existing=True,
     )
-    
+
     if not scheduler.running:
         scheduler.start()
+        scheduler.add_job(download_catalog_data, trigger="date")

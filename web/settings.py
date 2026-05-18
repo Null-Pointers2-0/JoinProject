@@ -66,7 +66,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django.middleware.locale.LocaleMiddleware',
-
+    'users.middleware.AdminRedirectMiddleware',
 ]
 
 ROOT_URLCONF = 'web.urls'
@@ -181,8 +181,19 @@ MEDIA_ROOT = BASE_DIR / 'media'
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-
+LOGIN_URL = 'login'
 LOGIN_REDIRECT_URL = 'go_to_dashboard'
 LOGOUT_REDIRECT_URL = 'home'
 
 AUTH_USER_MODEL = 'web_app.CustomUser'
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 465
+EMAIL_USE_SSL = True
+EMAIL_USE_TLS = False
+EMAIL_HOST_USER = os.getenv('MAIL')
+EMAIL_HOST_PASSWORD = os.getenv('MAIL_PW')
+DEFAULT_FROM_EMAIL = f'StreamSync <{EMAIL_HOST_USER}>'
+
+EMAIL_TIMEOUT = 10
