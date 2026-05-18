@@ -3,6 +3,15 @@ from django.db.models import Count, Q
 from web_app.models import Contingut, Visualitzacio, Preferits, API, Genre, AgeRating, Director
 from django.utils import timezone
 
+PII_COLUMNS = frozenset({
+    'username', 'email', 'ip_address', 'id_address',
+    'first_name', 'last_name', 'location', 'bio',
+    'avatar', 'password',
+})
+
+def _strip_pii(row):
+    return {k: v for k, v in row.items() if k not in PII_COLUMNS}
+
 def get_content_analytics(start_date=None, end_date=None, plataform_id=None):
     queryset = Contingut.objects.select_related('genere', 'age_rating', 'api', 'director')
 
@@ -45,15 +54,14 @@ def get_content_analytics(start_date=None, end_date=None, plataform_id=None):
 def format_analytics_for_csv (data_list, is_b2b_report = False):
     formatted_data = []
     for row in data_list:
+        safe_row = _strip_pii(row)
+
         if is_b2b_report:
             if 'username' in row and row['username']:
                 user_hash = hashlib.sha256(row['username'].encode()).hexdigest()[:10]
-                row['username'] = f"USER_{user_hash}"
-            
-            row.pop('email', None)
-            row.pop('id_address', None)
+                safe_row['username'] = f"USER_{user_hash}"
         
-        formatted_data.append(row)
+        formatted_data.append(safe_row)
         
     return formatted_data
 

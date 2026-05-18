@@ -8,7 +8,8 @@ from .services import (
     format_analytics_for_csv,
     get_genre_distribution,
     get_age_rating_distribution,
-    get_director_top_list
+    get_director_top_list,
+    PII_COLUMNS,
 )
 from django.shortcuts import render, redirect
 from django.contrib import messages
@@ -105,6 +106,11 @@ def export_analytics_csv(request):
             item['year'], item['director'], item['platform'], 
             item['views'], item['favorites']
         ])
+    
+    for item in clean_data:
+        leaked = PII_COLUMNS & item.keys()
+        if leaked:
+            raise ValueError(f"CRITICAL: PII columns {leaked} would be exported!")
     
     return response
 
