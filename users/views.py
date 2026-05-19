@@ -11,6 +11,7 @@ from .services import (
     get_age_rating_distribution,
     get_director_top_list
 )
+from django.core.paginator import Paginator
 from django.shortcuts import render, redirect
 from django.contrib import messages
 from web_app.forms import CustomUserChangeForm
@@ -77,6 +78,13 @@ def subscription(request):
         'user_subscription_ids': user_subscription_ids,
     })
 
+@login_required(login_url='login')
+@user_passes_test(lambda u: u.is_superuser)
+def staff_admin_panel(request):
+    if not request.user.is_authenticated:
+        return redirect('login')
+    return redirect('gestion_usuarios')
+
 @user_passes_test(lambda u: u.is_superuser)
 def gestion_usuarios(request):
     if not request.user.is_authenticated:
@@ -86,7 +94,11 @@ def gestion_usuarios(request):
     filter_type = request.GET.get('tipo')
     if filter_type:
         exclude_staff_admin = exclude_staff_admin.filter(type=filter_type)
-    return render(request, 'users/parts/users_table.html', {'users': exclude_staff_admin})
+
+    paginator = Paginator(exclude_staff_admin, 20)
+    page_obj = paginator.get_page(request.GET.get('page', 1))
+
+    return render(request, 'users/parts/users_table.html', {'users': page_obj})
 
 @user_passes_test(lambda u: u.is_superuser)
 def eliminar_usuario(request, user_id):
@@ -263,4 +275,49 @@ def admin_dashboard_directors(request):
         'director_stats': director_stats,
         'filters': {'start': start_date, 'end': end_date},
         'platforms': API.objects.all()
+    })
+
+@user_passes_test(lambda u: u.is_superuser)
+def gestion_cartelleres(request):
+    if not request.user.is_authenticated:
+        return redirect('login')
+
+    plataforma_id = request.GET.get('plataforma')
+    search_query = request.GET.get('q', '')
+    contenidos = Contingut.objects.all().order_by('titol')
+
+    if plataforma_id:
+        contenidos = contenidos.filter(api_id=plataforma_id)
+    if search_query:
+        contenidos = contenidos.filter(titol__icontains=search_query)
+
+    paginator = Paginator(contenidos, 20)
+    page_obj = paginator.get_page(request.GET.get('page', 1))
+
+    plataformas = API.objects.all()
+
+    return render(request, 'users/parts/gestion_cartelleres.html', {
+        'contenidos': page_obj,
+        'plataformas': plataformas,
+        'selected_plataforma': plataforma_id,
+        'search_query': search_query,
+    })
+
+
+@user_passes_test(lambda u: u.is_superuser)
+def editar_cartellera(request, contingut_id):
+    if not request.user.is_authenticated:
+        return redirect('login')
+
+    contingut = get_object_or_404(Contingut, id=contingut_id)
+
+    if request.method == 'POST':
+        poster_path = request.POST.get('poster_path', '').strip()
+        contingut.poster_path = poster_path if poster_path else None
+        contingut.save()
+        messages.success(request, f"Cartellera actualitzada per a '{contingut.titol}'")
+        return redirect('gestion_cartelleres')
+
+    return render(request, 'users/parts/editar_cartellera.html', {
+        'contingut': contingut,
     })
