@@ -321,7 +321,7 @@ def gestion_cartelleres(request):
     contenidos_qs = Contingut.objects.all().order_by('titol')
 
     if plataforma_id:
-        contenidos_qs = contenidos_qs.filter(apis__id=plataforma_id)
+        contenidos_qs = contenidos_qs.filter(apis__port=plataforma_id)
     if search_query:
         contenidos_qs = contenidos_qs.filter(titol__icontains=search_query)
 
