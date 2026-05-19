@@ -41,11 +41,16 @@
             
             <div class="data-card">
                 <div class="data-card-label">Disponible en:</div>
-                <div class="data-card-value">
+                <div class="data-card-value api-buttons-container">
                     {% for api in available_apis %}
-                        <span>{{ api.name|default:api.port }}</span>
+                        <button class="api-btn track-platform-btn"
+                                data-contingut-id="{{ content.contingut.id }}"
+                                data-api-id="{{ api.id }}">
+                            {{ api.name|default:api.port }}
+                            <span class="api-stats"></span>
+                        </button>
                     {% empty %}
-                        <span>No hay información de API disponible.</span>
+                        <span style="font-size: 12px; color: var(--tm);">No hay información de API disponible.</span>
                     {% endfor %}
                 </div>
             </div>
@@ -64,7 +69,7 @@
             <h2 class="section-title">Acciones</h2>
             <div style="display: flex; gap: 16px;">
                 {% if user.is_authenticated %}
-                    <button id="btn-save" class="btn-action" 
+                    <button id="btn-save" class="btn-action"
                             data-url="{% block favorite_url %}{% endblock %}">
                         {% if is_favorite %} Dejar de seguir {% else %} Seguir {% endif %}
                     </button>
@@ -128,24 +133,65 @@
     </div>
 </div>
 
+<div id="history-toast" class="toast-notification">✅ Añadido a tu historial</div>
+
 <script>
 document.addEventListener('DOMContentLoaded', () => {
+    // 1. Lógica del botón de favoritos (Seguir / Dejar de seguir)
     const favoriteBtn = document.getElementById('btn-save');
     if (favoriteBtn) {
         favoriteBtn.addEventListener('click', function() {
             const targetUrl = this.getAttribute('data-url');
-            const btn = this;
             fetch(targetUrl, {
                 method: 'POST',
                 headers: { 'X-CSRFToken': '{{ csrf_token }}', 'Content-Type': 'application/json' }
             })
             .then(response => response.json())
             .then(data => {
-                btn.innerText = (data.status === 'added') ? 'Dejar de seguir' : 'Seguir';
-                btn.style.color = (data.status === 'added') ? 'var(--cyan)' : 'var(--tm)';
+                this.innerText = (data.status === 'added') ? 'Dejar de seguir' : 'Seguir';
+                this.style.color = (data.status === 'added') ? 'var(--cyan)' : 'var(--tm)';
             });
         });
     }
+
+    // 2. Lógica de tracking asíncrono de clics en plataformas (Issue #24)
+    const platformButtons = document.querySelectorAll('.track-platform-btn');
+    const toast = document.getElementById('history-toast');
+
+    platformButtons.forEach(btn => {
+        btn.addEventListener('click', function() {
+            const contingutId = this.getAttribute('data-contingut-id');
+            const apiId = this.getAttribute('data-api-id');
+            const statsSpan = this.querySelector('.api-stats');
+
+            fetch("{% url 'register_platform_click' %}", {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': '{{ csrf_token }}',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ contingut_id: contingutId, api_id: apiId })
+            })
+            .then(response => {
+                if (!response.ok) throw new Error('Error en el registro del clic');
+                return response.json();
+            })
+            .then(data => {
+                if (data.status === 'success') {
+                    // Feedback visual inmediato en el botón e inyección de la métrica
+                    this.classList.add('clicked');
+                    statsSpan.innerText = `(${data.total_clicks} views)`;
+
+                    // Disparar el banner flotante (Toast)
+                    toast.classList.add('show');
+                    setTimeout(() => {
+                        toast.classList.remove('show');
+                    }, 3000);
+                }
+            })
+            .catch(error => console.error('Error tracking click:', error));
+        });
+    });
 });
 </script>
 {% endblock %}

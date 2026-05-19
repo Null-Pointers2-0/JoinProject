@@ -3,8 +3,10 @@ from django.conf import settings
 from django.utils.crypto import get_random_string
 from django.shortcuts import render, redirect, get_object_or_404
 from web_app.forms import CustomUserAdminCreationForm, CustomUserCreationForm
-from web_app.models import AgeRating, API, CustomUser, Director, Genre, Movie, UserProfile, Series, Contingut, AgeRating, Valoracio
+from web_app.models import AgeRating, API, CustomUser, Director, Genre, Movie, UserProfile, Series, Contingut, \
+    AgeRating, Valoracio, Visualitzacio
 from web_app import utils
+import json
 from itertools import chain
 from django.http import JsonResponse
 from django.contrib.auth.decorators import login_required, user_passes_test
@@ -234,3 +236,29 @@ def terms_use(request):
 
 def privacy_policy(request):
     return render(request, 'footer_legal/privacy_policy.html')
+
+def register_platform_click(request):
+    if request.method == 'POST':
+        try:
+            data = json.loads(request.body)
+            contingut_id = data.get('contingut_id')
+            api_id = data.get('api_id')
+
+            contingut = get_object_or_404(Contingut, id=contingut_id)
+            api = get_object_or_404(API, id=api_id)
+
+            user = request.user if request.user.is_authenticated else None
+            Visualitzacio.objects.create(
+                user=user,
+                contingut=contingut,
+                api=api
+            )
+
+            total_clicks = Visualitzacio.objects.filter(contingut=contingut, api=api).count()
+
+            return JsonResponse({'status': 'success', 'total_clicks': total_clicks})
+
+        except Exception as e:
+            return JsonResponse({'status': 'error', 'message': str(e)}, status=400)
+
+    return JsonResponse({'status': 'error', 'message': 'Método no permitido'}, status=405)
