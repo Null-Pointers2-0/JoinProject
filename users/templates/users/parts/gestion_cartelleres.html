@@ -1,0 +1,113 @@
+{% extends 'users/types/staff_admin.html' %}
+{% load i18n %}
+{% load static %}
+
+{% block extra_css %}
+    {{ block.super }}
+    <link rel="stylesheet" href="{% static 'css/home/home.css' %}">
+    <link rel="stylesheet" href="{% static 'users/css/admin_management.css' %}?v=2.0">
+{% endblock %}
+
+{% block staff_admin_content %}
+<div class="admin-container">
+    <div class="admin-header d-flex justify-content-between align-items-center mb-4">
+        <div class="header-text">
+            <h2 class="title-neon">{% trans 'Editar Cartelleres' %}</h2>
+            <p class="subtitle mb-0">{% trans 'Revisa i modifica les cartelleres (posters) de cada contingut' %}</p>
+        </div>
+    </div>
+
+    <div class="glass-card filter-section mb-4">
+        <form method="GET" class="filter-form d-flex align-items-center gap-3 flex-wrap">
+            <div class="filter-group d-flex align-items-center">
+                <i class="bi bi-funnel-fill me-2 text-neon"></i>
+                <select name="plataforma" class="filter-select">
+                    <option value="">{% trans 'Totes les Plataformes' %}</option>
+                    {% for p in plataformas %}
+                    <option value="{{ p.port }}" {% if request.GET.plataforma == p.port|stringformat:'s' %}selected{% endif %}>{{ p.name|default:p.port }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="filter-group d-flex align-items-center flex-grow-1" >
+                <div class="search-input-container search-principal-container col-8">
+                    <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                        stroke-width="2">
+                        <circle cx="11" cy="11" r="8" />
+                        <line x1="21" y1="21" x2="16.65" y2="16.65" />
+                    </svg>
+                    <input type="text" id="search" name="q" class="search-input" placeholder="{% trans 'Search...' %}"
+                        value="{{ request.GET.q|default:'' }}">
+
+                    <!--<input type="text" name="q" class="filter-select flex-grow-1" placeholder="{% trans 'Cercar per títol...' %}" value="{{ search_query }}">-->
+                </div>
+            </div>
+            <button type="submit" class="btn-ghost">
+                <i class="bi bi-check2-circle me-1"></i>{% trans 'Filtrar' %}
+            </button>
+            <a href="{% url 'gestion_cartelleres' %}" class="btn-ghost">
+                <i class="bi bi-x-circle me-1"></i>{% trans 'Netejar' %}
+            </a>
+        </form>
+    </div>
+
+    <div class="glass-card table-container p-0">
+        <div class="table-responsive">
+            <table class="table-sync w-100">
+                <thead>
+                    <tr>
+                        <th>{% trans 'Pòster' %}</th>
+                        <th>{% trans 'Títol' %}</th>
+                        <th>{% trans 'Plataforma' %}</th>
+                        <th>{% trans 'Any' %}</th>
+                        <th>{% trans 'Poster Path' %}</th>
+                        <th class="text-center">{% trans 'Accions' %}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for c in contenidos %}
+                    <tr>
+                        <td class="poster-preview">
+                            {% if c.poster_path %}
+                            <img src="{{ c.poster_path }}" alt="{{ c.titol }}" class="poster-thumb" style="width: 50px; height: 75px; object-fit: cover; border-radius: 4px;">
+                            {% else %}
+                            <div class="poster-placeholder" style="width: 50px; height: 75px; background: rgba(255,255,255,0.1); border-radius: 4px; display: flex; align-items: center; justify-content: center;">
+                                <i class="bi bi-image text-muted"></i>
+                            </div>
+                            {% endif %}
+                        </td>
+                        <td class="content-title text-white">{{ c.titol }}</td>
+                        <td class="text-white">
+                            {% for api in c.all_apis %}
+                                {{ api.name|default:api.port }}{% if not forloop.last %}, {% endif %}
+                            {% empty %}
+                                -
+                            {% endfor %}
+                        </td>
+                        <td class="text-white">{{ c.data_estrena|default:'-' }}</td>
+                        <td class="poster-path-cell" style="max-width: 300px;">
+                            <span class="text-white small" style="word-break: break-all; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;" title="{{ c.poster_path }}">{{ c.poster_path|default:'-' }}</span>
+                        </td>
+                        <td class="text-center">
+                            <a href="{% url 'editar_cartellera' c.id %}" class="btn-ghost" title="{% trans 'Editar cartellera' %}">
+                                <i class="bi bi-pencil-fill">{% trans 'Editar' %}</i>
+                            </a>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="6" class="empty-state text-center py-5">
+                            <i class="bi bi-search mb-2 d-block fs-2 text-muted"></i>
+                            {% trans 'No s\'han trobat continguts amb aquests criteris.' %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    {% if contenidos.paginator.num_pages > 1 %}
+        {% include 'home/home_parts/paginator.html' with items=contenidos %}
+    {% endif %}
+</div>
+{% endblock %}
