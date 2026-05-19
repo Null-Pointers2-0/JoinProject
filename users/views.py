@@ -318,14 +318,27 @@ def gestion_cartelleres(request):
 
     plataforma_id = request.GET.get('plataforma')
     search_query = request.GET.get('q', '')
-    contenidos = Contingut.objects.all().order_by('titol')
+    contenidos_qs = Contingut.objects.all().order_by('titol')
 
     if plataforma_id:
-        contenidos = contenidos.filter(api_id=plataforma_id)
+        contenidos_qs = contenidos_qs.filter(apis__id=plataforma_id)
     if search_query:
-        contenidos = contenidos.filter(titol__icontains=search_query)
+        contenidos_qs = contenidos_qs.filter(titol__icontains=search_query)
 
-    paginator = Paginator(contenidos, 20)
+    # Agrupar per títol perquè la base de dades pot tenir duplicats per plataforma
+    seen = {}
+    grouped_contenidos = []
+    for c in contenidos_qs.prefetch_related('apis'):
+        if c.titol not in seen:
+            c.all_apis = list(c.apis.all())
+            seen[c.titol] = c
+            grouped_contenidos.append(c)
+        else:
+            for api in c.apis.all():
+                if api not in seen[c.titol].all_apis:
+                    seen[c.titol].all_apis.append(api)
+
+    paginator = Paginator(grouped_contenidos, 20)
     page_obj = paginator.get_page(request.GET.get('page', 1))
 
     plataformas = API.objects.all()

@@ -77,7 +77,7 @@
                         </td>
                         <td class="content-title text-white">{{ c.titol }}</td>
                         <td class="text-white">
-                            {% for api in c.apis.all %}
+                            {% for api in c.all_apis %}
                                 {{ api.name|default:api.port }}{% if not forloop.last %}, {% endif %}
                             {% empty %}
                                 -
