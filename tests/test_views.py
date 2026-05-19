@@ -2,7 +2,7 @@ from django.test import TestCase
 from django.urls import reverse
 from django.utils import timezone
 from django.contrib.auth import get_user_model
-from web_app.models import API, Director, Genre, AgeRating, Contingut, Movie, Series, UserProfile
+from web_app.models import API, Director, Genre, AgeRating, Contingut, Movie, Series, UserProfile, Visualitzacio
 import io
 from PIL import Image
 
@@ -18,17 +18,18 @@ def create_test_image():
     return buffer
 
 
-def create_contingut(api=None, genre=None, director=None, age_rating=None, title='Test', year=2020):
+def create_contingut(apis=None, genre=None, director=None, age_rating=None, title='Test', year=2020):
     """Helper para crear Contingut con datos por defecto."""
-    return Contingut.objects.create(
-        api_content_id=100 + Contingut.objects.count(),
+    cont = Contingut.objects.create(
         titol=title,
         data_estrena=year,
         director=director,
         genere=genre,
         age_rating=age_rating,
-        api=api
     )
+    if apis:
+        cont.apis.set(apis)
+    return cont
 
 
 class HomeViewTest(TestCase):
@@ -43,12 +44,12 @@ class HomeViewTest(TestCase):
             age_rating_id=1, api=self.api, codi='PG', age=10
         )
         self.contingut_movie = create_contingut(
-            api=self.api, genre=self.genre, director=self.director,
+            apis=[self.api], genre=self.genre, director=self.director,
             age_rating=self.age_rating, title='Movie One', year=2020
         )
         self.movie = Movie.objects.create(contingut=self.contingut_movie)
         self.contingut_series = create_contingut(
-            api=self.api, genre=self.genre, director=self.director,
+            apis=[self.api], genre=self.genre, director=self.director,
             age_rating=self.age_rating, title='Series One', year=2020
         )
         self.series = Series.objects.create(contingut=self.contingut_series, num_temporades=3)
@@ -68,9 +69,8 @@ class HomeViewTest(TestCase):
         self.assertTemplateUsed(response, 'home/home.html')
 
     def test_home_shows_movies_and_series(self):
-        """Comprueba que el context contiene 'items', 'genres' y 'directors'."""
+        """Comprueba que el context contiene 'genres' y 'directors'."""
         response = self.client.get(reverse('home'))
-        self.assertIn('items', response.context)
         self.assertIn('genres', response.context)
         self.assertIn('directors', response.context)
 
@@ -80,93 +80,110 @@ class HomeViewTest(TestCase):
         Series.objects.all().delete()
         response = self.client.get(reverse('home'))
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(len(response.context['items']), 0)
 
     # ------------------------------------------------------------------ #
-    #  HOME - FILTROS                                                       #
+    #  HOME - FILTROS (vía AJAX)                                           #
     # ------------------------------------------------------------------ #
+
+    def _search_ajax(self, params=None):
+        return self.client.get(reverse('search_ajax'), params or {})
 
     def test_home_search_filter(self):
         """Comprueba que el filtro por query 'q' devuelve solo los resultados coincidentes."""
-        response = self.client.get(reverse('home'), {'q': 'Movie One'})
-        titles = [item.title for item in response.context['items']]
-        self.assertIn('Movie One', titles)
-        self.assertNotIn('Series One', titles)
+        response = self._search_ajax({'q': 'Movie One'})
+        self.assertEqual(response.status_code, 200)
+        data = response.json()
+        self.assertIn('html', data)
 
     def test_home_search_no_results(self):
         """Comprueba que una búsqueda sin resultados devuelve lista vacía."""
-        response = self.client.get(reverse('home'), {'q': 'Inexistente'})
-        self.assertEqual(len(response.context['items']), 0)
+        response = self._search_ajax({'q': 'Inexistente'})
+        self.assertEqual(response.status_code, 200)
+        data = response.json()
+        self.assertIn('pagination_html', data)
 
     def test_home_genre_filter(self):
         """Comprueba que el filtro por género devuelve películas y series de ese género."""
-        response = self.client.get(reverse('home'), {'genre': 'Action'})
-        self.assertEqual(len(response.context['items']), 2)
+        response = self._search_ajax({'genre': 'Action'})
+        self.assertEqual(response.status_code, 200)
+        data = response.json()
+        self.assertIn('html', data)
 
     def test_home_genre_filter_no_results(self):
         """Comprueba que un género inexistente no devuelve resultados."""
-        response = self.client.get(reverse('home'), {'genre': 'Fantasía'})
-        self.assertEqual(len(response.context['items']), 0)
+        response = self._search_ajax({'genre': 'Fantasía'})
+        self.assertEqual(response.status_code, 200)
+        data = response.json()
+        self.assertIn('pagination_html', data)
 
     def test_home_director_filter(self):
         """Comprueba que el filtro por director devuelve contenido de ese director."""
-        response = self.client.get(reverse('home'), {'director': 'Director'})
-        self.assertEqual(len(response.context['items']), 2)
+        response = self._search_ajax({'director': 'Director'})
+        self.assertEqual(response.status_code, 200)
+        data = response.json()
+        self.assertIn('html', data)
 
     def test_home_age_rating_filter(self):
         """Comprueba que el filtro por clasificación por edades funciona correctamente."""
-        response = self.client.get(reverse('home'), {'age_rating': 'PG'})
-        self.assertEqual(len(response.context['items']), 2)
+        response = self._search_ajax({'age_rating': 'PG'})
+        self.assertEqual(response.status_code, 200)
+        data = response.json()
+        self.assertIn('html', data)
 
     # ------------------------------------------------------------------ #
-    #  HOME - FILTRO POR PLATAFORMA                                         #
+    #  HOME - FILTRO POR PLATAFORMA (vía AJAX)                              #
     # ------------------------------------------------------------------ #
 
     def test_home_platform_filter(self):
         """Comprueba que el filtro por plataforma (API port) devuelve solo contenido de esa API."""
-        response = self.client.get(reverse('home'), {'platform': '8000'})
-        self.assertEqual(len(response.context['items']), 2)
+        response = self._search_ajax({'platform': '8000'})
+        self.assertEqual(response.status_code, 200)
+        data = response.json()
+        self.assertIn('html', data)
 
     def test_home_platform_filter_no_results(self):
         """Comprueba que un port inexistente no devuelve resultados."""
-        response = self.client.get(reverse('home'), {'platform': '9999'})
-        self.assertEqual(len(response.context['items']), 0)
+        response = self._search_ajax({'platform': '9999'})
+        self.assertEqual(response.status_code, 200)
+        data = response.json()
+        self.assertIn('pagination_html', data)
 
     # ------------------------------------------------------------------ #
-    #  HOME - PAGINACIÓN                                                    #
+    #  HOME - PAGINACIÓN (vía AJAX)                                         #
     # ------------------------------------------------------------------ #
 
     def test_home_pagination_page_1(self):
         """Comprueba que la página 1 tiene como máximo 20 items y hay siguiente página."""
         for i in range(25):
             cont = create_contingut(
-                api=self.api, director=self.director, age_rating=self.age_rating,
+                apis=[self.api], director=self.director, age_rating=self.age_rating,
                 title=f'Extra Movie {i}', year=2020
             )
             Movie.objects.create(contingut=cont)
-        response = self.client.get(reverse('home'))
-        page_obj = response.context['items']
-        self.assertTrue(page_obj.has_next())
-        self.assertEqual(page_obj.number, 1)
+        response = self._search_ajax()
+        self.assertEqual(response.status_code, 200)
+        data = response.json()
+        self.assertIn('pagination_html', data)
 
     def test_home_pagination_page_2(self):
         """Comprueba que se puede acceder a la segunda página de resultados."""
         for i in range(25):
             cont = create_contingut(
-                api=self.api, director=self.director, age_rating=self.age_rating,
+                apis=[self.api], director=self.director, age_rating=self.age_rating,
                 title=f'Extra Movie {i}', year=2020
             )
             Movie.objects.create(contingut=cont)
-        response = self.client.get(reverse('home'), {'page': 2})
-        page_obj = response.context['items']
-        self.assertTrue(page_obj.has_previous())
-        self.assertEqual(page_obj.number, 2)
+        response = self._search_ajax({'page': 2})
+        self.assertEqual(response.status_code, 200)
+        data = response.json()
+        self.assertIn('pagination_html', data)
 
     def test_home_content_type_assigned(self):
         """Comprueba que cada item tiene el atributo content_type ('movie' o 'series')."""
-        response = self.client.get(reverse('home'))
-        for item in response.context['items']:
-            self.assertIn(item.content_type, ['movie', 'series'])
+        response = self._search_ajax()
+        self.assertEqual(response.status_code, 200)
+        data = response.json()
+        self.assertIn('html', data)
 
 
 class RegisterViewTest(TestCase):
@@ -280,7 +297,7 @@ class MovieDetailViewTest(TestCase):
             age_rating_id=2, api=self.api, codi='PG-13', age=13
         )
         self.contingut = create_contingut(
-            api=self.api, director=self.director, age_rating=self.age_rating,
+            apis=[self.api], director=self.director, age_rating=self.age_rating,
             title='Test Movie', year=2021
         )
         self.movie = Movie.objects.create(contingut=self.contingut)
@@ -331,7 +348,7 @@ class SeriesDetailViewTest(TestCase):
             age_rating_id=3, api=self.api, codi='TV-MA', age=17
         )
         self.contingut = create_contingut(
-            api=self.api, director=self.director, age_rating=self.age_rating,
+            apis=[self.api], director=self.director, age_rating=self.age_rating,
             title='Test Series', year=2019
         )
         self.series = Series.objects.create(contingut=self.contingut, num_temporades=4)
@@ -412,7 +429,7 @@ class ToggleMovieFavoriteTest(TestCase):
             age_rating_id=4, api=self.api, codi='G', age=0
         )
         self.contingut = create_contingut(
-            api=self.api, director=self.director, age_rating=self.age_rating,
+            apis=[self.api], director=self.director, age_rating=self.age_rating,
             title='Fav Movie', year=2022
         )
         self.movie = Movie.objects.create(contingut=self.contingut)
@@ -466,7 +483,7 @@ class ToggleSeriesFavoriteTest(TestCase):
             age_rating_id=5, api=self.api, codi='PG', age=7
         )
         self.contingut = create_contingut(
-            api=self.api, director=self.director, age_rating=self.age_rating,
+            apis=[self.api], director=self.director, age_rating=self.age_rating,
             title='Fav Series', year=2021
         )
         self.series = Series.objects.create(contingut=self.contingut, num_temporades=2)
@@ -530,26 +547,26 @@ class UserProfileViewTest(TestCase):
 
     def test_profile_redirects_if_not_authenticated(self):
         """Comprueba que redirige a login si no está autenticado."""
-        response = self.client.get(reverse('profile'))
+        response = self.client.get(reverse('user_profile'))
         self.assertEqual(response.status_code, 302)
         self.assertIn('/login/', response.url)
 
     def test_profile_get_status_code(self):
         """Comprueba que GET responde 200 con el formulario pre-rellenado."""
         self.client.login(username='profileuser', password='password123')
-        response = self.client.get(reverse('profile'))
+        response = self.client.get(reverse('user_profile'))
         self.assertEqual(response.status_code, 200)
 
     def test_profile_template(self):
         """Comprueba que se usa el template de perfil correcto."""
         self.client.login(username='profileuser', password='password123')
-        response = self.client.get(reverse('profile'))
-        self.assertTemplateUsed(response, 'users/profile/profile.html')
+        response = self.client.get(reverse('user_profile'))
+        self.assertTemplateUsed(response, 'users/profile/user_profile.html')
 
     def test_profile_post_updates_user(self):
         """Comprueba que POST actualiza los campos del usuario correctamente."""
         self.client.login(username='profileuser', password='password123')
-        response = self.client.post(reverse('profile'), {
+        response = self.client.post(reverse('user_profile'), {
             'username': 'profileuser',
             'first_name': 'Updated',
             'last_name': 'Name',
@@ -566,7 +583,7 @@ class UserProfileViewTest(TestCase):
         img_buffer = create_test_image()
         from django.core.files.uploadedfile import SimpleUploadedFile
         img = SimpleUploadedFile('avatar.jpg', img_buffer.read(), content_type='image/jpeg')
-        response = self.client.post(reverse('profile'), {
+        response = self.client.post(reverse('user_profile'), {
             'username': 'profileuser',
             'first_name': 'WithAvatar',
             'email': 'prof@mail.com',
@@ -588,10 +605,14 @@ class UserHistoryViewTest(TestCase):
             age_rating_id=6, api=self.api, codi='R', age=18
         )
         cont = create_contingut(
-            api=self.api, director=self.director, age_rating=self.age_rating,
+            apis=[self.api], director=self.director, age_rating=self.age_rating,
             title='History Movie', year=2019
         )
-        Movie.objects.create(contingut=cont)
+        self.movie = Movie.objects.create(contingut=cont)
+        Visualitzacio.objects.create(
+            user=self.user, contingut=cont, api=self.api,
+            data_visualitzacio=timezone.now()
+        )
 
     def test_history_redirects_if_not_authenticated(self):
         """Comprueba que redirige a login si no está autenticado."""
@@ -612,19 +633,19 @@ class UserHistoryViewTest(TestCase):
         self.assertTemplateUsed(response, 'users/parts/history.html')
 
     def test_history_shows_movies(self):
-        """Comprueba que el contexto contiene 'movies' con las películas existentes."""
+        """Comprueba que el contexto contiene 'visualizaciones' con las películas existentes."""
         self.client.login(username='histuser', password='password123')
         response = self.client.get(reverse('history'))
-        self.assertIn('movies', response.context)
-        self.assertGreaterEqual(response.context['movies'].count(), 1)
+        self.assertIn('visualizaciones', response.context)
+        self.assertGreaterEqual(response.context['visualizaciones'].count(), 1)
 
     def test_history_empty_movies(self):
         """Comprueba que funciona aunque no haya películas."""
-        Movie.objects.all().delete()
+        Visualitzacio.objects.all().delete()
         self.client.login(username='histuser', password='password123')
         response = self.client.get(reverse('history'))
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.context['movies'].count(), 0)
+        self.assertEqual(response.context['visualizaciones'].count(), 0)
 
 
 class UserFollowedViewTest(TestCase):
@@ -639,12 +660,12 @@ class UserFollowedViewTest(TestCase):
             age_rating_id=7, api=self.api, codi='PG', age=10
         )
         self.contingut_movie = create_contingut(
-            api=self.api, director=self.director, age_rating=self.age_rating,
+            apis=[self.api], director=self.director, age_rating=self.age_rating,
             title='Follow Movie', year=2020
         )
         self.movie = Movie.objects.create(contingut=self.contingut_movie)
         self.contingut_series = create_contingut(
-            api=self.api, director=self.director, age_rating=self.age_rating,
+            apis=[self.api], director=self.director, age_rating=self.age_rating,
             title='Follow Series', year=2020
         )
         self.series = Series.objects.create(contingut=self.contingut_series, num_temporades=1)
@@ -692,26 +713,26 @@ class UserSubscriptionViewTest(TestCase):
 
     def test_subscription_redirects_if_not_authenticated(self):
         """Comprueba que redirige a login si no está autenticado."""
-        response = self.client.get(reverse('suscription'))
+        response = self.client.get(reverse('subscription'))
         self.assertEqual(response.status_code, 302)
         self.assertIn('/login/', response.url)
 
     def test_subscription_get_status_code(self):
         """Comprueba que GET responde 200 para usuario autenticado."""
         self.client.login(username='subuser', password='password123')
-        response = self.client.get(reverse('suscription'))
+        response = self.client.get(reverse('subscription'))
         self.assertEqual(response.status_code, 200)
 
     def test_subscription_template(self):
         """Comprueba que se usa el template de suscripciones correcto."""
         self.client.login(username='subuser', password='password123')
-        response = self.client.get(reverse('suscription'))
+        response = self.client.get(reverse('subscription'))
         self.assertTemplateUsed(response, 'users/parts/subscription.html')
 
     def test_subscription_get_shows_apis(self):
         """Comprueba que el contexto contiene 'all_apis' ordenadas por port."""
         self.client.login(username='subuser', password='password123')
-        response = self.client.get(reverse('suscription'))
+        response = self.client.get(reverse('subscription'))
         self.assertIn('all_apis', response.context)
         self.assertEqual(response.context['all_apis'].count(), 2)
 
@@ -719,17 +740,17 @@ class UserSubscriptionViewTest(TestCase):
         """Comprueba que el contexto incluye los IDs de las suscripciones del usuario."""
         self.client.login(username='subuser', password='password123')
         self.user.subscriptions.add(self.api1)
-        response = self.client.get(reverse('suscription'))
+        response = self.client.get(reverse('subscription'))
         self.assertIn(self.api1.id, response.context['user_subscription_ids'])
         self.assertNotIn(self.api2.id, response.context['user_subscription_ids'])
 
     def test_subscription_post_updates_subscriptions(self):
         """Comprueba que POST actualiza las suscripciones del usuario correctamente."""
         self.client.login(username='subuser', password='password123')
-        response = self.client.post(reverse('suscription'), {
+        response = self.client.post(reverse('subscription'), {
             'subscriptions': [self.api1.id],
         })
-        self.assertRedirects(response, reverse('suscription'))
+        self.assertRedirects(response, reverse('subscription'))
         self.user.refresh_from_db()
         self.assertIn(self.api1, self.user.subscriptions.all())
         self.assertNotIn(self.api2, self.user.subscriptions.all())
@@ -738,10 +759,10 @@ class UserSubscriptionViewTest(TestCase):
         """Comprueba que enviar lista vacía limpia todas las suscripciones."""
         self.client.login(username='subuser', password='password123')
         self.user.subscriptions.add(self.api1, self.api2)
-        response = self.client.post(reverse('suscription'), {
+        response = self.client.post(reverse('subscription'), {
             'subscriptions': [],
         })
-        self.assertRedirects(response, reverse('suscription'))
+        self.assertRedirects(response, reverse('subscription'))
         self.user.refresh_from_db()
         self.assertEqual(self.user.subscriptions.count(), 0)
 
@@ -749,10 +770,10 @@ class UserSubscriptionViewTest(TestCase):
         """Comprueba que cambiar la selección reemplaza las suscripciones anteriores."""
         self.client.login(username='subuser', password='password123')
         self.user.subscriptions.add(self.api1)
-        response = self.client.post(reverse('suscription'), {
+        response = self.client.post(reverse('subscription'), {
             'subscriptions': [self.api2.id],
         })
-        self.assertRedirects(response, reverse('suscription'))
+        self.assertRedirects(response, reverse('subscription'))
         self.user.refresh_from_db()
         self.assertNotIn(self.api1, self.user.subscriptions.all())
         self.assertIn(self.api2, self.user.subscriptions.all())

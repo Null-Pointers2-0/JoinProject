@@ -14,7 +14,7 @@ urlpatterns = [
     path('profile/', views.user_profile, name='user_profile'),
     path('history/', views.history, name='history'),
     path('followed/', views.followed, name='followed'),
-    path('subscription/', views.subscription, name='suscription'),
+    path('subscription/', views.subscription, name='subscription'),
 
     # Admin URLs
     path('admin/export-csv/', views.export_analytics_csv, name='export_analytics_csv'),
