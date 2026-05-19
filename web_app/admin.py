@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.utils.safestring import mark_safe
-from .models import SyncLog, API, Contingut, Movie, Series, Director, Genre, AgeRating, CustomUser, UserProfile, Valoracio, Preferits
+from .models import SyncLog, API, Contingut, Movie, Series, Director, Genre, AgeRating, CustomUser, UserProfile, Valoracio, Preferits, RoleAuditLog
 
 
 @admin.register(API)
@@ -130,3 +130,10 @@ class PreferitsAdmin(admin.ModelAdmin):
 
     def contingut_titol(self, obj):
         return obj.contingut.titol
+
+@admin.register(RoleAuditLog)
+class RoleAuditLogAdmin(admin.ModelAdmin):
+    list_display = ('timestamp', 'admin', 'affected_user', 'old_role', 'new_role')
+    list_filter = ('timestamp', 'old_role', 'new_role')
+    search_fields = ('admin__username', 'affected_user__username')
+    readonly_fields = ('admin', 'affected_user', 'old_role', 'new_role', 'timestamp')
