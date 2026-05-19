@@ -20,6 +20,7 @@ urlpatterns = [
 
     path("api/user/profile/", views.api_user_profile, name="api_user_profile"),
     path('api/register-click/', views.register_platform_click, name='register_platform_click'),
+    path('api/update-role/', views.update_user_role, name='update_user_role'),
     path('favorite/movie/<int:pk>/', views.toggle_movie_favorite, name='toggle_movie_favorite'),
     path('favorite/series/<int:pk>/', views.toggle_series_favorite, name='toggle_series_favorite'),
 
