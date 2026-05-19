@@ -87,26 +87,7 @@ class CustomUserChangeForm(UserChangeForm):
 
         return avatar
 
-class CustomUserAdminCreationForm(UserCreationForm):
+class CustomUserAdminCreationForm(forms.ModelForm):
     class Meta:
         model = CustomUser
-        fields = ("username", "email", "type", "location")
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        
-        if 'password1' in self.fields:
-            del self.fields['password1']
-        if 'password2' in self.fields:
-            del self.fields['password2']
-    
-    def save(self, commit=True):
-        """
-        Sobrescribimos save para evitar que Django busque 'password1'.
-        Simplemente creamos la instancia del modelo con los datos del form.
-        """
-        # No llamamos a super().save() porque ahí es donde explota el KeyError
-        user = CustomUser(**self.cleaned_data)
-        if commit:
-            user.save()
-        return user
+        fields = ("username", "email", "type", "subscriptions")

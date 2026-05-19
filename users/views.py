@@ -1,9 +1,15 @@
 import csv
-import os, resend
+import os
+import resend
+
 from django.http import HttpResponse
-import csv
-from django.http import HttpResponse
+from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib import messages
 from django.contrib.auth.decorators import login_required, user_passes_test
+from django.utils.crypto import get_random_string
+
+from web_app.forms import CustomUserChangeForm, CustomUserAdminCreationForm
+from web_app.models import CustomUser, Movie, Series, UserProfile, API, Visualitzacio
 from .services import (
     get_content_analytics, 
     format_analytics_for_csv,
@@ -13,29 +19,31 @@ from .services import (
     PII_COLUMNS,
     validate_gdpr_compliance,
 )
-from django.shortcuts import render, redirect
-from django.contrib import messages
-from web_app.forms import CustomUserChangeForm
-from web_app.models import Movie, Series
-from django.core.mail import send_mail
-from django.conf import settings
-from django.utils.crypto import get_random_string
-from django.shortcuts import render, redirect, get_object_or_404
-from web_app.forms import CustomUserAdminCreationForm
-from web_app.models import CustomUser, Movie, UserProfile, Series
-from django.contrib.auth.decorators import login_required, user_passes_test
-from django.contrib import messages
-from web_app.models import Movie, Series, Contingut, API, CustomUser
-from django.urls import reverse
 
+# --- UTILS ---
 
 def is_consumer(user):
     return user.type == 'Consumer'
 
+def is_admin_or_staff(user):
+    return user.type in ['Staff', 'Admin', 'Staff Admin']
+
+def get_active_platform_ids(user):
+    """
+    Devuelve de forma segura una lista con los IDs de las plataformas
+    a las que el administrador/staff tiene acceso.
+    """
+    subscribed_ports = list(user.subscriptions.values_list('port', flat=True))
+    if not subscribed_ports:
+        return []
+    return list(API.objects.filter(port__in=subscribed_ports).values_list('id', flat=True))
+
+
+# --- VISTAS DE CONSUMIDOR ---
+
 @login_required(login_url='login')
 @user_passes_test(is_consumer)
 def user_profile(request):
-        
     if request.method == 'POST':
         form = CustomUserChangeForm(request.POST, request.FILES, instance=request.user)
         if form.is_valid():
@@ -50,16 +58,28 @@ def user_profile(request):
 @login_required(login_url='login')
 @user_passes_test(is_consumer)
 def history(request):
-    movies = Movie.objects.all()
-    return render(request, 'users/parts/history.html', {'movies': movies})
+    # OPTIMIZACIÓN: Buscamos en el modelo real de visualizaciones y hacemos Eager Loading
+    visualizaciones = Visualitzacio.objects.filter(user=request.user).select_related(
+        'contingut__movie', 'contingut__series'
+    ).prefetch_related('contingut__apis').order_by('-data_visualitzacio')
+    
+    return render(request, 'users/parts/history.html', {'visualizaciones': visualizaciones})
 
 @login_required(login_url='login')
 @user_passes_test(is_consumer)
 def followed(request):
-    profile, _ = request.user.profile, True
+    profile = request.user.profile
     preferits_ids = profile.preferits.values_list('id', flat=True)
-    movies = Movie.objects.filter(contingut_id__in=preferits_ids)
-    series_list = Series.objects.filter(contingut_id__in=preferits_ids)
+    
+    # OPTIMIZACIÓN N+1: Aplicamos prefetch y select_related para evitar cuellos de botella
+    movies = Movie.objects.filter(contingut_id__in=preferits_ids).select_related(
+        'contingut__genere', 'contingut__director'
+    ).prefetch_related('contingut__apis')
+    
+    series_list = Series.objects.filter(contingut_id__in=preferits_ids).select_related(
+        'contingut__genere', 'contingut__director'
+    ).prefetch_related('contingut__apis')
+    
     return render(request, 'users/parts/followed.html', {'movies': movies, 'series_list': series_list})
 
 @login_required(login_url='login')
@@ -72,12 +92,15 @@ def subscription(request):
         selected_ids = request.POST.getlist('subscriptions')
         request.user.subscriptions.set(API.objects.filter(id__in=selected_ids))
         messages.success(request, '¡Suscripciones actualizadas correctamente!')
-        return redirect('suscription')
+        return redirect('subscription') # Corregido typo en el nombre de la URL ('suscription' a 'subscription')
 
     return render(request, 'users/parts/subscription.html', {
         'all_apis': all_apis,
         'user_subscription_ids': user_subscription_ids,
     })
+
+
+# --- VISTAS DE ADMINISTRACIÓN ---
 
 @user_passes_test(lambda u: u.is_superuser)
 def gestion_usuarios(request):
@@ -103,12 +126,20 @@ def crear_usuario_admin(request):
     if request.method == 'POST':
         form = CustomUserAdminCreationForm(request.POST)
         if form.is_valid():
+            # 1. Creamos la instancia en memoria (sin enviarla a PostgreSQL aún)
             user = form.save(commit=False)
             
+            # 2. Generamos y encriptamos la contraseña temporal
             temp_password = get_random_string(length=12)
             user.set_password(temp_password)
+            
+            # 3. Guardamos el usuario en la BD (ahora ya tiene un ID asignado)
             user.save()
             
+            # 4. MAGIA DE DJANGO: Ejecutamos el guardado de la relación ManyToMany (Suscripciones)
+            form.save_m2m()
+            
+            # 5. Creamos su perfil base
             UserProfile.objects.get_or_create(user=user)
 
             resend.api_key = os.getenv('RESEND_KEY')
@@ -131,6 +162,8 @@ def crear_usuario_admin(request):
                 })
                 messages.success(request, f"Usuario '{user.username}' creado correctamente y correo enviado.")
             except Exception as e:
+                import logging
+                logging.error(f"Fallo enviando correo Resend: {e}")
                 messages.warning(request, "Usuario creado, pero hubo un error al enviar el correo.")
 
             return redirect('gestion_usuarios')
@@ -139,10 +172,7 @@ def crear_usuario_admin(request):
     
     return render(request, 'users/parts/create_user.html', {'form': form})
 
-
-
-def is_admin_or_staff(user):
-    return user.type == 'Staff' or user.type == 'Admin'
+# --- DASHBOARDS Y ANALÍTICAS ---
 
 @login_required(login_url='login')
 @user_passes_test(is_admin_or_staff)
@@ -151,16 +181,13 @@ def export_analytics_csv(request):
     end_date = request.GET.get('end')
     report_type = request.GET.get('type', 'internal') 
     
-    # Obtener la plataforma del usuario (ya que solo tiene una)
-    subscribed_ports = list(request.user.subscriptions.values_list('port', flat=True))
-    platform_id = API.objects.get(port=subscribed_ports[0]).id if subscribed_ports else None
+    platform_ids = get_active_platform_ids(request.user)
 
     raw_data = get_content_analytics(
         start_date=start_date,
         end_date=end_date,
-        plataform_id=platform_id
+        plataform_id=platform_ids # Ahora pasamos una lista de IDs segura
     )
-
 
     is_b2b = (report_type == 'b2b')
     clean_data = format_analytics_for_csv(raw_data, is_b2b_report=is_b2b)
@@ -169,7 +196,6 @@ def export_analytics_csv(request):
     response['Content-Disposition'] = 'attachment; filename="analytics_report.csv"'
 
     writer = csv.writer(response)
-
     writer.writerow(['Title', 'Genre', 'Age Rating', 'Year', 'Director', 'Platform', 'Total Views', 'Total Favorites'])
 
     for item in clean_data:
@@ -192,21 +218,16 @@ def export_analytics_csv(request):
 @login_required(login_url='login')
 @user_passes_test(is_admin_or_staff)
 def admin_dashboard_overview(request):
-    # 1. Capturar filtros de la URL
     start_date = request.GET.get('start')
     end_date = request.GET.get('end')
 
-    # 2. Obtener el port de la plataforma suscrita
-    subscribed_ports = list(request.user.subscriptions.values_list('port', flat=True))
-    active_ports = API.objects.get(port=subscribed_ports[0]).id if subscribed_ports else None
+    platform_ids = get_active_platform_ids(request.user)
 
-    # 4. Obtener datos filtrados por las plataformas activas
-    content_list = get_content_analytics(start_date, end_date, active_ports)
-    genre_stats = get_genre_distribution(start_date, end_date, active_ports)
-    age_stats = get_age_rating_distribution(start_date, end_date, active_ports)
-    director_stats = get_director_top_list(start_date, end_date, active_ports)
+    content_list = get_content_analytics(start_date, end_date, platform_ids)
+    genre_stats = get_genre_distribution(start_date, end_date, platform_ids)
+    age_stats = get_age_rating_distribution(start_date, end_date, platform_ids)
+    director_stats = get_director_top_list(start_date, end_date, platform_ids)
 
-    # 5. Pasar al template las plataformas suscritas
     subscribed_apis = request.user.subscriptions.all()
 
     context = {
@@ -220,7 +241,6 @@ def admin_dashboard_overview(request):
             'end': end_date,
         }
     }
-
     return render(request, 'users/parts/dashboard_overview.html', context)
 
 @login_required(login_url='login')
@@ -228,11 +248,9 @@ def admin_dashboard_overview(request):
 def admin_dashboard_genres(request):
     start_date = request.GET.get('start')
     end_date = request.GET.get('end')
+    platform_ids = get_active_platform_ids(request.user)
     
-    subscribed_ports = list(request.user.subscriptions.values_list('port', flat=True))
-    active_ports = API.objects.get(port=subscribed_ports[0]).id if subscribed_ports else None
-    
-    genre_stats = get_genre_distribution(start_date, end_date, active_ports)
+    genre_stats = get_genre_distribution(start_date, end_date, platform_ids)
     
     return render(request, 'users/parts/dashboard_genres.html', {
         'genre_stats': genre_stats,
@@ -245,11 +263,9 @@ def admin_dashboard_genres(request):
 def admin_dashboard_age_ratings(request):
     start_date = request.GET.get('start')
     end_date = request.GET.get('end')
+    platform_ids = get_active_platform_ids(request.user)
     
-    subscribed_ports = list(request.user.subscriptions.values_list('port', flat=True))
-    active_ports = API.objects.get(port=subscribed_ports[0]).id if subscribed_ports else None
-    
-    age_stats = get_age_rating_distribution(start_date, end_date, active_ports)
+    age_stats = get_age_rating_distribution(start_date, end_date, platform_ids)
     
     return render(request, 'users/parts/dashboard_age_ratings.html', {
         'age_stats': age_stats,
@@ -262,11 +278,9 @@ def admin_dashboard_age_ratings(request):
 def admin_dashboard_directors(request):
     start_date = request.GET.get('start')
     end_date = request.GET.get('end')
-
-    subscribed_ports = list(request.user.subscriptions.values_list('port', flat=True))
-    active_ports = API.objects.get(port=subscribed_ports[0]).id if subscribed_ports else None
+    platform_ids = get_active_platform_ids(request.user)
     
-    director_stats = get_director_top_list(start_date, end_date, active_ports)
+    director_stats = get_director_top_list(start_date, end_date, platform_ids)
     
     return render(request, 'users/parts/dashboard_directors.html', {
         'director_stats': director_stats,
