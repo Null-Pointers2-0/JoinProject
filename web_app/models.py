@@ -62,16 +62,15 @@ class AgeRating(models.Model):
 
 
 class Contingut(models.Model):
-    api_content_id = models.IntegerField(verbose_name='ID de l\'API', blank=True, null=True, db_index=True)
-    titol = models.CharField(max_length=255, verbose_name='Títol')
+    titol = models.CharField(max_length=255, verbose_name='Títol', db_index=True)
     data_estrena = models.IntegerField(blank=True, null=True, verbose_name='Any d\'estrena')
     expires_at = models.DateTimeField(blank=True, null=True)
     director = models.ForeignKey(Director, on_delete=models.SET_NULL, blank=True, null=True)
     genere = models.ForeignKey(Genre, on_delete=models.SET_NULL, blank=True, null=True)
     age_rating = models.ForeignKey(AgeRating, on_delete=models.SET_NULL, blank=True, null=True)
-    api = models.ForeignKey(API, on_delete=models.SET_NULL, blank=True, null=True)
-    poster_path = models.TextField(blank=True, null=True)
+    apis = models.ManyToManyField(API, blank=True, related_name='continguts')
 
+    poster_path = models.TextField(blank=True, null=True)
     synopsis = models.TextField(blank=True, null=True)
     rating = models.FloatField(blank=True, null=True)
 
@@ -251,6 +250,7 @@ class Valoracio(models.Model):
 class Visualitzacio(models.Model):
     user = models.ForeignKey(CustomUser, on_delete=models.SET_NULL, null=True, blank=True, related_name='visualitzacions')
     contingut = models.ForeignKey(Contingut, on_delete=models.CASCADE, related_name='visualitzacions')
+    api = models.ForeignKey(API, on_delete=models.SET_NULL, null=True, blank=True, related_name='visualitzacions')
     data_visualitzacio = models.DateTimeField(auto_now_add=True)
 
     class Meta:

@@ -1,6 +1,6 @@
-import sys
+import sys, logging, time
 import requests, os
-
+from requests.exceptions import RequestException, HTTPError, Timeout
 from dotenv import load_dotenv
 load_dotenv()
 
@@ -32,19 +32,60 @@ def store_data():
 def store_api(port):
     API.objects.get_or_create(port=port)
 
-def get_poster(content_title,url_search):
-    try:
-        response = requests.get(f"{url_search}{content_title}")
-        response.raise_for_status()
-        poster_path = response.json()['results'][0]['poster_path']
-        if not poster_path:
-            return None
-        if poster_path.startswith('/'):
-            poster_path = poster_path[1:]
-        return f"{TMDB_POSTER_URL}{poster_path}"
-    except:
-        return None
 
+logger = logging.getLogger(__name__)
+
+def get_poster(content_title, url_search, retries=3):
+    """
+    Busca el póster en TMDB con manejo de timeouts, rate limits y reintentos.
+    """
+    url = f"{url_search}{content_title}"
+    
+    for attempt in range(retries):
+        try:
+            response = requests.get(url, timeout=5)
+            response.raise_for_status()
+            
+            data = response.json()
+            
+            if not data.get('results'):
+                return None
+                
+            poster_path = data['results'][0].get('poster_path')
+            
+            if not poster_path:
+                return None
+                
+            if poster_path.startswith('/'):
+                poster_path = poster_path[1:]
+                
+            return f"{TMDB_POSTER_URL}{poster_path}"
+
+        except HTTPError as e:
+            if response.status_code == 429:
+                wait_time = int(response.headers.get('Retry-After', 2))
+                logger.warning(f"TMDB Rate Limit alcanzado (429). Esperando {wait_time}s... (Intento {attempt + 1}/{retries})")
+                time.sleep(wait_time)
+                continue
+            else:
+                logger.error(f"Error HTTP {response.status_code} buscando {content_title}: {e}")
+                return None
+
+        except Timeout:
+            logger.warning(f"Timeout conectando con TMDB para {content_title}. (Intento {attempt + 1}/{retries})")
+            time.sleep(1)
+            continue
+            
+        except RequestException as e:
+            logger.error(f"Fallo de red crítico con TMDB para {content_title}: {e}")
+            return None
+            
+        except Exception as e:
+            logger.error(f"Error inesperado procesando póster de {content_title}: {e}")
+            return None
+            
+    logger.error(f"Se agotaron los {retries} reintentos para descargar el póster de {content_title}.")
+    return None
 
 def Call(endpoint, params=None):
     result = {'8080': None, '8081': None, '8082': None}
@@ -133,17 +174,19 @@ def get_movies(params=None):
         api_instance = API.objects.get(port=port)
         unique_data = deduplicate_by_id(data)
         
+        directores_db = {d.director_id: d for d in Director.objects.filter(api=api_instance)}
+        generos_db = {g.genre_id: g for g in Genre.objects.filter(api=api_instance)}
+        age_ratings_db = {ar.age_rating_id: ar for ar in AgeRating.objects.filter(api=api_instance)}
+        
         for json in unique_data:
-            director = Director.objects.filter(director_id=json.get('director_id')).first()
-            genre = Genre.objects.filter(genre_id=json.get('genre_id')).first()
-            age_rating = AgeRating.objects.filter(age_rating_id=json.get('age_rating_id'), api=api_instance).first()
+            director = directores_db.get(json.get('director_id'))
+            genre = generos_db.get(json.get('genre_id'))
+            age_rating = age_ratings_db.get(json.get('age_rating_id'))
 
-            contingut, _ = Contingut.objects.update_or_create(
-                api_content_id=json['id'],
-                api=api_instance,
+            contingut, created = Contingut.objects.get_or_create(
+                titol=json['title'],
+                data_estrena=json.get('year'),
                 defaults={
-                    'titol': json['title'],
-                    'data_estrena': json.get('year'),
                     'synopsis': json.get('synopsis'),
                     'rating': json.get('rating'),
                     'expires_at': json.get('expires_at'),
@@ -154,13 +197,13 @@ def get_movies(params=None):
                 }
             )
 
-            movie, created = Movie.objects.get_or_create(
-                contingut=contingut,
-            )
-            
-            status = "created" if created else "found"
-            print(f"Movie '{movie.title}' {status} from port {port}.")
+            contingut.apis.add(api_instance)
 
+            movie, movie_created = Movie.objects.get_or_create(contingut=contingut)
+            
+            status = "creada" if created else "vinculada a nueva plataforma"
+            print(f"Movie '{movie.title}' {status} desde el puerto {port}.")
+            
         current_ids = {json['id'] for json in unique_data}
         stale = Contingut.objects.filter(api=api_instance, movie__isnull=False).exclude(api_content_id__in=current_ids)
         if stale.exists():
@@ -170,6 +213,7 @@ def get_movies(params=None):
 
 def get_series(params=None):
     series_data = Call('series', params=params)
+    
     for port, data in series_data.items():
         if not data:
             continue
@@ -177,17 +221,19 @@ def get_series(params=None):
         api_instance = API.objects.get(port=port)
         unique_data = deduplicate_by_id(data)
         
+        directores_db = {d.director_id: d for d in Director.objects.filter(api=api_instance)}
+        generos_db = {g.genre_id: g for g in Genre.objects.filter(api=api_instance)}
+        age_ratings_db = {ar.age_rating_id: ar for ar in AgeRating.objects.filter(api=api_instance)}
+        
         for json in unique_data:
-            director = Director.objects.filter(director_id=json.get('director_id')).first()
-            genre = Genre.objects.filter(genre_id=json.get('genre_id')).first()
-            age_rating = AgeRating.objects.filter(age_rating_id=json.get('age_rating_id'), api=api_instance).first()
+            director = directores_db.get(json.get('director_id'))
+            genre = generos_db.get(json.get('genre_id'))
+            age_rating = age_ratings_db.get(json.get('age_rating_id'))
 
-            contingut, _ = Contingut.objects.update_or_create(
-                api_content_id=json['id'] + SERIES_ID_OFFSET,
-                api=api_instance,
+            contingut, created = Contingut.objects.get_or_create(
+                titol=json['title'],
+                data_estrena=json.get('start_year'),
                 defaults={
-                    'titol': json['title'],
-                    'data_estrena': json.get('start_year'),
                     'synopsis': json.get('synopsis'),
                     'rating': json.get('rating'),
                     'expires_at': json.get('expires_at'),
@@ -198,15 +244,17 @@ def get_series(params=None):
                 }
             )
 
-            series, created = Series.objects.get_or_create(
+            contingut.apis.add(api_instance)
+
+            series, series_created = Series.objects.get_or_create(
                 contingut=contingut,
                 defaults={
                     'num_temporades': json.get('total_seasons'),
                 }
             )
             
-            status = "created" if created else "found"
-            print(f"Series '{series.title}' {status} from port {port}.")
+            status = "creada" if created else "vinculada a nueva plataforma"
+            print(f"Series '{series.title}' {status} desde el puerto {port}.")
 
         current_ids = {json['id'] + SERIES_ID_OFFSET for json in unique_data}
         stale = Contingut.objects.filter(api=api_instance, series__isnull=False).exclude(api_content_id__in=current_ids)
