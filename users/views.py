@@ -2,14 +2,17 @@ import csv
 import os
 import resend
 
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.utils.crypto import get_random_string
+from django.contrib.sessions.models import Session
+from django.utils import timezone
+import json
 
 from web_app.forms import CustomUserChangeForm, CustomUserAdminCreationForm
-from web_app.models import CustomUser, Movie, Series, UserProfile, API, Visualitzacio
+from web_app.models import CustomUser, Movie, Series, UserProfile, API, Visualitzacio, UserType, RoleAuditLog
 from .services import (
     get_content_analytics, 
     format_analytics_for_csv,
@@ -111,8 +114,10 @@ def gestion_usuarios(request):
     filter_type = request.GET.get('tipo')
     if filter_type:
         exclude_staff_admin = exclude_staff_admin.filter(type=filter_type)
-    return render(request, 'users/parts/users_table.html', {'users': exclude_staff_admin})
-
+    return render(request, 'users/parts/users_table.html', {
+        'users': exclude_staff_admin,
+        'roles': UserType.choices
+    })
 @user_passes_test(lambda u: u.is_superuser)
 def eliminar_usuario(request, user_id):
     user = get_object_or_404(CustomUser, id=user_id)
@@ -287,3 +292,42 @@ def admin_dashboard_directors(request):
         'filters': {'start': start_date, 'end': end_date},
         'platforms': API.objects.all()
     })
+
+@user_passes_test(lambda u: u.is_superuser)
+def update_user_role(request):
+    if request.method == 'POST':
+        try:
+            data = json.loads(request.body)
+            target_user_id = data.get('user_id')
+            new_role = data.get('new_role')
+
+            if new_role not in dict(UserType.choices):
+                return JsonResponse({'status': 'error', 'message': 'Rol inválido.'}, status=400)
+
+            target_user = get_object_or_404(CustomUser, id=target_user_id)
+            old_role = target_user.type
+
+            if old_role == new_role:
+                return JsonResponse({'status': 'error', 'message': 'Ya tiene ese rol.'}, status=400)
+
+            target_user.type = new_role
+            target_user.save()
+
+            RoleAuditLog.objects.create(
+                admin=request.user,
+                affected_user=target_user,
+                old_role=old_role,
+                new_role=new_role
+            )
+
+            active_sessions = Session.objects.filter(expire_date__gte=timezone.now())
+            for session in active_sessions:
+                session_data = session.get_decoded()
+                if str(target_user.pk) == str(session_data.get('_auth_user_id')):
+                    session.delete()
+
+            return JsonResponse({'status': 'success', 'message': f'Privilegios de {target_user.username} actualizados.'})
+        except Exception as e:
+            return JsonResponse({'status': 'error', 'message': str(e)}, status=500)
+
+    return JsonResponse({'status': 'error', 'message': 'Método no permitido'}, status=405)

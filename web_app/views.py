@@ -17,7 +17,6 @@ from django.db.models import Avg, Count
 from django.template.loader import render_to_string
 from django.contrib.sessions.models import Session
 from django.utils import timezone
-from .models import UserType, RoleAuditLog
 
 def home(request):
     """Carga instantánea del esqueleto de la página."""
@@ -267,48 +266,3 @@ def register_platform_click(request):
 
     return JsonResponse({'status': 'error', 'message': 'Método no permitido'}, status=405)
 
-@login_required
-def update_user_role(request):
-    if request.user.type not in [UserType.STAFF_ADMIN, UserType.ADMIN]:
-        return JsonResponse({'status': 'error', 'message': 'No tienes permisos para realizar esta acción.'}, status=403)
-
-    if request.method == 'POST':
-        try:
-            data = json.loads(request.body)
-            target_user_id = data.get('user_id')
-            new_role = data.get('new_role')
-
-            if new_role not in dict(UserType.choices):
-                return JsonResponse({'status': 'error', 'message': 'Rol inválido.'}, status=400)
-
-            target_user = get_object_or_404(CustomUser, id=target_user_id)
-            old_role = target_user.type
-
-            if old_role == new_role:
-                return JsonResponse({'status': 'error', 'message': 'El usuario ya tiene asignado este rol.'}, status=400)
-
-            target_user.type = new_role
-            target_user.save()
-
-            RoleAuditLog.objects.create(
-                admin=request.user,
-                affected_user=target_user,
-                old_role=old_role,
-                new_role=new_role
-            )
-
-            active_sessions = Session.objects.filter(expire_date__gte=timezone.now())
-            for session in active_sessions:
-                session_data = session.get_decoded()
-                if str(target_user.pk) == str(session_data.get('_auth_user_id')):
-                    session.delete()
-
-            return JsonResponse({
-                'status': 'success',
-                'message': f'Rol de {target_user.username} actualizado a {new_role} exitosamente.'
-            })
-
-        except Exception as e:
-            return JsonResponse({'status': 'error', 'message': str(e)}, status=500)
-
-    return JsonResponse({'status': 'error', 'message': 'Método no permitido'}, status=405)

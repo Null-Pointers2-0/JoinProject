@@ -17,7 +17,8 @@ class AdminRedirectMiddleware:
                 'gestion_usuarios', 
                 'crear_usuario_admin', 
                 'logout', 
-                'eliminar_usuario'
+                'eliminar_usuario',
+                'update_user_role'
                 ]
             
             if current_url_name not in exempt_url_names and not request.path.startswith('/static/'):
@@ -36,6 +37,7 @@ class AdminRedirectMiddleware:
                 'admin_dashboard_directors', 
                 'export_analytics_csv',
                 'logout',
+                'update_user_role',
                 ]
             
             if current_url_name not in exempt_url_names and not request.path.startswith('/static/'):

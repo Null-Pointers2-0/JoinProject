@@ -6,6 +6,7 @@ urlpatterns = [
     path('gestion/', views.gestion_usuarios, name='gestion_usuarios'),
     path('crear_admin/', views.crear_usuario_admin, name='crear_usuario_admin'),
     path('eliminar/<int:user_id>', views.eliminar_usuario, name='eliminar_usuario'),
+    path('api/update-role/', views.update_user_role, name='update_user_role'),
 
     # User URLs
     path('profile/', views.user_profile, name='user_profile'),
