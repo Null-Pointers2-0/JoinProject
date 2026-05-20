@@ -126,9 +126,9 @@ class ContingutTest(TestCase):
             director=self.director,
             genere=self.genre,
             age_rating=self.age_rating,
-            apis=[self.api],
             rating=8.8
         )
+        self.contingut.apis.set([self.api])
 
     def test_contingut_creation(self):
         self.assertEqual(self.contingut.titol, 'Inception')
@@ -153,8 +153,9 @@ class MovieTest(TestCase):
         self.contingut1 = Contingut.objects.create(
             titol='Inception', data_estrena=2010,
             director=self.director, genere=self.genre, age_rating=self.age_rating,
-            apis=[self.api], rating=8.8
+            rating=8.8
         )
+        self.contingut1.apis.set([self.api])
         self.movie = Movie.objects.create(contingut=self.contingut1)
 
     def test_movie_creation(self):
@@ -199,8 +200,9 @@ class SeriesTest(TestCase):
         self.contingut2 = Contingut.objects.create(
             titol='Breaking Bad', data_estrena=2008,
             director=self.director, genere=self.genre, age_rating=self.age_rating,
-            apis=[self.api], rating=9.5
+            rating=9.5
         )
+        self.contingut2.apis.set([self.api])
         self.series = Series.objects.create(contingut=self.contingut2, num_temporades=5)
 
     def test_series_creation(self):
@@ -265,8 +267,9 @@ class UserProfileTest(TestCase):
         )
         contingut = Contingut.objects.create(
             titol='Fav Content', director=director,
-            age_rating=age_rating, apis=[api]
+            age_rating=age_rating,
         )
+        contingut.apis.set([api])
         self.profile.preferits.add(contingut)
         self.assertIn(contingut, self.profile.preferits.all())
 

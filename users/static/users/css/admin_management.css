@@ -39,24 +39,34 @@
 .filter-form {
     display: flex;
     align-items: center;
-    gap: 16px; /* Espacio entre select y botón */
+    gap: 16px;
 }
 
-.filter-group {
+/* Specificity override: beats home filter.css .filter-group */
+.filter-form .filter-group {
+    width: auto;
+    flex-wrap: nowrap;
     display: flex;
     align-items: center;
     gap: 10px;
     background: rgba(255, 255, 255, 0.03);
-    padding: 4px 12px;
+    padding: 6px 12px;
     border-radius: 6px;
     border: 1px solid rgba(102, 252, 241, 0.1);
+    margin: 0;
+    max-width: unset;
+    height: 50px;
 }
 
-.filter-group i {
+.filter-form .filter-group.flex-grow-1 {
+    flex: 1;
+}
+
+.filter-form .filter-group i {
     color: var(--neon-cyan);
 }
 
-.filter-group select {
+.filter-form .filter-group select {
     background: transparent;
     border: none;
     color: var(--text-primary);
@@ -64,10 +74,32 @@
     font-size: 14px;
     outline: none;
     cursor: pointer;
+    padding: 0;
+    width: auto;
+    background-image: none;
+    appearance: auto;
 }
 
-.filter-group select option {
+.filter-form .filter-group select option {
     background: var(--glass-surface);
+}
+
+/* Compact filter card — overrides .glass-card padding */
+.filter-section {
+    padding: 10px 16px !important;
+    margin-bottom: 16px !important;
+}
+
+/* Override margins from global.css + filter.css .search-principal-container */
+.filter-form .search-principal-container {
+    margin-top: 0 !important;
+    margin-bottom: 0 !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+    max-width: unset !important;
+    width: 100%;
+    display: flex;
+    align-items: center;
 }
 
 /* --- GLASS CARDS --- */

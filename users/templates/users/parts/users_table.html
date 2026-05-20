@@ -4,6 +4,7 @@
 
 {% block extra_css %}
     {{ block.super }}
+    <link rel="stylesheet" href="{% static 'css/home/home.css' %}">
     <link rel="stylesheet" href="{% static 'users/css/admin_management.css' %}">
     <style>
         .role-select-neon {
@@ -27,7 +28,7 @@
     </style>
 {% endblock %}
 
-{% block content_staff_admin %}
+{% block staff_admin_content %}
 <div class="admin-container">
     <div class="admin-header d-flex justify-content-between align-items-center mb-4">
         <div class="header-text">
@@ -118,6 +119,10 @@
             </table>
         </div>
     </div>
+
+    {% if users.paginator.num_pages > 1 %}
+        {% include 'home/home_parts/paginator.html' with items=users %}
+    {% endif %}
 </div>
 
 <div id="double-validation-modal" class="validation-modal">

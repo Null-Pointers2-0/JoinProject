@@ -3,16 +3,19 @@ from . import views
 
 urlpatterns = [
     # Staff Admin URLs
+    path('staff-admin/', views.staff_admin_panel, name='staff_admin_panel'),
     path('gestion/', views.gestion_usuarios, name='gestion_usuarios'),
     path('crear_admin/', views.crear_usuario_admin, name='crear_usuario_admin'),
     path('eliminar/<int:user_id>', views.eliminar_usuario, name='eliminar_usuario'),
     path('api/update-role/', views.update_user_role, name='update_user_role'),
+    path('staff-admin/cartelleres/', views.gestion_cartelleres, name='gestion_cartelleres'),
+    path('staff-admin/cartelleres/editar/<int:contingut_id>/', views.editar_cartellera, name='editar_cartellera'),
 
     # User URLs
     path('profile/', views.user_profile, name='user_profile'),
     path('history/', views.history, name='history'),
     path('followed/', views.followed, name='followed'),
-    path('subscription/', views.subscription, name='suscription'),
+    path('subscription/', views.subscription, name='subscription'),
 
     # Admin URLs
     path('admin/export-csv/', views.export_analytics_csv, name='export_analytics_csv'),

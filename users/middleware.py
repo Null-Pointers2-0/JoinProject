@@ -14,15 +14,18 @@ class AdminRedirectMiddleware:
                 current_url_name = None
 
             exempt_url_names = [
+                'staff_admin_panel',
                 'gestion_usuarios', 
                 'crear_usuario_admin', 
                 'logout', 
                 'eliminar_usuario',
                 'update_user_role'
+                'gestion_cartelleres',
+                'editar_cartellera',
                 ]
             
             if current_url_name not in exempt_url_names and not request.path.startswith('/static/'):
-                return redirect(reverse('gestion_usuarios'))
+                return redirect(reverse('staff_admin_panel'))
         if request.user.is_authenticated and getattr(request.user, 'type', None) == 'Admin':
             try:
                 current_url_name = resolve(request.path_info).url_name

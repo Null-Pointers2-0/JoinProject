@@ -6,13 +6,16 @@
     <ul class="nav nav-tabs">
         <li class="nav-item">
             <a class="nav-link {% if request.resolver_match.url_name == 'gestion_usuarios' %}active{% endif %}"
-               href="{% url 'gestion_usuarios' %}">{% trans 'Gestion Usuarios' %}</a>
+               href="{% url 'gestion_usuarios' %}"><i class="bi bi-people-fill me-1"></i>{% trans 'Usuaris' %}</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link {% if request.resolver_match.url_name == 'gestion_cartelleres' or request.resolver_match.url_name == 'editar_cartellera' %}active{% endif %}"
+               href="{% url 'gestion_cartelleres' %}"><i class="bi bi-images me-1"></i>{% trans 'Cartelleres' %}</a>
         </li>
     </ul>
 
-    <!-- Contenido de la tab activa -->
     <div class="tab-content-area">
-        {% block parts_content %}{% endblock %}
+        {% block staff_admin_content %}{% endblock %}
     </div>
 
 {% endblock %}

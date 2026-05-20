@@ -22,6 +22,21 @@ from .services import (
     PII_COLUMNS,
     validate_gdpr_compliance,
 )
+from django.core.paginator import Paginator
+from django.shortcuts import render, redirect
+from django.contrib import messages
+from web_app.forms import CustomUserChangeForm
+from web_app.models import Movie, Series
+from django.core.mail import send_mail
+from django.conf import settings
+from django.utils.crypto import get_random_string
+from django.shortcuts import render, redirect, get_object_or_404
+from web_app.forms import CustomUserAdminCreationForm
+from web_app.models import CustomUser, Movie, UserProfile, Series
+from django.contrib.auth.decorators import login_required, user_passes_test
+from django.contrib import messages
+from web_app.models import Movie, Series, Contingut, API, CustomUser
+from django.urls import reverse
 
 # --- UTILS ---
 
@@ -102,8 +117,12 @@ def subscription(request):
         'user_subscription_ids': user_subscription_ids,
     })
 
-
-# --- VISTAS DE ADMINISTRACIÓN ---
+@login_required(login_url='login')
+@user_passes_test(lambda u: u.is_superuser)
+def staff_admin_panel(request):
+    if not request.user.is_authenticated:
+        return redirect('login')
+    return redirect('gestion_usuarios')
 
 @user_passes_test(lambda u: u.is_superuser)
 def gestion_usuarios(request):
@@ -114,10 +133,15 @@ def gestion_usuarios(request):
     filter_type = request.GET.get('tipo')
     if filter_type:
         exclude_staff_admin = exclude_staff_admin.filter(type=filter_type)
+    
+
+    paginator = Paginator(exclude_staff_admin, 20)
+    page_obj = paginator.get_page(request.GET.get('page', 1))
     return render(request, 'users/parts/users_table.html', {
-        'users': exclude_staff_admin,
+        'users': page_obj,
         'roles': UserType.choices
     })
+
 @user_passes_test(lambda u: u.is_superuser)
 def eliminar_usuario(request, user_id):
     user = get_object_or_404(CustomUser, id=user_id)
@@ -331,3 +355,59 @@ def update_user_role(request):
             return JsonResponse({'status': 'error', 'message': str(e)}, status=500)
 
     return JsonResponse({'status': 'error', 'message': 'Método no permitido'}, status=405)
+def gestion_cartelleres(request):
+    if not request.user.is_authenticated:
+        return redirect('login')
+
+    plataforma_id = request.GET.get('plataforma')
+    search_query = request.GET.get('q', '')
+    contenidos_qs = Contingut.objects.all().order_by('titol')
+
+    if plataforma_id:
+        contenidos_qs = contenidos_qs.filter(apis__port=plataforma_id)
+    if search_query:
+        contenidos_qs = contenidos_qs.filter(titol__icontains=search_query)
+
+    # Agrupar per títol perquè la base de dades pot tenir duplicats per plataforma
+    seen = {}
+    grouped_contenidos = []
+    for c in contenidos_qs.prefetch_related('apis'):
+        if c.titol not in seen:
+            c.all_apis = list(c.apis.all())
+            seen[c.titol] = c
+            grouped_contenidos.append(c)
+        else:
+            for api in c.apis.all():
+                if api not in seen[c.titol].all_apis:
+                    seen[c.titol].all_apis.append(api)
+
+    paginator = Paginator(grouped_contenidos, 20)
+    page_obj = paginator.get_page(request.GET.get('page', 1))
+
+    plataformas = API.objects.all()
+
+    return render(request, 'users/parts/gestion_cartelleres.html', {
+        'contenidos': page_obj,
+        'plataformas': plataformas,
+        'selected_plataforma': plataforma_id,
+        'search_query': search_query,
+    })
+
+
+@user_passes_test(lambda u: u.is_superuser)
+def editar_cartellera(request, contingut_id):
+    if not request.user.is_authenticated:
+        return redirect('login')
+
+    contingut = get_object_or_404(Contingut, id=contingut_id)
+
+    if request.method == 'POST':
+        poster_path = request.POST.get('poster_path', '').strip()
+        contingut.poster_path = poster_path if poster_path else None
+        contingut.save()
+        messages.success(request, f"Cartellera actualitzada per a '{contingut.titol}'")
+        return redirect('gestion_cartelleres')
+
+    return render(request, 'users/parts/editar_cartellera.html', {
+        'contingut': contingut,
+    })
