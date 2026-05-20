@@ -19,7 +19,7 @@ class AdminRedirectMiddleware:
                 'crear_usuario_admin', 
                 'logout', 
                 'eliminar_usuario',
-                'update_user_role'
+                'update_user_role',
                 'gestion_cartelleres',
                 'editar_cartellera',
                 ]
