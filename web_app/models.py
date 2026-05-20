@@ -277,3 +277,20 @@ class SyncLog(models.Model):
 
     def __str__(self):
         return f"Sync {self.start_time.strftime('%Y-%m-%d %H:%M')} - {self.status}"
+
+class RoleAuditLog(models.Model):
+    admin = models.ForeignKey(CustomUser, on_delete=models.SET_NULL, null=True, related_name='role_changes_made')
+    affected_user = models.ForeignKey(CustomUser, on_delete=models.SET_NULL, null=True, related_name='role_changes_received')
+    old_role = models.CharField(max_length=50)
+    new_role = models.CharField(max_length=50)
+    timestamp = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        verbose_name = 'Audit Log de Roles'
+        verbose_name_plural = 'Audit Logs de Roles'
+        ordering = ['-timestamp']
+
+    def __str__(self):
+        admin_name = self.admin.username if self.admin else "Sistema/Eliminado"
+        user_name = self.affected_user.username if self.affected_user else "Usuario Eliminado"
+        return f"{self.timestamp.strftime('%Y-%m-%d %H:%M:%S')} | {admin_name} cambió a {user_name}: {self.old_role} -> {self.new_role}"

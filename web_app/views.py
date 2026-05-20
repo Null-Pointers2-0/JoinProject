@@ -15,6 +15,8 @@ from django.contrib.auth import login
 from django.core.paginator import Paginator
 from django.db.models import Avg, Count
 from django.template.loader import render_to_string
+from django.contrib.sessions.models import Session
+from django.utils import timezone
 
 def home(request):
     """Carga instantánea del esqueleto de la página."""
@@ -263,3 +265,4 @@ def register_platform_click(request):
             return JsonResponse({'status': 'error', 'message': str(e)}, status=400)
 
     return JsonResponse({'status': 'error', 'message': 'Método no permitido'}, status=405)
+
