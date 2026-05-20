@@ -12,8 +12,8 @@
 <div class="admin-container">
     <div class="admin-header d-flex justify-content-between align-items-center mb-4">
         <div class="header-text">
-            <h2 class="title-neon">{% trans 'Editar Cartelleres' %}</h2>
-            <p class="subtitle mb-0">{% trans 'Revisa i modifica les cartelleres (posters) de cada contingut' %}</p>
+            <h2 class="title-neon">{% trans "Editar Carteleras" %}</h2>
+            <p class="subtitle mb-0">{% trans "Revisa y modifica las carteleras (posters) de cada contenido" %}</p>
         </div>
     </div>
 
@@ -22,7 +22,7 @@
             <div class="filter-group d-flex align-items-center">
                 <i class="bi bi-funnel-fill me-2 text-neon"></i>
                 <select name="plataforma" class="filter-select">
-                    <option value="">{% trans 'Totes les Plataformes' %}</option>
+                    <option value="">{% trans "Todas las Plataformas" %}</option>
                     {% for p in plataformas %}
                     <option value="{{ p.port }}" {% if request.GET.plataforma == p.port|stringformat:'s' %}selected{% endif %}>{{ p.name|default:p.port }}</option>
                     {% endfor %}
@@ -35,17 +35,15 @@
                         <circle cx="11" cy="11" r="8" />
                         <line x1="21" y1="21" x2="16.65" y2="16.65" />
                     </svg>
-                    <input type="text" id="search" name="q" class="search-input" placeholder="{% trans 'Search...' %}"
+                    <input type="text" id="search" name="q" class="search-input" placeholder="{% trans "Search..." %} "
                         value="{{ request.GET.q|default:'' }}">
-
-                    <!--<input type="text" name="q" class="filter-select flex-grow-1" placeholder="{% trans 'Cercar per títol...' %}" value="{{ search_query }}">-->
                 </div>
             </div>
             <button type="submit" class="btn-ghost">
-                <i class="bi bi-check2-circle me-1"></i>{% trans 'Filtrar' %}
+                <i class="bi bi-check2-circle me-1"></i>{% trans "Filtrar" %}
             </button>
             <a href="{% url 'gestion_cartelleres' %}" class="btn-ghost">
-                <i class="bi bi-x-circle me-1"></i>{% trans 'Netejar' %}
+                <i class="bi bi-x-circle me-1"></i>{% trans "Limpiar" %}
             </a>
         </form>
     </div>
@@ -55,12 +53,12 @@
             <table class="table-sync w-100">
                 <thead>
                     <tr>
-                        <th>{% trans 'Pòster' %}</th>
-                        <th>{% trans 'Títol' %}</th>
-                        <th>{% trans 'Plataforma' %}</th>
-                        <th>{% trans 'Any' %}</th>
-                        <th>{% trans 'Poster Path' %}</th>
-                        <th class="text-center">{% trans 'Accions' %}</th>
+                        <th>{% trans "Póster" %}</th>
+                        <th>{% trans "Título" %}</th>
+                        <th>{% trans "Plataforma" %}</th>
+                        <th>{% trans "Año" %}</th>
+                        <th>{% trans "Poster Path" %}</th>
+                        <th class="text-center">{% trans "Acciones" %}</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -88,8 +86,8 @@
                             <span class="text-white small" style="word-break: break-all; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;" title="{{ c.poster_path }}">{{ c.poster_path|default:'-' }}</span>
                         </td>
                         <td class="text-center">
-                            <a href="{% url 'editar_cartellera' c.id %}" class="btn-ghost" title="{% trans 'Editar cartellera' %}">
-                                <i class="bi bi-pencil-fill">{% trans 'Editar' %}</i>
+                            <a href="{% url 'editar_cartellera' c.id %}" class="btn-ghost" title="{% trans "Editar cartelera" %}">
+                                <i class="bi bi-pencil-fill">{% trans "Editar" %}</i>
                             </a>
                         </td>
                     </tr>
@@ -97,7 +95,7 @@
                     <tr>
                         <td colspan="6" class="empty-state text-center py-5">
                             <i class="bi bi-search mb-2 d-block fs-2 text-muted"></i>
-                            {% trans 'No s\'han trobat continguts amb aquests criteris.' %}
+                            {% trans "No se han encontrado contenidos con estos criterios." %}
                         </td>
                     </tr>
                     {% endfor %}

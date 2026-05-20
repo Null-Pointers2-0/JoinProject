@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
+{% load i18n %}
 
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'css/details.css' %}">
@@ -34,13 +35,13 @@
             
             {% if content.director %}
             <div class="data-card">
-                <div class="data-card-label">Dirección</div>
+                <div class="data-card-label">{% trans "Dirección" %}</div>
                 <div class="data-card-value">{{ content.director.name }}</div>
             </div>
             {% endif %}
             
             <div class="data-card">
-                <div class="data-card-label">Disponible en:</div>
+                <div class="data-card-label">{% trans "Disponible en:" %}</div>
                 <div class="data-card-value api-buttons-container">
                     {% for api in available_apis %}
                         <button class="api-btn track-platform-btn"
@@ -50,7 +51,7 @@
                             <span class="api-stats"></span>
                         </button>
                     {% empty %}
-                        <span style="font-size: 12px; color: var(--tm);">No hay información de API disponible.</span>
+                        <span style="font-size: 12px; color: var(--tm);">{% trans "No hay información de API disponible." %}</span>
                     {% endfor %}
                 </div>
             </div>
@@ -59,39 +60,39 @@
 
     <div class="details-main">
         <section>
-            <h2 class="section-title">Sinopsis</h2>
+            <h2 class="section-title">{% trans "Sinopsis" %}</h2>
             <p class="synopsis-text">
-                {{ content.synopsis|default:"No hay una descripción disponible." }}
+                {% if content.synopsis %}{{ content.synopsis }}{% else %}{% trans "No hay una descripción disponible." %}{% endif %}
             </p>
 
             {% block extra_main_content %}{% endblock %}
 
-            <h2 class="section-title">Acciones</h2>
+            <h2 class="section-title">{% trans "Acciones" %}</h2>
             <div style="display: flex; gap: 16px;">
                 {% if user.is_authenticated %}
                     <button id="btn-save" class="btn-action"
                             data-url="{% block favorite_url %}{% endblock %}">
-                        {% if is_favorite %} Dejar de seguir {% else %} Seguir {% endif %}
+                        {% if is_favorite %} {% trans "Dejar de seguir" %} {% else %} {% trans "Seguir" %} {% endif %}
                     </button>
                 {% endif %}
             </div>
         </section>
 
         <section class="community-reviews-section">
-            <h2 class="section-title">Valoracions de la comunitat</h2>
+            <h2 class="section-title">{% trans "Valoraciones de la comunidad" %}</h2>
 
             <div class="rating-summary">
                 {% if total_reviews > 0 %}
                     <span class="stars-avg">★ {{ avg_rating|floatformat:1 }}</span>
                     <span class="count">({{ total_reviews }})</span>
                 {% else %}
-                    <span class="count" style="font-style: italic;">Sense valoracions encara</span>
+                    <span class="count" style="font-style: italic;">{% trans "Sin valoraciones todavía" %}</span>
                 {% endif %}
             </div>
 
             {% if user.is_authenticated %}
             <div class="review-form-container">
-                <h4>Deixa la teva opinió</h4>
+                <h4>{% trans "Deja tu opinión" %}</h4>
                 <form action="{% url 'submit_review' content.contingut.id %}" method="POST">
                     {% csrf_token %}
 
@@ -102,9 +103,9 @@
                         {% endfor %}
                     </div>
 
-                    <textarea name="comment" class="review-textarea" placeholder="Què t'ha semblat?"></textarea>
+                    <textarea name="comment" class="review-textarea" placeholder="{% trans "¿Qué te ha parecido?" %}"></textarea>
 
-                    <button type="submit" class="submit-btn mt-3">Publicar valoració</button>
+                    <button type="submit" class="submit-btn mt-3">{% trans "Publicar valoración" %}</button>
                 </form>
             </div>
             {% endif %}
@@ -126,14 +127,14 @@
                     {% endif %}
                 </div>
                 {% empty %}
-                <p style="color: rgba(255,255,255,0.5);">Sigues el primer en valorar aquest contingut!</p>
+                <p style="color: rgba(255,255,255,0.5);">{% trans "¡Sé el primero en valorar este contenido!" %}</p>
                 {% endfor %}
             </div>
         </section>
     </div>
 </div>
 
-<div id="history-toast" class="toast-notification">✅ Añadido a tu historial</div>
+<div id="history-toast" class="toast-notification">✅ {% trans "Añadido a tu historial" %}</div>
 
 <script>
 document.addEventListener('DOMContentLoaded', () => {
@@ -148,7 +149,7 @@ document.addEventListener('DOMContentLoaded', () => {
             })
             .then(response => response.json())
             .then(data => {
-                this.innerText = (data.status === 'added') ? 'Dejar de seguir' : 'Seguir';
+                this.innerText = (data.status === 'added') ? '{% trans "Dejar de seguir" %}' : '{% trans "Seguir" %}';
                 this.style.color = (data.status === 'added') ? 'var(--cyan)' : 'var(--tm)';
             });
         });

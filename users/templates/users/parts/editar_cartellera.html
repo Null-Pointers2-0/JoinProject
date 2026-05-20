@@ -11,51 +11,51 @@
 <div class="admin-container">
     <div class="admin-header d-flex justify-content-between align-items-center mb-4">
         <div class="header-text">
-            <h2 class="title-neon">{% trans 'Editar Cartellera' %}</h2>
+            <h2 class="title-neon">{% trans "Editar Cartelera" %}</h2>
             <p class="subtitle mb-0">{{ contingut.titol }}</p>
         </div>
         <a href="{% url 'gestion_cartelleres' %}" class="btn-ghost">
-            <i class="bi bi-arrow-left me-1"></i>{% trans 'Tornar' %}
+            <i class="bi bi-arrow-left me-1"></i>{% trans "Volver" %}
         </a>
     </div>
 
     <div class="row g-4">
         <div class="col-md-4">
             <div class="glass-card text-center p-4">
-                <h5 class="text-white mb-3">{% trans 'Pòster Actual' %}</h5>
+                <h5 class="text-white mb-3">{% trans "Póster Actual" %}</h5>
                 {% if contingut.poster_path %}
                 <img src="{{ contingut.poster_path }}" alt="{{ contingut.titol }}" class="img-fluid rounded" style="max-height: 400px; object-fit: contain;">
                 {% else %}
                 <div class="p-5 text-muted">
                     <i class="bi bi-image display-3"></i>
-                    <p class="mt-2">{% trans 'Sense pòster' %}</p>
+                    <p class="mt-2">{% trans "Sin póster" %}</p>
                 </div>
                 {% endif %}
             </div>
         </div>
         <div class="col-md-8">
             <div class="glass-card p-4">
-                <h5 class="text-white mb-4">{% trans 'Informació del Contingut' %}</h5>
+                <h5 class="text-white mb-4">{% trans "Información del Contenido" %}</h5>
                 <table class="table-sync w-100 mb-4">
                     <tbody>
                         <tr>
-                            <td class="text-muted" style="width: 150px;">{% trans 'Títol' %}</td>
+                            <td class="text-muted" style="width: 150px;">{% trans "Título" %}</td>
                             <td class="text-white">{{ contingut.titol }}</td>
                         </tr>
                         <tr>
-                            <td class="text-muted">{% trans 'Any' %}</td>
+                            <td class="text-muted">{% trans "Año" %}</td>
                             <td class="text-white">{{ contingut.data_estrena|default:'-' }}</td>
                         </tr>
                         <tr>
-                            <td class="text-muted">{% trans 'Plataforma' %}</td>
+                            <td class="text-muted">{% trans "Plataforma" %}</td>
                             <td class="text-white">{{ contingut.api.name|default:'-' }}</td>
                         </tr>
                         <tr>
-                            <td class="text-muted">{% trans 'Gènere' %}</td>
+                            <td class="text-muted">{% trans "Género" %}</td>
                             <td class="text-white">{{ contingut.genere.name|default:'-' }}</td>
                         </tr>
                         <tr>
-                            <td class="text-muted">{% trans 'Director' %}</td>
+                            <td class="text-muted">{% trans "Director" %}</td>
                             <td class="text-white">{{ contingut.director.name|default:'-' }}</td>
                         </tr>
                     </tbody>
@@ -65,30 +65,30 @@
                     {% csrf_token %}
                     <div class="mb-3">
                         <label for="poster_path" class="form-label text-white">
-                            <i class="bi bi-link-45deg me-1 text-neon"></i>{% trans 'URL del Pòster' %}
+                            <i class="bi bi-link-45deg me-1 text-neon"></i>{% trans "URL del Póster" %}
                         </label>
                         <input type="url" name="poster_path" id="poster_path" class="filter-select w-100" 
                                value="{{ contingut.poster_path|default:'' }}" 
                                placeholder="https://image.tmdb.org/t/p/w185/...">
                         <div class="form-text text-muted mt-2">
-                            <i class="bi bi-info-circle me-1"></i>{% trans 'Introdueix una URL vàlida d\'una imatge de pòster. Deixa el camp buit per eliminar el pòster.' %}
+                            <i class="bi bi-info-circle me-1"></i>{% trans "Introduce una URL válida de una imagen de póster. Deja el campo vacío para eliminar el póster." %}
                         </div>
                     </div>
                     <div class="d-flex gap-2">
                         <button type="submit" class="btn-neon">
-                            <i class="bi bi-save me-1"></i>{% trans 'Guardar Canvis' %}
+                            <i class="bi bi-save me-1"></i>{% trans "Guardar Cambios" %}
                         </button>
                         <a href="{% url 'gestion_cartelleres' %}" class="btn-ghost">
-                            {% trans 'Cancel·lar' %}
+                            {% trans "Cancelar" %}
                         </a>
                     </div>
                 </form>
             </div>
 
             <div class="glass-card p-4 mt-4">
-                <h5 class="text-white mb-3">{% trans 'Previsualització' %}</h5>
+                <h5 class="text-white mb-3">{% trans "Previsualización" %}</h5>
                 <div id="preview-container" class="text-center p-4" style="background: rgba(0,0,0,0.3); border-radius: 8px; min-height: 200px; display: flex; align-items: center; justify-content: center;">
-                    <p class="text-muted mb-0">{% trans 'Escriu una URL de pòster i fes clic a "Guardar Canvis" per veure\'l actualitzat' %}</p>
+                    <p class="text-muted mb-0">{% trans "Escribe una URL de póster y haz clic en 'Guardar Cambios' para verlo actualizado" %}</p>
                 </div>
             </div>
         </div>
@@ -102,7 +102,7 @@ document.getElementById('poster_path').addEventListener('input', function() {
     if (url) {
         previewContainer.innerHTML = '<img src="' + url + '" alt="Preview" class="img-fluid rounded" style="max-height: 400px; object-fit: contain;" onerror="this.parentElement.innerHTML=\'<p class=\\\'text-danger mb-0\\\'><i class=\\\'bi bi-exclamation-triangle me-1\\\'></i>URL no vàlida o imatge no accessible</p>\'">';
     } else {
-        previewContainer.innerHTML = '<p class="text-muted mb-0">{% trans 'Escriu una URL de pòster per veure la previsualització' %}</p>';
+        previewContainer.innerHTML = '<p class="text-muted mb-0">{% trans "Escribe una URL de póster para ver la previsualización" %}</p>';
     }
 });
 </script>

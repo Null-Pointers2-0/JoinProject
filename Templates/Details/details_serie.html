@@ -1,17 +1,18 @@
 {% extends 'Details/details_base.html' %}
+{% load i18n %}
 
 {% block content_metadata %}
 <div class="data-card">
-    <div class="data-card-label">Periodo</div>
+    <div class="data-card-label">{% trans "Periodo" %}</div>
     <div class="data-card-value">
-        {{ content.start_year }} - {{ content.end_year|default:"Actualidad" }}
+        {{ content.start_year }} - {% if content.end_year %}{{ content.end_year }}{% else %}{% trans "Actualidad" %}{% endif %}
     </div>
 </div>
 
 {% if content.total_seasons %}
 <div class="data-card">
-    <div class="data-card-label">Temporadas</div>
-    <div class="data-card-value">{{ content.total_seasons }} Seasons</div>
+    <div class="data-card-label">{% trans "Temporadas" %}</div>
+    <div class="data-card-value">{{ content.total_seasons }} {% trans "Temporadas" %}</div>
 </div>
 {% endif %}
 {% endblock %}

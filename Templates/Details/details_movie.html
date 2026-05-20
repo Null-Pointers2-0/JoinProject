@@ -1,8 +1,9 @@
 {% extends 'Details/details_base.html' %}
+{% load i18n %}
 
 {% block content_metadata %}
 <div class="data-card">
-    <div class="data-card-label">Lanzamiento</div>
+    <div class="data-card-label">{% trans "Lanzamiento" %}</div>
     <div class="data-card-value">{{ content.year }}</div>
 </div>
 {% endblock %}
@@ -11,7 +12,7 @@
 
 {% block extra_main_content %}
 <div class="recommendations-section" style="margin: 30px 0;">
-    <h3 class="section-title">També et pot agradar...</h3>
+    <h3 class="section-title">{% trans "También te puede gustar..." %}</h3>
     <div class="recommendations-grid" style="display: flex; gap: 15px; overflow-x: auto; padding-bottom: 10px;">
         {% for rec in recommendations %}
             <a href="{% url 'movie_detail' rec.id %}" style="text-decoration: none; color: white; min-width: 140px;">
@@ -25,7 +26,7 @@
                 <p style="font-size: 0.9rem; margin-top: 8px; font-weight: bold; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{ rec.title }}</p>
             </a>
         {% empty %}
-            <p style="color: rgba(255,255,255,0.5);">No hi ha recomanacions disponibles.</p>
+            <p style="color: rgba(255,255,255,0.5);">{% trans "No hay recomendaciones disponibles." %}</p>
         {% endfor %}
     </div>
 </div>
