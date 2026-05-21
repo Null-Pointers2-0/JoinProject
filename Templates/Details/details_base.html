@@ -149,7 +149,7 @@ document.addEventListener('DOMContentLoaded', () => {
             })
             .then(response => response.json())
             .then(data => {
-                this.innerText = (data.status === 'added') ? '{% trans "Dejar de seguir" %}' : '{% trans "Seguir" %}';
+                this.innerText = (data.status === 'added') ? '{% filter escapejs %}{% trans "Dejar de seguir" %}{% endfilter %}' : '{% filter escapejs %}{% trans "Seguir" %}{% endfilter %}';
                 this.style.color = (data.status === 'added') ? 'var(--cyan)' : 'var(--tm)';
             });
         });
