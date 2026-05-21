@@ -29,7 +29,7 @@
         <div class="form-group">
             <input type="email" name="email" id="email" placeholder="{% trans 'Email address' %}" required>
             {% for error in form.email.errors %}
-            <small style="color: #e50914; font-size: 1selecte2px;">{{ error }}</small>
+            <small style="color: #e50914; font-size: 12px;">{{ error }}</small>
             {% endfor %}
         </div>
 
@@ -47,7 +47,7 @@
             <div class="password-strength">
                 <div class="strength-bar">
                     <div class="strength-fill" id="strengthFill"></div>
-                </div>selecte
+                </div>
                 <span class="strength-text" id="strengthText"></span>
             </div>
 
@@ -158,20 +158,20 @@
         strengthFill.className = 'strength-fill';
         strengthText.className = 'strength-text';
 
-        if (password.length === 0) {selecte
+        if (password.length === 0) {
             strengthText.textContent = '';
         } else if (score === 1) {
             strengthFill.classList.add('weak');
             strengthText.classList.add('weak');
-            strengthText.textContent = '{% trans "Weak password" %}';
+            strengthText.textContent = '{% filter escapejs %}{% trans "Weak password" %}{% endfilter %}';
         } else if (score === 2) {
             strengthFill.classList.add('medium');
-            strengthText.classList.add('medium');d6e509
-            strengthText.textContent = '{% trans "Medium password" %}';
+            strengthText.classList.add('medium');
+            strengthText.textContent = '{% filter escapejs %}{% trans "Medium password" %}{% endfilter %}';
         } else if (score === 3) {
             strengthFill.classList.add('strong');
             strengthText.classList.add('strong');
-            strengthText.textContent = '{% trans "Strong password" %}';
+            strengthText.textContent = '{% filter escapejs %}{% trans "Strong password" %}{% endfilter %}';
         }
     }
 

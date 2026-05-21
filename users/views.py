@@ -118,7 +118,7 @@ def subscription(request):
     if request.method == 'POST':
         selected_ids = request.POST.getlist('subscriptions')
         request.user.subscriptions.set(API.objects.filter(id__in=selected_ids))
-        messages.success(request, _('¡Suscripciones actualizadas correctamente!'))
+        messages.success(request, _('¡Suscripciones actualizadas correctamente!'))#TODO translate this
         return redirect('subscription') # Corregido typo en el nombre de la URL ('suscription' a 'subscription')
 
     return render(request, 'users/parts/subscription.html', {
@@ -234,7 +234,7 @@ def export_analytics_csv(request):
     response['Content-Disposition'] = 'attachment; filename="analytics_report.csv"'
 
     writer = csv.writer(response)
-    writer.writerow(['Title', 'Genre', 'Age Rating', 'Year', 'Director', 'Platform', 'Total Views', 'Total Favorites'])
+    writer.writerow(['Title', 'Genre', 'Age Rating', 'Year', 'Director', 'Platform', 'Total Views', 'Total Favorites'])#TODO translate this
 
     for item in clean_data:
         writer.writerow([
