@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-28 16:41+0000\n"
+"POT-Creation-Date: 2026-05-20 19:06+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -19,31 +19,121 @@ msgstr ""
 "Plural-Forms: nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? "
 "1 : 2;\n"
 
+#: Templates/Details/details_base.html:38
+msgid "Dirección"
+msgstr "Dirección"
+
+#: Templates/Details/details_base.html:44
+msgid "Disponible en:"
+msgstr "Disponible en:"
+
+#: Templates/Details/details_base.html:54
+msgid "No hay información de API disponible."
+msgstr "No hay información de API disponible."
+
+#: Templates/Details/details_base.html:63
+msgid "Sinopsis"
+msgstr "Sinopsis"
+
+#: Templates/Details/details_base.html:65
+msgid "No hay una descripción disponible."
+msgstr "No hay una descripción disponible."
+
+#: Templates/Details/details_base.html:70
+#: users/templates/users/parts/gestion_cartelleres.html:63
+#: users/templates/users/parts/users_table.html:74
+msgid "Acciones"
+msgstr "Acciones"
+
+#: Templates/Details/details_base.html:75
+#: Templates/Details/details_base.html:152
+msgid "Dejar de seguir"
+msgstr "Dejar de seguir"
+
+#: Templates/Details/details_base.html:75
+#: Templates/Details/details_base.html:152
+msgid "Seguir"
+msgstr "Seguir"
+
+#: Templates/Details/details_base.html:82
+msgid "Valoraciones de la comunidad"
+msgstr "Valoraciones de la comunidad"
+
+#: Templates/Details/details_base.html:89
+msgid "Sin valoraciones todavía"
+msgstr "Sin valoraciones todavía"
+
+#: Templates/Details/details_base.html:95
+msgid "Deja tu opinión"
+msgstr "Deja tu opinión"
+
+#: Templates/Details/details_base.html:106
+msgid "¿Qué te ha parecido?"
+msgstr "¿Qué te ha parecido?"
+
+#: Templates/Details/details_base.html:108
+msgid "Publicar valoración"
+msgstr "Publicar valoración"
+
+#: Templates/Details/details_base.html:130
+msgid "¡Sé el primero en valorar este contenido!"
+msgstr "¡Sé el primero en valorar este contenido!"
+
+#: Templates/Details/details_base.html:137
+msgid "Añadido a tu historial"
+msgstr "Añadido a tu historial"
+
+#: Templates/Details/details_movie.html:6
+msgid "Lanzamiento"
+msgstr "Lanzamiento"
+
+#: Templates/Details/details_movie.html:15
+msgid "También te puede gustar..."
+msgstr "También te puede gustar..."
+
+#: Templates/Details/details_movie.html:29
+msgid "No hay recomendaciones disponibles."
+msgstr "No hay recomendaciones disponibles."
+
+#: Templates/Details/details_serie.html:6
+msgid "Periodo"
+msgstr "Periodo"
+
+#: Templates/Details/details_serie.html:8
+msgid "Actualidad"
+msgstr "Actualidad"
+
+#: Templates/Details/details_serie.html:14
+#: Templates/Details/details_serie.html:15
+msgid "Temporadas"
+msgstr "Temporadas"
+
 #: Templates/base.html:33
 msgid "Welcome"
 msgstr "Bienvenido"
 
-#: Templates/base.html:64 Templates/base.html:160
+#: Templates/base.html:62 Templates/base.html:163
 msgid "Home"
 msgstr "Inicio"
 
-#: Templates/base.html:78
+#: Templates/base.html:76
 msgid "Login"
 msgstr "Iniciar sesión"
 
-#: Templates/base.html:89
+#: Templates/base.html:87
 msgid "Register"
 msgstr "Registrarse"
 
-#: Templates/base.html:104
+#: Templates/base.html:102
 msgid "Logout"
 msgstr "Cerrar sesión"
 
-#: Templates/base.html:133 Templates/home/home.html:17
+#: Templates/base.html:136 Templates/home/home.html:42
+#: users/templates/users/parts/gestion_cartelleres.html:38
 msgid "Search..."
 msgstr "Buscar..."
 
-#: Templates/base.html:155
+#: Templates/base.html:158
 msgid ""
 "From surveys to real-time insights. We unify global catalogs and leverage in-"
 "app data to track market trends without the need for traditional polling."
@@ -52,50 +142,50 @@ msgstr ""
 "globales y aprovechamos los datos de las aplicaciones para rastrear las "
 "tendencias del mercado sin necesidad de los sondeos tradicionales."
 
-#: Templates/base.html:158
+#: Templates/base.html:161
 msgid "Navigation"
 msgstr "Navegación"
 
-#: Templates/base.html:161
+#: Templates/base.html:164
 msgid "About us"
 msgstr "Sobre nosotros"
 
-#: Templates/base.html:162
+#: Templates/base.html:165
 msgid "Contact us"
 msgstr "Contáctenos"
 
-#: Templates/base.html:166
+#: Templates/base.html:169
 msgid "Legal"
 msgstr "Legal"
 
-#: Templates/base.html:168
+#: Templates/base.html:171
 msgid "Privacy Policy"
 msgstr "Política de privacidad"
 
-#: Templates/base.html:169
+#: Templates/base.html:172
 msgid "Terms of Use"
 msgstr "Condiciones de uso"
 
-#: Templates/base.html:173
+#: Templates/base.html:176
 msgid "Contact"
 msgstr "Contacto"
 
-#: Templates/base.html:181
+#: Templates/base.html:184
 msgid "All rights reserved"
 msgstr "Todos los derechos reservados"
 
 #: Templates/footer_legal/privacy_policy.html:12
 msgid "Política de Privacidad"
-msgstr ""
+msgstr "Política de Privacidad"
 
 #: Templates/footer_legal/privacy_policy.html:13
 #: Templates/footer_legal/terms_use.html:13
 msgid "Última actualización"
-msgstr ""
+msgstr "Última actualización"
 
 #: Templates/footer_legal/privacy_policy.html:15
 msgid "Información que Recopilamos"
-msgstr ""
+msgstr "Información que Recopilamos"
 
 #: Templates/footer_legal/privacy_policy.html:17
 msgid ""
@@ -107,15 +197,15 @@ msgstr ""
 
 #: Templates/footer_legal/privacy_policy.html:20
 msgid "Uso de la Información"
-msgstr ""
+msgstr "Uso de la Información"
 
 #: Templates/footer_legal/privacy_policy.html:22
 msgid "Para mantener, mejorar y desarrollar nuevos servicios."
-msgstr ""
+msgstr "Para mantener, mejorar y desarrollar nuevos servicios."
 
 #: Templates/footer_legal/privacy_policy.html:23
 msgid "Para personalizar las recomendaciones de series y películas."
-msgstr ""
+msgstr "Para personalizar las recomendaciones de series y películas."
 
 #: Templates/footer_legal/privacy_policy.html:24
 msgid ""
@@ -124,7 +214,7 @@ msgstr ""
 
 #: Templates/footer_legal/privacy_policy.html:27
 msgid "Protección de Datos"
-msgstr ""
+msgstr "Protección de Datos"
 
 #: Templates/footer_legal/privacy_policy.html:29
 msgid ""
@@ -135,7 +225,7 @@ msgstr ""
 
 #: Templates/footer_legal/privacy_policy.html:32
 msgid "Compartir Información con Terceros"
-msgstr ""
+msgstr "Compartir Información con Terceros"
 
 #: Templates/footer_legal/privacy_policy.html:34
 msgid ""
@@ -147,7 +237,7 @@ msgstr ""
 
 #: Templates/footer_legal/privacy_policy.html:37
 msgid "Tus Derechos"
-msgstr ""
+msgstr "Tus Derechos"
 
 #: Templates/footer_legal/privacy_policy.html:39
 msgid ""
@@ -158,7 +248,7 @@ msgstr ""
 
 #: Templates/footer_legal/terms_use.html:12
 msgid "Términos de Uso"
-msgstr ""
+msgstr "Términos de Uso"
 
 #: Templates/footer_legal/terms_use.html:15
 #, fuzzy
@@ -182,7 +272,7 @@ msgstr "Uso del Servicio"
 
 #: Templates/footer_legal/terms_use.html:22
 msgid "Debe tener al menos 18 años para crear una cuenta."
-msgstr ""
+msgstr "Debe tener al menos 18 años para crear una cuenta."
 
 #: Templates/footer_legal/terms_use.html:23
 msgid ""
@@ -197,7 +287,7 @@ msgstr ""
 
 #: Templates/footer_legal/terms_use.html:27
 msgid "Propiedad Intelectual"
-msgstr ""
+msgstr "Propiedad Intelectual"
 
 #: Templates/footer_legal/terms_use.html:29
 msgid ""
@@ -208,7 +298,7 @@ msgstr ""
 
 #: Templates/footer_legal/terms_use.html:32
 msgid "Limitación de Responsabilidad"
-msgstr ""
+msgstr "Limitación de Responsabilidad"
 
 #: Templates/footer_legal/terms_use.html:34
 msgid ""
@@ -220,7 +310,7 @@ msgstr ""
 
 #: Templates/footer_legal/terms_use.html:37
 msgid "Modificaciones"
-msgstr ""
+msgstr "Modificaciones"
 
 #: Templates/footer_legal/terms_use.html:39
 msgid ""
@@ -229,76 +319,83 @@ msgid ""
 "estar sujeto a la versión actual de estos Términos y Condiciones de Uso."
 msgstr ""
 
-#: Templates/home/home.html:22 Templates/home/home.html:86
+#: Templates/home/home.html:47
 msgid "Genre"
 msgstr "Género"
 
-#: Templates/home/home.html:24 Templates/home/home.html:36
-#: Templates/home/home.html:48
+#: Templates/home/home.html:49 Templates/home/home.html:59
+#: Templates/home/home.html:69 Templates/home/home.html:81
 msgid "All"
 msgstr "Todos"
 
-#: Templates/home/home.html:34 Templates/home/home.html:87
+#: Templates/home/home.html:57 Templates/part/card.html:26
+#: users/templates/users/parts/editar_cartellera.html:58
 msgid "Director"
 msgstr "Director"
 
-#: Templates/home/home.html:46
+#: Templates/home/home.html:67
 msgid "Age Rating"
 msgstr "Clasificación"
 
-#: Templates/home/home.html:57
+#: Templates/home/home.html:79
 msgid "Platform"
 msgstr "Plataforma"
 
-#: Templates/home/home.html:58
+#: Templates/home/home.html:91
 msgid "Filter / Search"
 msgstr "Filtrar / Buscar"
 
-#: Templates/home/home.html:59
+#: Templates/home/home.html:92
 msgid "Clear filters"
 msgstr "Limpiar filtros"
 
-#: Templates/home/home.html:76
-msgid "Results"
+#: Templates/home/home.html:105
+#, fuzzy
+#| msgid "Results"
+msgid "Results for"
 msgstr "Resultados"
 
-#: Templates/home/home.html:86 Templates/home/home.html:87
-#: Templates/home/home.html:91 Templates/home/home.html:93
-msgid "N/A"
-msgstr "N/A"
+#: Templates/home/home.html:107
+msgid "Catálogo completo"
+msgstr "Catálogo completo"
 
-#: Templates/home/home.html:82
-msgid "No content found matching those filters."
-msgstr "No se ha encontrado ningún contenido con esos filtros."
+#: Templates/home/home.html:115
+msgid "Cargando contenido..."
+msgstr "Cargando contenido..."
 
-#: Templates/part/card.html
-msgid "Available on"
-msgstr "Disponible en"
+#: Templates/home/home.html:141 Templates/home/includes/result_fragment.html:5
+msgid "No se han encontrado resultados."
+msgstr "No se han encontrado resultados."
 
-msgid "No movies found matching those filters."
-msgstr "No se encontraron películas con esos filtros."
+#: Templates/home/home.html:153
+msgid "Error al cargar los datos."
+msgstr "Error al cargar los datos."
 
-#: Templates/home/home.html:111
+#: Templates/home/home_parts/paginator.html:6
 msgid "primera"
 msgstr "primera"
 
-#: Templates/home/home.html:114 Templates/home/home.html:116
+#: Templates/home/home_parts/paginator.html:9
+#: Templates/home/home_parts/paginator.html:11
 msgid "anterior"
 msgstr "anterior"
 
-#: Templates/home/home.html:121
-msgid "Pàgina"
+#: Templates/home/home_parts/paginator.html:16
+#, fuzzy
+#| msgid "Pàgina"
+msgid "Página"
 msgstr "Página"
 
-#: Templates/home/home.html:123
+#: Templates/home/home_parts/paginator.html:18
 msgid "de"
 msgstr "de"
 
-#: Templates/home/home.html:128 Templates/home/home.html:129
-msgid "següent"
+#: Templates/home/home_parts/paginator.html:23
+#: Templates/home/home_parts/paginator.html:24
+msgid "siguiente"
 msgstr "siguiente"
 
-#: Templates/home/home.html:132
+#: Templates/home/home_parts/paginator.html:27
 msgid "última"
 msgstr "última"
 
@@ -326,7 +423,7 @@ msgstr "¿Eres nuevo en Streamflix?"
 msgid "Sign up now"
 msgstr "Regístrate ahora"
 
-#: Templates/identify/register.html:12 Templates/identify/register.html:92
+#: Templates/identify/register.html:12 Templates/identify/register.html:114
 msgid "Create Account"
 msgstr "Crear cuenta"
 
@@ -335,7 +432,7 @@ msgid "Join millions of viewers worldwide"
 msgstr "Únete a millones de espectadores en todo el mundo"
 
 #: Templates/identify/register.html:23
-#: users/templates/users/profile/profile.html:21
+#: users/templates/users/profile/user_profile.html:21
 msgid "Username"
 msgstr "Nombre de usuario"
 
@@ -363,41 +460,183 @@ msgstr "Un número"
 msgid "Confirm password"
 msgstr "Confirmar contraseña"
 
-#: Templates/identify/register.html:85
+#: Templates/identify/register.html:83 web_app/forms.py:45
+msgid "Select your platforms"
+msgstr "Selecciona tus plataformas"
+
+#: Templates/identify/register.html:107
 msgid "I accept the"
 msgstr "Acepto los"
 
-#: Templates/identify/register.html:85
+#: Templates/identify/register.html:107
 msgid "terms and conditions of use"
 msgstr "términos y condiciones de uso"
 
-#: Templates/identify/register.html:97
+#: Templates/identify/register.html:119
 msgid "Already have an account?"
 msgstr "¿Ya tienes cuenta?"
 
-#: Templates/identify/register.html:97
+#: Templates/identify/register.html:119
 msgid "Sign in"
 msgstr "Iniciar sesión"
 
-#: Templates/identify/register.html:144
+#: Templates/identify/register.html:166
 msgid "Weak password"
 msgstr "Contraseña débil"
 
-#: Templates/identify/register.html:148
+#: Templates/identify/register.html:170
 msgid "Medium password"
 msgstr "Contraseña media"
 
-#: Templates/identify/register.html:152
+#: Templates/identify/register.html:174
 msgid "Strong password"
 msgstr "Contraseña fuerte"
 
-#: users/templates/users/parts/followed.html:40
-msgid "No followed movies or series yet."
+#: Templates/part/card.html:25
+#: users/templates/users/parts/editar_cartellera.html:54
+msgid "Género"
+msgstr "Género"
+
+#: Templates/part/card.html:43
+msgid "Disponible en"
+msgstr "Disponible en"
+
+#: users/templates/users/parts/create_user.html:69
+msgid "Registrar Nuevo Miembro"
+msgstr "Registrar Nuevo Miembro"
+
+#: users/templates/users/parts/create_user.html:107
+msgid "Asignar plataformas de gestión"
+msgstr "Asignar plataformas de gestión"
+
+#: users/templates/users/parts/create_user.html:132
+msgid "Crear Usuario y Enviar Email"
+msgstr "Crear Usuario y Enviar Email"
+
+#: users/templates/users/parts/create_user.html:135
+#: users/templates/users/parts/editar_cartellera.html:82
+#: users/templates/users/parts/users_table.html:140
+msgid "Cancelar"
+msgstr "Cancelar"
+
+#: users/templates/users/parts/editar_cartellera.html:14
+msgid "Editar Cartelera"
+msgstr "Editar Cartelera"
+
+#: users/templates/users/parts/editar_cartellera.html:18
+msgid "Volver"
+msgstr "Volver"
+
+#: users/templates/users/parts/editar_cartellera.html:25
+msgid "Póster Actual"
+msgstr "Póster Actual"
+
+#: users/templates/users/parts/editar_cartellera.html:31
+msgid "Sin póster"
+msgstr "Sin póster"
+
+#: users/templates/users/parts/editar_cartellera.html:38
+msgid "Información del Contenido"
+msgstr "Información del Contenido"
+
+#: users/templates/users/parts/editar_cartellera.html:42
+#: users/templates/users/parts/gestion_cartelleres.html:59
+msgid "Título"
+msgstr "Título"
+
+#: users/templates/users/parts/editar_cartellera.html:46
+#: users/templates/users/parts/gestion_cartelleres.html:61
+msgid "Año"
+msgstr "Año"
+
+#: users/templates/users/parts/editar_cartellera.html:50
+#: users/templates/users/parts/gestion_cartelleres.html:60
+#, fuzzy
+#| msgid "Platform"
+msgid "Plataforma"
+msgstr "Plataforma"
+
+#: users/templates/users/parts/editar_cartellera.html:68
+msgid "URL del Póster"
+msgstr "URL del Póster"
+
+#: users/templates/users/parts/editar_cartellera.html:74
+msgid ""
+"Introduce una URL válida de una imagen de póster. Deja el campo vacío para "
+"eliminar el póster."
 msgstr ""
 
-#: users/templates/users/parts/history.html:26
-msgid "No movies in history yet."
+#: users/templates/users/parts/editar_cartellera.html:79
+msgid "Guardar Cambios"
+msgstr "Guardar Cambios"
+
+#: users/templates/users/parts/editar_cartellera.html:89
+msgid "Previsualización"
+msgstr "Previsualización"
+
+#: users/templates/users/parts/editar_cartellera.html:91
+msgid ""
+"Escribe una URL de póster y haz clic en 'Guardar Cambios' para verlo "
+"actualizado"
 msgstr ""
+
+#: users/templates/users/parts/editar_cartellera.html:105
+msgid "Escribe una URL de póster para ver la previsualización"
+msgstr "Escribe una URL de póster para ver la previsualización"
+
+#: users/templates/users/parts/followed.html:22
+msgid "No followed movies or series yet."
+msgstr "No hay películas o series seguidas todavía."
+
+#: users/templates/users/parts/gestion_cartelleres.html:15
+msgid "Editar Carteleras"
+msgstr "Editar Carteleras"
+
+#: users/templates/users/parts/gestion_cartelleres.html:16
+msgid "Revisa y modifica las carteleras (posters) de cada contenido"
+msgstr "Revisa y modifica las carteleras (posters) de cada contenido"
+
+#: users/templates/users/parts/gestion_cartelleres.html:25
+msgid "Todas las Plataformas"
+msgstr "Todas las Plataformas"
+
+#: users/templates/users/parts/gestion_cartelleres.html:41
+msgid "Cercar per títol..."
+msgstr "Cercar per títol..."
+
+#: users/templates/users/parts/gestion_cartelleres.html:45
+#, fuzzy
+#| msgid "Filter / Search"
+msgid "Filtrar"
+msgstr "Filtrar / Buscar"
+
+#: users/templates/users/parts/gestion_cartelleres.html:48
+msgid "Limpiar"
+msgstr "Limpiar"
+
+#: users/templates/users/parts/gestion_cartelleres.html:58
+msgid "Póster"
+msgstr "Póster"
+
+#: users/templates/users/parts/gestion_cartelleres.html:62
+msgid "Poster Path"
+msgstr "Poster Path"
+
+#: users/templates/users/parts/gestion_cartelleres.html:91
+msgid "Editar cartelera"
+msgstr "Editar cartelera"
+
+#: users/templates/users/parts/gestion_cartelleres.html:92
+msgid "Editar"
+msgstr "Editar"
+
+#: users/templates/users/parts/gestion_cartelleres.html:100
+msgid "No se han encontrado contenidos con estos criterios."
+msgstr "No se han encontrado contenidos con estos criterios."
+
+#: users/templates/users/parts/history.html:16
+msgid "No movies in history yet."
+msgstr "No hay películas en el historial todavía."
 
 #: users/templates/users/parts/subscription.html:18
 #, fuzzy
@@ -407,7 +646,7 @@ msgstr "Suscripciones"
 
 #: users/templates/users/parts/subscription.html:19
 msgid "Select the platforms you are subscribed to"
-msgstr ""
+msgstr "Selecciona las plataformas a las que estás suscrito"
 
 #: users/templates/users/parts/subscription.html:54
 #: users/templates/users/parts/subscription.html:98
@@ -419,7 +658,7 @@ msgstr "Suscripciones"
 #: users/templates/users/parts/subscription.html:57
 #: users/templates/users/parts/subscription.html:102
 msgid "Add"
-msgstr ""
+msgstr "Añadir"
 
 #: users/templates/users/parts/subscription.html:74
 #, fuzzy
@@ -429,58 +668,149 @@ msgstr "Suscripciones"
 
 #: users/templates/users/parts/subscription.html:81
 msgid "No platforms available at the moment."
-msgstr ""
+msgstr "No hay plataformas disponibles en este momento."
 
-#: users/templates/users/profile/profile.html:26
-msgid "Name"
-msgstr ""
+#: users/templates/users/parts/users_table.html:35
+#, fuzzy
+#| msgid "Acceptance of Terms"
+msgid "Gestión de Usuarios"
+msgstr "Aceptación de los Términos"
 
-#: users/templates/users/profile/profile.html:31
-msgid "Last name"
-msgstr ""
+#: users/templates/users/parts/users_table.html:36
+msgid "Control de acceso y roles de la plataforma"
+msgstr "Control de acceso y roles de la plataforma"
 
-#: users/templates/users/profile/profile.html:36
+#: users/templates/users/parts/users_table.html:39
+msgid "Añadir Usuario"
+msgstr "Añadir Usuario"
+
+#: users/templates/users/parts/users_table.html:48
+msgid "Todos los Roles"
+msgstr "Todos los Roles"
+
+#: users/templates/users/parts/users_table.html:56
+msgid "Aplicar Filtro"
+msgstr "Aplicar Filtro"
+
+#: users/templates/users/parts/users_table.html:62
+msgid "Buscar por nombre o email..."
+msgstr "Buscar por nombre o email..."
+
+#: users/templates/users/parts/users_table.html:71
+msgid "Usuario"
+msgstr "Usuario"
+
+#: users/templates/users/parts/users_table.html:72
+#: users/templates/users/profile/user_profile.html:36
 msgid "Email"
-msgstr ""
+msgstr "Email"
 
-#: users/templates/users/profile/profile.html:41
+#: users/templates/users/parts/users_table.html:73
+msgid "Rol"
+msgstr "Rol"
+
+#: users/templates/users/parts/users_table.html:100
+msgid "Guardar"
+msgstr "Guardar"
+
+#: users/templates/users/parts/users_table.html:104
+msgid "Eliminar usuario"
+msgstr "Eliminar usuario"
+
+#: users/templates/users/parts/users_table.html:114
+msgid "No se han encontrado usuarios con estos criterios."
+msgstr "No se han encontrado usuarios con estos criterios."
+
+#: users/templates/users/parts/users_table.html:130
+msgid "Confirmación de Seguridad"
+msgstr "Confirmación de Seguridad"
+
+#: users/templates/users/parts/users_table.html:131
+msgid "Su sesión activa será destruida de inmediato para propagar el cambio."
+msgstr "Su sesión activa será destruida de inmediato para propagar el cambio."
+
+#: users/templates/users/parts/users_table.html:141
+#, fuzzy
+#| msgid "Confirm password"
+msgid "Confirmar Acceso"
+msgstr "Confirmar contraseña"
+
+#: users/templates/users/profile/user_profile.html:26
+msgid "Name"
+msgstr "Nombre"
+
+#: users/templates/users/profile/user_profile.html:31
+msgid "Last name"
+msgstr "Apellido"
+
+#: users/templates/users/profile/user_profile.html:41
 msgid "Avatar"
-msgstr ""
+msgstr "Avatar"
 
-#: users/templates/users/profile/profile.html:46
+#: users/templates/users/profile/user_profile.html:46
 msgid "Biography"
-msgstr ""
+msgstr "Biografía"
 
-#: users/templates/users/profile/profile.html:51
-#: users/templates/users/settings/user_settings.html:33
+#: users/templates/users/profile/user_profile.html:51
+#: users/templates/users/settings/user_settings.html:34
 #, fuzzy
 #| msgid "Syndication"
 msgid "Location"
 msgstr "Sindicación"
 
-#: users/templates/users/profile/profile.html:55
+#: users/templates/users/profile/user_profile.html:55
 msgid "Save changes"
-msgstr ""
+msgstr "Guardar cambios"
 
-#: users/templates/users/settings/user_settings.html:12
+#: users/templates/users/settings/user_settings.html:13
 msgid "Bio"
-msgstr ""
+msgstr "Bio"
 
-#: users/templates/users/settings/user_settings.html:17
+#: users/templates/users/settings/user_settings.html:18
 msgid "Write a few words about you"
-msgstr ""
+msgstr "Escribe algunas palabras sobre ti"
 
-#: users/templates/users/settings/user_settings.html:23
+#: users/templates/users/settings/user_settings.html:24
 msgid "Member since"
-msgstr ""
+msgstr "Miembro desde"
 
-#: users/templates/users/settings/user_settings.html:28
+#: users/templates/users/settings/user_settings.html:29
 msgid "Last access"
-msgstr ""
+msgstr "Último acceso"
 
-#: users/templates/users/settings/user_settings.html:38
+#: users/templates/users/settings/user_settings.html:39
 msgid "Add your location"
-msgstr ""
+msgstr "Añade tu ubicación"
+
+#: users/templates/users/types/staff_admin.html:9
+msgid "Usuarios"
+msgstr "Usuarios"
+
+#: users/templates/users/types/staff_admin.html:13
+msgid "Carteleras"
+msgstr "Carteleras"
+
+#: users/templates/users/types/user_admin.html:12
+msgid "Overview"
+msgstr "Resumen"
+
+#: users/templates/users/types/user_admin.html:16
+#, fuzzy
+#| msgid "Genre"
+msgid "Genres"
+msgstr "Género"
+
+#: users/templates/users/types/user_admin.html:20
+#, fuzzy
+#| msgid "Age Rating"
+msgid "Age Ratings"
+msgstr "Clasificación"
+
+#: users/templates/users/types/user_admin.html:24
+#, fuzzy
+#| msgid "Director"
+msgid "Directors"
+msgstr "Director"
 
 #: users/templates/users/types/user_client.html:10
 msgid "Profile"
@@ -496,15 +826,30 @@ msgstr "Suscripciones"
 
 #: users/templates/users/types/user_client.html:22
 msgid "Followed"
-msgstr ""
+msgstr "Siguiendo"
 
-#: web_app/forms.py:33
+#: web_app/forms.py:37
 msgid "I accept the terms and conditions of use"
 msgstr "Acepto los términos y condiciones de uso"
 
-#: web_app/forms.py:34
+#: web_app/forms.py:38
 msgid "You must accept the terms and conditions to continue."
 msgstr "Debe aceptar los términos y condiciones para continuar."
+
+#~ msgid "N/A"
+#~ msgstr "N/A"
+
+#~ msgid "No content found matching those filters."
+#~ msgstr "No se ha encontrado ningún contenido con esos filtros."
+
+#~ msgid "Available on"
+#~ msgstr "Disponible en"
+
+#~ msgid "No movies found matching those filters."
+#~ msgstr "No se encontraron películas con esos filtros."
+
+#~ msgid "següent"
+#~ msgstr "siguiente"
 
 #~ msgid "Terms and Conditions of Use"
 #~ msgstr "Términos y Condiciones de Uso"
