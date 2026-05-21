@@ -11,6 +11,15 @@ from django.contrib.sessions.models import Session
 from django.utils import timezone
 import json
 
+import gettext
+
+# Configurar el directorio y el nombre de dominio de los archivos de traducción
+gettext.bindtextdomain('app', 'locales')
+gettext.textdomain('app')
+
+# Definir la función _ (convención estándar de gettext)
+_ = gettext.gettext
+
 from web_app.forms import CustomUserChangeForm, CustomUserAdminCreationForm
 from web_app.models import CustomUser, Movie, Series, UserProfile, API, Visualitzacio, UserType, RoleAuditLog
 from .services import (
@@ -109,7 +118,7 @@ def subscription(request):
     if request.method == 'POST':
         selected_ids = request.POST.getlist('subscriptions')
         request.user.subscriptions.set(API.objects.filter(id__in=selected_ids))
-        messages.success(request, '¡Suscripciones actualizadas correctamente!')
+        messages.success(request, _('¡Suscripciones actualizadas correctamente!'))
         return redirect('subscription') # Corregido typo en el nombre de la URL ('suscription' a 'subscription')
 
     return render(request, 'users/parts/subscription.html', {
@@ -147,7 +156,7 @@ def eliminar_usuario(request, user_id):
     user = get_object_or_404(CustomUser, id=user_id)
     if request.method == 'POST':
         user.delete()
-        messages.success(request, f"Usuario '{user.username}' eliminado correctamente.")
+        messages.success(request, f"Usuario '{user.username}' eliminado correctamente.")#TODO translate this
         return redirect('gestion_usuarios')
 
 @user_passes_test(lambda u: u.is_superuser)
@@ -188,12 +197,12 @@ def crear_usuario_admin(request):
                     </ul>
                     <p>Por seguridad, te recomendamos cambiarla en tu perfil tras iniciar sesión.</p>
                     """
-                })
-                messages.success(request, f"Usuario '{user.username}' creado correctamente y correo enviado.")
+                })#TODO translate this
+                messages.success(request, f"Usuario '{user.username}' creado correctamente y correo enviado.")#TODO translate this
             except Exception as e:
                 import logging
-                logging.error(f"Fallo enviando correo Resend: {e}")
-                messages.warning(request, "Usuario creado, pero hubo un error al enviar el correo.")
+                logging.error(f"Fallo enviando correo Resend: {e}")#TODO translate this
+                messages.warning(request, "Usuario creado, pero hubo un error al enviar el correo.")#TODO translate this
 
             return redirect('gestion_usuarios')
     else:
@@ -326,13 +335,13 @@ def update_user_role(request):
             new_role = data.get('new_role')
 
             if new_role not in dict(UserType.choices):
-                return JsonResponse({'status': 'error', 'message': 'Rol inválido.'}, status=400)
+                return JsonResponse({'status': 'error', 'message': 'Rol inválido.'}, status=400)#TODO translate this
 
             target_user = get_object_or_404(CustomUser, id=target_user_id)
             old_role = target_user.type
 
             if old_role == new_role:
-                return JsonResponse({'status': 'error', 'message': 'Ya tiene ese rol.'}, status=400)
+                return JsonResponse({'status': 'error', 'message': 'Ya tiene ese rol.'}, status=400)#TODO translate this
 
             target_user.type = new_role
             target_user.save()
