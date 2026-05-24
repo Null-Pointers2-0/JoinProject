@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
+{% load i18n %}
 
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'css/details.css' %}">
@@ -8,91 +9,190 @@
 {% block content %}
 <div class="details-wrapper">
     <aside class="details-sidebar">
+        {% if content.poster_path %}
+        <div class="poster-container">
+            <img src="{{ content.poster_path }}" alt="{{ content.title }}" class="details-poster">
+        </div>
+        {% endif %}
         <div class="side-meta">
-            <span class="label-neon">StreamSync Premium</span>
             <h1 class="main-title">{{ content.title }}</h1>
             
             <div class="badge-group">
+                {% if content.genre %}
                 <span class="badge">{{ content.genre.name }}</span>
+                {% endif %}
                 {% if content.age_rating %}
                     <span class="badge">{{ content.age_rating.description }}</span>
                 {% endif %}
+                {% if content.rating %}
                 <span class="badge" style="color: var(--rating); border-color: rgba(245, 197, 24, 0.2);">★ {{ content.rating }}</span>
+                {% endif %}
             </div>
         </div>
 
         <div class="side-info-list" style="display: flex; flex-direction: column; gap: 12px;">
-            {# Los archivos hijos (movie_detail y series_detail) rellenarán esto #}
             {% block content_metadata %}{% endblock %}
             
             {% if content.director %}
             <div class="data-card">
-                <div class="data-card-label">Dirección</div>
+                <div class="data-card-label">{% trans "Dirección" %}</div>
                 <div class="data-card-value">{{ content.director.name }}</div>
             </div>
             {% endif %}
-
-            {% block platforms %}{% endblock %}
+            
+            <div class="data-card">
+                <div class="data-card-label">{% trans "Disponible en:" %}</div>
+                <div class="data-card-value api-buttons-container">
+                    {% for api in available_apis %}
+                        <button class="api-btn track-platform-btn"
+                                data-contingut-id="{{ content.contingut.id }}"
+                                data-api-id="{{ api.id }}">
+                            {{ api.name|default:api.port }}
+                            <span class="api-stats"></span>
+                        </button>
+                    {% empty %}
+                        <span style="font-size: 12px; color: var(--tm);">{% trans "No hay información de API disponible." %}</span>
+                    {% endfor %}
+                </div>
+            </div>
         </div>
     </aside>
 
     <div class="details-main">
         <section>
-            <h2 class="section-title">Sinopsis</h2>
+            <h2 class="section-title">{% trans "Sinopsis" %}</h2>
             <p class="synopsis-text">
-                {{ content.synopsis|default:"No hay una descripción disponible." }}
+                {% if content.synopsis %}{{ content.synopsis }}{% else %}{% trans "No hay una descripción disponible." %}{% endif %}
             </p>
 
             {% block extra_main_content %}{% endblock %}
 
-            <h2 class="section-title">Acciones</h2>
+            <h2 class="section-title">{% trans "Acciones" %}</h2>
             <div style="display: flex; gap: 16px;">
                 {% if user.is_authenticated %}
-                    <button id="btn-save" class="btn-action" 
+                    <button id="btn-save" class="btn-action"
                             data-url="{% block favorite_url %}{% endblock %}">
-                        {% if is_favorite %} Dejar de seguir {% else %} Seguir {% endif %}
+                        {% if is_favorite %} {% trans "Dejar de seguir" %} {% else %} {% trans "Seguir" %} {% endif %}
                     </button>
                 {% endif %}
+            </div>
+        </section>
+
+        <section class="community-reviews-section">
+            <h2 class="section-title">{% trans "Valoraciones de la comunidad" %}</h2>
+
+            <div class="rating-summary">
+                {% if total_reviews > 0 %}
+                    <span class="stars-avg">★ {{ avg_rating|floatformat:1 }}</span>
+                    <span class="count">({{ total_reviews }})</span>
+                {% else %}
+                    <span class="count" style="font-style: italic;">{% trans "Sin valoraciones todavía" %}</span>
+                {% endif %}
+            </div>
+
+            {% if user.is_authenticated %}
+            <div class="review-form-container">
+                <h4>{% trans "Deja tu opinión" %}</h4>
+                <form action="{% url 'submit_review' content.contingut.id %}" method="POST">
+                    {% csrf_token %}
+
+                    <div class="star-rating-input">
+                        {% for i in "54321" %}
+                        <input type="radio" id="star{{i}}" name="rating" value="{{i}}" required />
+                        <label for="star{{i}}" class="star-label">★</label>
+                        {% endfor %}
+                    </div>
+
+                    <textarea name="comment" class="review-textarea" placeholder="{% trans "¿Qué te ha parecido?" %}"></textarea>
+
+                    <button type="submit" class="submit-btn mt-3">{% trans "Publicar valoración" %}</button>
+                </form>
+            </div>
+            {% endif %}
+
+            <div class="reviews-list">
+                {% for review in reviews %}
+                <div class="review-card">
+                    <div class="review-header">
+                        <span class="review-user">{{ review.user.username }}</span>
+                        <span class="review-stars">
+                            {% for i in "12345" %}
+                                {% if forloop.counter <= review.puntuacio %}★{% else %}<span style="opacity:0.3">★</span>{% endif %}
+                            {% endfor %}
+                        </span>
+                    </div>
+                    <div class="review-date">{{ review.creada_a|date:"d M Y" }}</div>
+                    {% if review.comentari %}
+                        <p class="review-text">{{ review.comentari }}</p>
+                    {% endif %}
+                </div>
+                {% empty %}
+                <p style="color: rgba(255,255,255,0.5);">{% trans "¡Sé el primero en valorar este contenido!" %}</p>
+                {% endfor %}
             </div>
         </section>
     </div>
 </div>
 
+<div id="history-toast" class="toast-notification">✅ {% trans "Añadido a tu historial" %}</div>
+
 <script>
 document.addEventListener('DOMContentLoaded', () => {
+    // 1. Lógica del botón de favoritos (Seguir / Dejar de seguir)
     const favoriteBtn = document.getElementById('btn-save');
-    
     if (favoriteBtn) {
         favoriteBtn.addEventListener('click', function() {
-            // Lee la URL específica generada por el bloque de Django
             const targetUrl = this.getAttribute('data-url');
-            const btn = this;
-
             fetch(targetUrl, {
                 method: 'POST',
+                headers: { 'X-CSRFToken': '{{ csrf_token }}', 'Content-Type': 'application/json' }
+            })
+            .then(response => response.json())
+            .then(data => {
+                this.innerText = (data.status === 'added') ? '{% filter escapejs %}{% trans "Dejar de seguir" %}{% endfilter %}' : '{% filter escapejs %}{% trans "Seguir" %}{% endfilter %}';
+                this.style.color = (data.status === 'added') ? 'var(--cyan)' : 'var(--tm)';
+            });
+        });
+    }
+
+    // 2. Lógica de tracking asíncrono de clics en plataformas (Issue #24)
+    const platformButtons = document.querySelectorAll('.track-platform-btn');
+    const toast = document.getElementById('history-toast');
+
+    platformButtons.forEach(btn => {
+        btn.addEventListener('click', function() {
+            const contingutId = this.getAttribute('data-contingut-id');
+            const apiId = this.getAttribute('data-api-id');
+            const statsSpan = this.querySelector('.api-stats');
+
+            fetch("{% url 'register_platform_click' %}", {
+                method: 'POST',
                 headers: {
-                    // Al estar incrustado en el template, Django inyecta el token aquí directamente
                     'X-CSRFToken': '{{ csrf_token }}',
                     'Content-Type': 'application/json'
-                }
+                },
+                body: JSON.stringify({ contingut_id: contingutId, api_id: apiId })
             })
             .then(response => {
-                if (!response.ok) throw new Error('Error en la petición');
+                if (!response.ok) throw new Error('Error en el registro del clic');
                 return response.json();
             })
             .then(data => {
-                // Actualización directa de la interfaz gráfica
-                if (data.status === 'added') {
-                    btn.innerText = 'Quitar de la lista';
-                    btn.style.color = 'var(--cyan)';
-                } else {
-                    btn.innerText = 'Seguir';
-                    btn.style.color = 'var(--tm)';
+                if (data.status === 'success') {
+                    // Feedback visual inmediato en el botón e inyección de la métrica
+                    this.classList.add('clicked');
+                    statsSpan.innerText = `(${data.total_clicks} views)`;
+
+                    // Disparar el banner flotante (Toast)
+                    toast.classList.add('show');
+                    setTimeout(() => {
+                        toast.classList.remove('show');
+                    }, 3000);
                 }
             })
-            .catch(error => console.error('Error:', error));
+            .catch(error => console.error('Error tracking click:', error));
         });
-    }
+    });
 });
 </script>
 {% endblock %}

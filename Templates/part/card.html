@@ -1,32 +1,53 @@
 {% load i18n %}
-{% if item.content_type == 'movie' %}
-<div class="movie-card" 
-data-url="{% url 'movie_detail' item.id %}" 
-onclick="window.location.href=this.dataset.url"    
-style="cursor: pointer;">
-{% elif item.content_type == 'series' %}
-<div class="movie-card" 
-data-url="{% url 'series_detail' item.id %}" 
-onclick="window.location.href=this.dataset.url"    
-style="cursor: pointer;">
+{% if item.content_type == 'movie' and item.movie %}
+<div class="movie-card" data-url="{% url 'movie_detail' item.movie.id %}" onclick="window.location.href=this.dataset.url" style="cursor: pointer;">
+{% elif item.content_type == 'series' and item.series %}
+<div class="movie-card" data-url="{% url 'series_detail' item.series.id %}" onclick="window.location.href=this.dataset.url" style="cursor: pointer;">
+{% else %}
+<div class="movie-card">
 {% endif %}
-    <div class="card-header">
-        <h3 class="movie-title">{{ item.title }}</h3>
-        <span class="movie-year">{{ item.year }}</span>
-    </div>
-    <div class="card-body">
-        <p class="movie-info"><strong>{% trans "Genre" %}:</strong> {{ item.genre.name|default:_("N/A") }}</p>
-        <p class="movie-info"><strong>{% trans "Director" %}:</strong> {{ item.director.name|default:_("N/A") }}</p>
-        <div class="movie-meta">
-            <span class="rating-badge">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="gold"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
-                {{ item.rating|default:_("N/A") }}
-            </span>
-            <span class="age-badge">{{ item.age_rating.description|default:_("N/A") }}</span>
-        </div>
-
-        {% if item.synopsis %}
-        <p class="movie-synopsis">{{ item.synopsis|truncatewords:20 }}</p>
+    <div class="card-poster">
+        {% if item.poster_path %}
+        <img src="{{ item.poster_path }}" alt="{{ item.titol }}" loading="lazy">
+        {% else %}
+        <div class="no-poster"><span>{{ item.titol|slice:":1" }}</span></div>
         {% endif %}
+        <div class="card-title-overlay">
+            <h3 class="movie-title">{{ item.titol }}</h3>
+            {% if item.data_estrena %}<span class="movie-year">{{ item.data_estrena }}</span>{% endif %}
+        </div>
+    </div>
+    <div class="card-hover-overlay">
+        <div class="card-hover-content">
+            <h4 class="hover-title">{{ item.titol }}</h4>
+            {% if item.data_estrena %}<span class="hover-year">{{ item.data_estrena }}</span>{% endif %}
+            <div class="hover-info">
+                <p><strong>{% trans "Género" %}:</strong> {{ item.genere.name|default:"N/A" }}</p>
+                <p><strong>{% trans "Director" %}:</strong> {{ item.director.name|default:"N/A" }}</p>
+            </div>
+            <div class="hover-meta">
+                {% if item.rating %}
+                <span class="rating-badge">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="gold"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
+                    {{ item.rating }}
+                </span>
+                {% endif %}
+                {% if item.age_rating %}
+                <span class="age-badge">{{ item.age_rating.description }}</span>
+                {% endif %}
+            </div>
+            {% if item.synopsis %}<p class="hover-synopsis">{{ item.synopsis|truncatewords:15 }}</p>{% endif %}
+            
+            {% if item.available_platforms %}
+            <div class="hover-platforms">
+                <span>{% trans "Disponible en" %}:</span>
+                <div class="platforms-list">
+                    {% for platform in item.available_platforms %}
+                    <span class="platform-badge">{{ platform.name|default:platform.port }}</span>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endif %}
+        </div>
     </div>
 </div>

@@ -164,7 +164,7 @@ function buildQualitySection(key, data) {
 
   const results = data.results || []
   const totalFiles = (data.summary && data.summary.total_files != null) ? data.summary.total_files : results.length
-  const violations = results.filter((r) => r.status_code !== 'OK' && r.status_code !== 'OK!')
+  const violations = results.filter((r) => r.status_code !== 'OK' && r.status_code !== 'OK!' && r.status_code !== 'NO DATA')
   const passed = totalFiles - violations.length
 
   const findingsHtml = violations.length === 0
@@ -172,7 +172,7 @@ function buildQualitySection(key, data) {
     : violations.map((r) => {
         const val = r[qm.metric]
         const display = typeof val === 'number' ? val.toFixed(qm.decimals) : (val ?? '?')
-        const lvl = (r.status_code === 'DANGER' || r.status_code === '⚠️ IMPROVE NAMING') ? 'error' : 'warning'
+        const lvl = (r.status_code === 'DANGER' || r.status_code === '⚠️ IMPROVE NAMING' || r.status_code === 'COMPLEX') ? 'error' : 'warning'
         return `
       <div style="display:flex;gap:10px;align-items:flex-start;padding:10px 0;border-bottom:1px solid #f1f5f9">
         <div style="flex-shrink:0;padding-top:1px">${chip(lvl)}</div>
@@ -225,7 +225,7 @@ const qualitySummaryRows = quality
       const qm = QUALITY_META[key]
       const data = quality[key]
       const status = qualityJobStatus(data)
-      const violations = data ? (data.results || []).filter((r) => r.status_code !== 'OK' && r.status_code !== 'OK!').length : 0
+      const violations = data ? (data.results || []).filter((r) => r.status_code !== 'OK' && r.status_code !== 'OK!' && r.status_code !== 'NO DATA').length : 0
       return `
   <tr>
     <td style="padding:12px 16px"><strong>${qm.icon} ${esc(qm.name)}</strong></td>

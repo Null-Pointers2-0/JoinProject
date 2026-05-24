@@ -1,0 +1,229 @@
+/* Variables basadas en style_gide.md */
+:root {
+    --deep-black: #0B0C10;
+    --glass-surface: #1F2833;
+    --neon-cyan: #66FCF1;
+    --text-primary: #E0E6ED;
+    --text-muted: #8A8D91;
+}
+
+.admin-container {
+    padding: 24px;
+    color: var(--text-primary);
+}
+
+/* --- HEADER & TITLES --- */
+.admin-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end; /* Alinea el botón con la base del texto */
+    margin-bottom: 32px;
+}
+
+.title-neon {
+    font-family: 'Syne', sans-serif;
+    font-weight: bold;
+    color: var(--text-primary);
+    text-transform: uppercase;
+    letter-spacing: -0.03em;
+    margin: 0;
+}
+
+.subtitle {
+    color: var(--text-muted);
+    font-size: 14px;
+    margin-top: 4px;
+}
+
+/* --- FILTER SECTION (ALINEACIÓN HORIZONTAL) --- */
+.filter-form {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+/* Specificity override: beats home filter.css .filter-group */
+.filter-form .filter-group {
+    width: auto;
+    flex-wrap: nowrap;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: rgba(255, 255, 255, 0.03);
+    padding: 6px 12px;
+    border-radius: 6px;
+    border: 1px solid rgba(102, 252, 241, 0.1);
+    margin: 0;
+    max-width: unset;
+    height: 50px;
+}
+
+.filter-form .filter-group.flex-grow-1 {
+    flex: 1;
+}
+
+.filter-form .filter-group i {
+    color: var(--neon-cyan);
+}
+
+.filter-form .filter-group select {
+    background: transparent;
+    border: none;
+    color: var(--text-primary);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    outline: none;
+    cursor: pointer;
+    padding: 0;
+    width: auto;
+    background-image: none;
+    appearance: auto;
+}
+
+.filter-form .filter-group select option {
+    background: var(--glass-surface);
+}
+
+/* Compact filter card — overrides .glass-card padding */
+.filter-section {
+    padding: 10px 16px !important;
+    margin-bottom: 16px !important;
+}
+
+/* Override margins from global.css + filter.css .search-principal-container */
+.filter-form .search-principal-container {
+    margin-top: 0 !important;
+    margin-bottom: 0 !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+    max-width: unset !important;
+    width: 100%;
+    display: flex;
+    align-items: center;
+}
+
+/* --- GLASS CARDS --- */
+.glass-card {
+    background: var(--glass-surface);
+    border: 1px solid rgba(102, 252, 241, 0.08);
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 24px;
+    transition: all 0.3s ease;
+}
+
+.glass-card:hover {
+    border-color: rgba(102, 252, 241, 0.22);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+}
+
+/* --- BUTTONS --- */
+.btn-neon {
+    border: 1px solid var(--neon-cyan);
+    color: var(--neon-cyan);
+    background: transparent;
+    padding: 10px 24px;
+    border-radius: 6px;
+    text-decoration: none;
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 500;
+    font-size: 14px;
+    transition: all 0.3s ease;
+    white-space: nowrap;
+}
+
+.btn-neon:hover {
+    background: var(--neon-cyan);
+    color: var(--deep-black);
+    box-shadow: 0 0 20px rgba(102, 252, 241, 0.3);
+}
+
+.btn-ghost {
+    background: transparent;
+    border: 1px solid var(--text-muted);
+    color: var(--text-muted);
+    padding: 8px 18px;
+    border-radius: 6px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.btn-ghost:hover {
+    border-color: var(--text-primary);
+    color: var(--text-primary);
+}
+
+/* --- TABLE STYLES --- */
+.table-sync {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0 8px; /* Crea el efecto de filas flotantes */
+}
+
+.table-sync thead th {
+    text-align: left;
+    color: var(--neon-cyan);
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    padding: 0 16px 12px 16px;
+    border: none;
+}
+
+.table-sync tbody tr {
+    background: rgba(255, 255, 255, 0.02);
+    transition: background 0.2s ease;
+}
+
+.table-sync tbody tr:hover {
+    background: rgba(255, 255, 255, 0.04);
+}
+
+.table-sync tbody td {
+    padding: 16px;
+    border: none;
+}
+
+/* Bordes redondeados para las filas */
+.table-sync tbody tr td:first-child { border-radius: 8px 0 0 8px; }
+.table-sync tbody tr td:last-child { border-radius: 0 8px 8px 0; }
+
+.user-name {
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 500;
+    color: var(--text-primary);
+}
+
+.user-email {
+    font-size: 13px;
+}
+
+/* Badge de Rol */
+.badge-neon {
+    border: 1px solid rgba(102, 252, 241, 0.4);
+    color: var(--neon-cyan);
+    padding: 4px 10px;
+    border-radius: 4px;
+    font-size: 10px;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+/* Botón de eliminar */
+.btn-delete {
+    background: transparent;
+    border: none;
+    color: #ff4d4d;
+    cursor: pointer;
+    font-size: 14px;
+    font-style: italic; /* Mantiene el estilo de tu imagen */
+    transition: all 0.2s;
+    text-decoration: none;
+}
+
+.btn-delete:hover {
+    color: #ff8080;
+    text-shadow: 0 0 8px rgba(255, 77, 77, 0.4);
+}

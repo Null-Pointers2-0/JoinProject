@@ -13,6 +13,9 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 from pathlib import Path
 from django.utils.translation import gettext as _
 import os
+from urllib.parse import urlparse, parse_qsl
+from dotenv import load_dotenv
+load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -27,15 +30,19 @@ SECRET_KEY = 'django-insecure-#hm@y9!i7z7nglcx+hivdx0j127mo2tw@1&*-esq62(o454t(y
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ.get('DJANGO_DEBUG', 'True') == 'True'
 
-ALLOWED_HOSTS = ['joinproject-23y7.onrender.com', 'joinproject-1.onrender.com', '127.0.0.1', 'localhost']
+render_host = os.environ.get('RENDER_EXTERNAL_HOSTNAME')
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost']
+
+
+if render_host:
+    ALLOWED_HOSTS.append(render_host)
 
 if not DEBUG:
-    CSRF_TRUSTED_ORIGINS = [
-        'https://joinproject-23y7.onrender.com',
-        'https://joinproject-1.onrender.com',
-    ]
+    if render_host:
+        CSRF_TRUSTED_ORIGINS = [
+            f'https://{render_host}',
+        ]
 
-# Application definition
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -59,7 +66,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django.middleware.locale.LocaleMiddleware',
-
+    'users.middleware.AdminRedirectMiddleware',
 ]
 
 ROOT_URLCONF = 'web.urls'
@@ -86,12 +93,31 @@ WSGI_APPLICATION = 'web.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+DATABASE_URL = os.getenv("DATABASE_URL")
+
+if DATABASE_URL and DEBUG == False:
+    print("DATABASE_URL encontrado, configurando PostgreSQL")
+    tmpPostgres = urlparse(DATABASE_URL)
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql',
+            'NAME': tmpPostgres.path.replace('/', ''),
+            'USER': tmpPostgres.username,
+            'PASSWORD': tmpPostgres.password,
+            'HOST': tmpPostgres.hostname,
+            'PORT': tmpPostgres.port or 5432,
+            'OPTIONS': dict(parse_qsl(tmpPostgres.query)),
+            'CONN_MAX_AGE': 0, 
+        }
     }
-}
+else:
+    print("DATABASE_URL no encontrado o DEBUG activo, usando SQLite")
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / 'db.sqlite3',
+        }
+    }
 
 
 # Password validation
@@ -156,8 +182,19 @@ MEDIA_ROOT = BASE_DIR / 'media'
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-
-LOGIN_REDIRECT_URL = 'home'
+LOGIN_URL = 'login'
+LOGIN_REDIRECT_URL = 'go_to_dashboard'
 LOGOUT_REDIRECT_URL = 'home'
 
 AUTH_USER_MODEL = 'web_app.CustomUser'
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 465
+EMAIL_USE_SSL = True
+EMAIL_USE_TLS = False
+EMAIL_HOST_USER = os.getenv('MAIL')
+EMAIL_HOST_PASSWORD = os.getenv('MAIL_PW')
+DEFAULT_FROM_EMAIL = f'StreamSync <{EMAIL_HOST_USER}>'
+
+EMAIL_TIMEOUT = 10

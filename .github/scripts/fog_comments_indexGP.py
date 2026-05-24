@@ -1,11 +1,9 @@
-import re
-import os
-import sys
-import json
-import textstat
+import re, os, sys, json, textstat
 from pathlib import Path
 
 SUPPORTED_EXTENSIONS = {'.py', '.js', '.ts', '.cpp', '.java', '.html'}
+
+EXCLUDE_DIRS = {'.git', 'node_modules', 'venv', 'env', '__pycache__', 'dist'}
 
 def extract_comments(file_path):
     extension = os.path.splitext(file_path)[1]
@@ -75,7 +73,7 @@ def scan(target_path):
 
     files = (
         [path] if path.is_file()
-        else [f for f in path.rglob('*') if f.suffix in SUPPORTED_EXTENSIONS]
+        else [f for f in path.rglob('*') if f.suffix in SUPPORTED_EXTENSIONS and not any(part in EXCLUDE_DIRS for part in f.parts)]
     )
 
     results = []
@@ -92,7 +90,7 @@ def scan(target_path):
         results.append({
             "file": str(file),
             "avg_fog": round(avg, 1) if avg else None,
-            "max_fog": round(max_score, 1) if max_score else None,
+            "fog_score": round(max_score, 1) if max_score else None,
             "status_code": status
         })
 

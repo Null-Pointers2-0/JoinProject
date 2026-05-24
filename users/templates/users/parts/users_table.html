@@ -1,0 +1,237 @@
+{% extends 'users/types/staff_admin.html' %}
+{% load i18n %}
+{% load static %}
+
+{% block extra_css %}
+    {{ block.super }}
+    <link rel="stylesheet" href="{% static 'css/home/home.css' %}">
+    <link rel="stylesheet" href="{% static 'users/css/admin_management.css' %}">
+    <style>
+        .role-select-neon {
+            background: rgba(0, 0, 0, 0.4);
+            color: #00ffcc;
+            border: 1px solid rgba(0, 255, 204, 0.2);
+            border-radius: 4px;
+            padding: 4px 10px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            outline: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .role-select-neon option { background: #141414; color: #fff; }
+        .validation-modal {
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(11, 12, 16, 0.85); z-index: 9999;
+            align-items: center; justify-content: center; backdrop-filter: blur(6px);
+        }
+    </style>
+{% endblock %}
+
+{% block staff_admin_content %}
+<div class="admin-container">
+    <div class="admin-header d-flex justify-content-between align-items-center mb-4">
+        <div class="header-text">
+            <h2 class="title-neon">{% trans 'Gestión de Usuarios' %}</h2>
+            <p class="subtitle mb-0">{% trans 'Control de acceso y roles de la plataforma' %}</p>
+        </div>
+        <a href="{% url 'crear_usuario_admin' %}" class="btn-neon" style="text-decoration: none;">
+            <i class="bi bi-person-plus-fill me-2"></i>{% trans 'Añadir Usuario' %}
+        </a>
+    </div>
+
+    <div class="glass-card filter-section mb-4 d-flex justify-content-between align-items-center flex-wrap gap-3">
+        <form method="GET" class="filter-form d-flex align-items-center gap-3 m-0">
+            <div class="filter-group d-flex align-items-center">
+                <i class="bi bi-funnel-fill me-2 text-neon"></i>
+                <select name="tipo" class="filter-select">
+                    <option value="">{% trans 'Todos los Roles' %}</option>
+                    <option value="Admin" {% if request.GET.tipo == 'Admin' %}selected{% endif %}>Admin</option>
+                    <option value="Consumer" {% if request.GET.tipo == 'Consumer' %}selected{% endif %}>Consumer</option>
+                    <option value="Staff" {% if request.GET.tipo == 'Staff' %}selected{% endif %}>Staff</option>
+                    <option value="Staff Admin" {% if request.GET.tipo == 'Staff Admin' %}selected{% endif %}>Staff Admin</option>
+                </select>
+            </div>
+            <button type="submit" class="btn-ghost">
+                <i class="bi bi-check2-circle me-1"></i>{% trans 'Aplicar Filtro' %}
+            </button>
+        </form>
+
+        <div class="search-group d-flex align-items-center">
+            <i class="bi bi-search me-2 text-neon"></i>
+            <input type="text" id="live-search-input" class="filter-select" placeholder="{% trans 'Buscar por nombre o email...' %}" style="width: 280px; outline: none; cursor: text;">
+        </div>
+    </div>
+
+    <div class="glass-card table-container p-0">
+        <div class="table-responsive">
+            <table class="table-sync w-100">
+                <thead>
+                    <tr>
+                        <th>{% trans 'Usuario' %}</th>
+                        <th>{% trans 'Email' %}</th>
+                        <th>{% trans 'Rol' %}</th>
+                        <th class="text-center">{% trans 'Acciones' %}</th>
+                    </tr>
+                </thead>
+                <tbody id="users-table-body">
+                    {% for u in users %}
+                    <tr class="user-row">
+                        <td class="user-name">
+                            <div class="d-flex align-items-center">
+                                <i class="bi bi-person-circle me-2 text-muted"></i>
+                                {{ u.username }}
+                            </div>
+                        </td>
+                        <td class="user-email text-muted">{{ u.email }}</td>
+                        <td>
+                            <select class="role-select-neon user-role-dropdown"
+                                    data-user-id="{{ u.id }}"
+                                    data-current-role="{{ u.type }}"
+                                    data-username="{{ u.username }}">
+                                {% for code, name in roles %}
+                                    <option value="{{ code }}" {% if u.type == code %}selected{% endif %}>{{ name }}</option>
+                                {% endfor %}
+                            </select>
+                        </td>
+                        <td class="text-center">
+                            <div class="d-flex align-items-center justify-content-center gap-2">
+                                <button type="button" class="btn-neon save-change-btn" data-user-id="{{ u.id }}" style="display: none; padding: 3px 10px; font-size: 0.75rem;">
+                                    {% trans 'Guardar' %}
+                                </button>
+                                <form action="{% url 'eliminar_usuario' u.id %}" method="POST" class="d-inline m-0">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn-delete" title="{% trans 'Eliminar usuario' %}" onclick="return confirm('¿Estás seguro de eliminar a {{ u.username }}?')">
+                                        <i class="bi bi-trash3-fill">Eliminar</i>
+                                    </button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr class="empty-state-row">
+                        <td colspan="4" class="empty-state text-center py-5">
+                            {% trans 'No se han encontrado usuarios con estos criterios.' %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    {% if users.paginator.num_pages > 1 %}
+        {% include 'home/home_parts/paginator.html' with items=users %}
+    {% endif %}
+</div>
+
+<div id="double-validation-modal" class="validation-modal">
+    <div class="glass-card p-4 text-center" style="max-width: 440px; border: 1px solid #e50914;">
+        <h4 style="color: #e50914;" class="mb-3">⚠️ {% trans 'Confirmación de Seguridad' %}</h4>
+        <p class="text-white-50 small mb-4">{% trans 'Su sesión activa será destruida de inmediato para propagar el cambio.' %}</p>
+
+        <div class="p-3 mb-4 text-start rounded" style="background: rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.05); font-size: 0.9rem;">
+            <p class="mb-2"><strong class="text-muted">Usuario:</strong> <span id="val-username" class="text-white"></span></p>
+            <p class="mb-2"><strong class="text-muted">Rol original:</strong> <span id="val-old" style="text-decoration: line-through;"></span></p>
+            <p class="mb-0"><strong class="text-muted">Nuevo rol asignado:</strong> <span id="val-new" class="text-neon" style="color: #00ffcc; font-weight: bold;"></span></p>
+        </div>
+
+        <div class="d-flex gap-2 justify-content-center">
+            <button type="button" id="btn-val-cancel" class="btn-ghost">{% trans 'Cancelar' %}</button>
+            <button type="button" id="btn-val-confirm" class="btn-neon" style="background: #e50914; border-color: #e50914; color: white;">{% trans 'Confirmar Acceso' %}</button>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    // 1. Buscador en Tiempo Real
+    const searchInput = document.getElementById('live-search-input');
+    if (searchInput) {
+        searchInput.addEventListener('input', function() {
+            const term = this.value.toLowerCase();
+            const rows = document.querySelectorAll('#users-table-body .user-row');
+
+            rows.forEach(row => {
+                const textContent = row.textContent.toLowerCase();
+                row.style.display = textContent.includes(term) ? '' : 'none';
+            });
+        });
+    }
+
+    // 2. Lógica de Desplegables y Doble Validación
+    const roleDropdowns = document.querySelectorAll('.user-role-dropdown');
+    const modal = document.getElementById('double-validation-modal');
+    let activeTransaction = null;
+
+    roleDropdowns.forEach(dropdown => {
+        dropdown.addEventListener('change', function() {
+            const saveBtn = document.querySelector(`.save-change-btn[data-user-id="${this.dataset.userId}"]`);
+            if (this.value !== this.dataset.currentRole) {
+                saveBtn.style.display = 'inline-block';
+                this.style.borderColor = '#ffc107'; this.style.color = '#ffc107';
+            } else {
+                saveBtn.style.display = 'none';
+                this.style.borderColor = 'rgba(0, 255, 204, 0.2)'; this.style.color = '#00ffcc';
+            }
+        });
+    });
+
+    document.querySelectorAll('.save-change-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+            const dropdown = document.querySelector(`.user-role-dropdown[data-user-id="${this.dataset.userId}"]`);
+            activeTransaction = {
+                userId: this.dataset.userId, oldRole: dropdown.dataset.currentRole,
+                newRole: dropdown.value, username: dropdown.dataset.username,
+                btnElement: this, selectElement: dropdown
+            };
+            document.getElementById('val-username').innerText = activeTransaction.username;
+            document.getElementById('val-old').innerText = activeTransaction.oldRole;
+            document.getElementById('val-new').innerText = activeTransaction.newRole;
+            modal.style.display = 'flex';
+        });
+    });
+
+    document.getElementById('btn-val-cancel').addEventListener('click', () => {
+        modal.style.display = 'none';
+        if(activeTransaction) {
+            activeTransaction.selectElement.value = activeTransaction.selectElement.dataset.currentRole;
+            activeTransaction.selectElement.style.borderColor = 'rgba(0, 255, 204, 0.2)';
+            activeTransaction.selectElement.style.color = '#00ffcc';
+            activeTransaction.btnElement.style.display = 'none';
+        }
+        activeTransaction = null;
+    });
+
+    document.getElementById('btn-val-confirm').addEventListener('click', () => {
+        if (!activeTransaction) return;
+        fetch("{% url 'update_user_role' %}", {
+            method: 'POST',
+            headers: { 'X-CSRFToken': '{{ csrf_token }}', 'Content-Type': 'application/json' },
+            body: JSON.stringify({ user_id: activeTransaction.userId, new_role: activeTransaction.newRole })
+        })
+        .then(response => {
+            // Si el servidor redirige y llega HTML en vez de JSON (falla el middleware)
+            if (response.redirected) {
+                throw new Error("Redirección detectada (302). Revisa el middleware.py.");
+            }
+            return response.json();
+        })
+        .then(data => {
+            if (data.status === 'success') {
+                activeTransaction.selectElement.dataset.currentRole = activeTransaction.newRole;
+                activeTransaction.selectElement.style.borderColor = 'rgba(0, 255, 204, 0.2)';
+                activeTransaction.selectElement.style.color = '#00ffcc';
+                activeTransaction.btnElement.style.display = 'none';
+                alert('✅ Privilegios propagados con éxito.');
+            } else { alert('❌ Error: ' + data.message); }
+            modal.style.display = 'none'; activeTransaction = null;
+        }).catch(error => {
+            console.error('Error:', error);
+            alert('Error de conexión o permisos denegados.');
+            modal.style.display = 'none';
+        });
+    });
+});
+</script>
+{% endblock %}

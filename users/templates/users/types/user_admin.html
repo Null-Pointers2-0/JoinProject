@@ -1,0 +1,33 @@
+{% extends 'users/settings/user_settings.html' %}
+{% load i18n %}
+
+{% block content_admin %}
+    <!-- Chart.js CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <!-- Tabs -->
+    <ul class="nav nav-tabs">
+        <li class="nav-item">
+            <a class="nav-link {% if request.resolver_match.url_name == 'admin_dashboard' %}active{% endif %}"
+               href="{% url 'admin_dashboard' %}">{% trans 'Overview' %}</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link {% if request.resolver_match.url_name == 'admin_dashboard_genres' %}active{% endif %}"
+               href="{% url 'admin_dashboard_genres' %}">{% trans 'Genres' %}</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link {% if request.resolver_match.url_name == 'admin_dashboard_age_ratings' %}active{% endif %}"
+               href="{% url 'admin_dashboard_age_ratings' %}">{% trans 'Age Ratings' %}</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link {% if request.resolver_match.url_name == 'admin_dashboard_directors' %}active{% endif %}"
+               href="{% url 'admin_dashboard_directors' %}">{% trans 'Directors' %}</a>
+        </li>
+    </ul>
+
+    <!-- Contenido de la tab activa -->
+    <div class="tab-content-area mt-3">
+        {% block parts_content %}{% endblock %}
+    </div>
+
+{% endblock %}

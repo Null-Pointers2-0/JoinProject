@@ -1,12 +1,16 @@
 from django import forms
 from django.utils.translation import gettext_lazy as _
-from django.contrib.auth.forms import UserCreationForm, UserChangeForm
+from django.contrib.auth.forms import UserChangeForm, UserCreationForm
 from django.core.exceptions import ValidationError
 from django.core.validators import MaxLengthValidator
 
-from .models import *
+from .models import CustomUser, API, UserType
 
 class CustomUserCreationForm(forms.ModelForm):
+    """
+    Handles the registration process for new users by capturing their credentials, 
+    validating password confirmation, and ensuring they accept the mandatory terms of service.
+    """
     username = forms.CharField(
         label='Nombre de usuario',
         max_length=150,
@@ -46,6 +50,10 @@ class CustomUserCreationForm(forms.ModelForm):
         fields = ('username', 'email', 'password', 'password2', 'platforms')
 
     def clean_password2(self):
+        """
+        Verifies that the initial password and the confirmation password match exactly 
+        before allowing the user to proceed with the registration.
+        """
         password = self.cleaned_data.get('password')
         password2 = self.cleaned_data.get('password2')
         if password is not None and password != password2:
@@ -62,10 +70,14 @@ class CustomUserCreationForm(forms.ModelForm):
 class CustomUserChangeForm(UserChangeForm):
     class Meta:
         model = CustomUser
-        fields = ['username', 'first_name', 'last_name', 'email', 'avatar', 'bio', 'location']
+        fields = ['username', 'first_name', 'last_name', 'email', 'avatar', 'bio', 'location', 'type']
         help_texts = {field: '' for field in fields}
 
     def clean_avatar(self):
+        """
+        Performs custom validation on the uploaded avatar file to strictly enforce 
+        that users only submit images in standard JPG or PNG formats.
+        """
         avatar = self.cleaned_data.get('avatar')
 
         if avatar:
@@ -74,3 +86,8 @@ class CustomUserChangeForm(UserChangeForm):
                 raise ValidationError('Solo se permiten archivos JPG o PNG.')
 
         return avatar
+
+class CustomUserAdminCreationForm(forms.ModelForm):
+    class Meta:
+        model = CustomUser
+        fields = ("username", "email", "type", "subscriptions")

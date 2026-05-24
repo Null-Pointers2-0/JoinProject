@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-28 16:41+0000\n"
+"POT-Creation-Date: 2026-05-20 19:06+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,31 +18,123 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
+#: Templates/Details/details_base.html:38
+msgid "Dirección"
+msgstr "Direction"
+
+#: Templates/Details/details_base.html:44
+msgid "Disponible en:"
+msgstr "Available on:"
+
+#: Templates/Details/details_base.html:54
+msgid "No hay información de API disponible."
+msgstr "No API information available."
+
+#: Templates/Details/details_base.html:63
+msgid "Sinopsis"
+msgstr "Synopsis"
+
+#: Templates/Details/details_base.html:65
+msgid "No hay una descripción disponible."
+msgstr "No description available."
+
+#: Templates/Details/details_base.html:70
+#: users/templates/users/parts/gestion_cartelleres.html:63
+#: users/templates/users/parts/users_table.html:74
+#, fuzzy
+#| msgid "Modificaciones"
+msgid "Acciones"
+msgstr "Modifications"
+
+#: Templates/Details/details_base.html:75
+#: Templates/Details/details_base.html:152
+msgid "Dejar de seguir"
+msgstr "Unfollow"
+
+#: Templates/Details/details_base.html:75
+#: Templates/Details/details_base.html:152
+msgid "Seguir"
+msgstr "Follow"
+
+#: Templates/Details/details_base.html:82
+msgid "Valoraciones de la comunidad"
+msgstr "Community Reviews"
+
+#: Templates/Details/details_base.html:89
+msgid "Sin valoraciones todavía"
+msgstr "No reviews yet"
+
+#: Templates/Details/details_base.html:95
+msgid "Deja tu opinión"
+msgstr "Leave your opinion"
+
+#: Templates/Details/details_base.html:106
+msgid "¿Qué te ha parecido?"
+msgstr "What did you think?"
+
+#: Templates/Details/details_base.html:108
+msgid "Publicar valoración"
+msgstr "Submit review"
+
+#: Templates/Details/details_base.html:130
+msgid "¡Sé el primero en valorar este contenido!"
+msgstr "Be the first to review this content!"
+
+#: Templates/Details/details_base.html:137
+msgid "Añadido a tu historial"
+msgstr "Added to your history"
+
+#: Templates/Details/details_movie.html:6
+msgid "Lanzamiento"
+msgstr "Release"
+
+#: Templates/Details/details_movie.html:15
+msgid "También te puede gustar..."
+msgstr "You might also like..."
+
+#: Templates/Details/details_movie.html:29
+msgid "No hay recomendaciones disponibles."
+msgstr "No recommendations available."
+
+#: Templates/Details/details_serie.html:6
+msgid "Periodo"
+msgstr "Period"
+
+#: Templates/Details/details_serie.html:8
+msgid "Actualidad"
+msgstr "Present"
+
+#: Templates/Details/details_serie.html:14
+#: Templates/Details/details_serie.html:15
+msgid "Temporadas"
+msgstr "Seasons"
+
 #: Templates/base.html:33
 msgid "Welcome"
 msgstr "Welcome"
 
-#: Templates/base.html:64 Templates/base.html:160
+#: Templates/base.html:62 Templates/base.html:163
 msgid "Home"
 msgstr "Home"
 
-#: Templates/base.html:78
+#: Templates/base.html:76
 msgid "Login"
 msgstr "Login"
 
-#: Templates/base.html:89
+#: Templates/base.html:87
 msgid "Register"
 msgstr "Register"
 
-#: Templates/base.html:104
+#: Templates/base.html:102
 msgid "Logout"
 msgstr "Logout"
 
-#: Templates/base.html:133 Templates/home/home.html:17
+#: Templates/base.html:136 Templates/home/home.html:42
+#: users/templates/users/parts/gestion_cartelleres.html:38
 msgid "Search..."
 msgstr "Search..."
 
-#: Templates/base.html:155
+#: Templates/base.html:158
 msgid ""
 "From surveys to real-time insights. We unify global catalogs and leverage in-"
 "app data to track market trends without the need for traditional polling."
@@ -50,35 +142,35 @@ msgstr ""
 "From surveys to real-time insights. We unify global catalogs and leverage in-"
 "app data to track market trends without the need for traditional polling."
 
-#: Templates/base.html:158
+#: Templates/base.html:161
 msgid "Navigation"
 msgstr "Navigation"
 
-#: Templates/base.html:161
+#: Templates/base.html:164
 msgid "About us"
 msgstr "About us"
 
-#: Templates/base.html:162
+#: Templates/base.html:165
 msgid "Contact us"
 msgstr "Contact us"
 
-#: Templates/base.html:166
+#: Templates/base.html:169
 msgid "Legal"
 msgstr "Legal"
 
-#: Templates/base.html:168
+#: Templates/base.html:171
 msgid "Privacy Policy"
 msgstr "Privacy Policy"
 
-#: Templates/base.html:169
+#: Templates/base.html:172
 msgid "Terms of Use"
 msgstr "Terms of Use"
 
-#: Templates/base.html:173
+#: Templates/base.html:176
 msgid "Contact"
 msgstr "Contact"
 
-#: Templates/base.html:181
+#: Templates/base.html:184
 msgid "All rights reserved"
 msgstr "All rights reserved"
 
@@ -101,7 +193,11 @@ msgid ""
 "únicamente para simular un entorno real y brindar una buena experiencia "
 "dentro de la aplicación. Esto incluye datos básicos al registrarte (como tu "
 "correo o nombre de usuario) y datos de uso de la plataforma."
-msgstr "As StreamSync is a university project, we collect information solely to simulate a real environment and provide a good experience within the application. This includes basic data when you register (such as your email or username) and platform usage data."
+msgstr ""
+"As StreamSync is a university project, we collect information solely to "
+"simulate a real environment and provide a good experience within the "
+"application. This includes basic data when you register (such as your email "
+"or username) and platform usage data."
 
 #: Templates/footer_legal/privacy_policy.html:20
 msgid "Uso de la Información"
@@ -129,7 +225,9 @@ msgid ""
 "Implementamos sólidas medidas de seguridad diseñadas para proteger tu "
 "información personal contra el acceso, la alteración o la destrucción no "
 "autorizados."
-msgstr "We implement robust security measures designed to protect your personal information against unauthorized access, alteration or destruction."
+msgstr ""
+"We implement robust security measures designed to protect your personal "
+"information against unauthorized access, alteration or destruction."
 
 #: Templates/footer_legal/privacy_policy.html:32
 msgid "Compartir Información con Terceros"
@@ -141,7 +239,11 @@ msgid ""
 "bajo circunstancias muy específicas, como para cumplir con una obligación "
 "legal, proteger nuestros derechos o en caso de integración con servicios "
 "suscritos por ti."
-msgstr "We do not sell your personal information. We only share it with third parties under very specific circumstances, such as to comply with a legal obligation, protect our rights or in the event of integration with services subscribed by you."
+msgstr ""
+"We do not sell your personal information. We only share it with third "
+"parties under very specific circumstances, such as to comply with a legal "
+"obligation, protect our rights or in the event of integration with services "
+"subscribed by you."
 
 #: Templates/footer_legal/privacy_policy.html:37
 msgid "Tus Derechos"
@@ -152,7 +254,10 @@ msgid ""
 "Tienes derecho a acceder, rectificar o eliminar tu información personal en "
 "cualquier momento accediendo a la configuración de tu perfil, o contactando "
 "directamente con nuestro equipo de soporte técnico."
-msgstr "You have the right to access, rectify or delete your personal information at any time by accessing your profile settings, or by contacting our technical support team directly."
+msgstr ""
+"You have the right to access, rectify or delete your personal information at "
+"any time by accessing your profile settings, or by contacting our technical "
+"support team directly."
 
 #: Templates/footer_legal/terms_use.html:12
 msgid "Términos de Uso"
@@ -168,7 +273,11 @@ msgid ""
 "académicos como parte de un proyecto universitario. Al acceder y utilizar "
 "StreamSync, acepta estos términos de uso (sin validez legal real), y se "
 "compromete a hacer un uso adecuado de la plataforma."
-msgstr "StreamSync is a platform developed exclusively for academic purposes as part of a university project. By accessing and using StreamSync, you accept these terms of use (without real legal validity), and commit to making appropriate use of the platform."
+msgstr ""
+"StreamSync is a platform developed exclusively for academic purposes as part "
+"of a university project. By accessing and using StreamSync, you accept these "
+"terms of use (without real legal validity), and commit to making appropriate "
+"use of the platform."
 
 #: Templates/footer_legal/terms_use.html:20
 msgid "Uso del Servicio"
@@ -187,7 +296,8 @@ msgstr "You commit to using the platform exclusively for legal purposes."
 msgid ""
 "No debe transmitir ningún gusano, virus o cualquier código de naturaleza "
 "destructiva."
-msgstr "You must not transmit any worms, viruses or any code of a destructive nature."
+msgstr ""
+"You must not transmit any worms, viruses or any code of a destructive nature."
 
 #: Templates/footer_legal/terms_use.html:27
 msgid "Propiedad Intelectual"
@@ -198,7 +308,10 @@ msgid ""
 "Todo el contenido, diseño, logotipos, texto, gráficos e interfaces de "
 "StreamSync son propiedad exclusiva de la plataforma o de sus licenciantes, y "
 "están protegidos por las leyes de propiedad intelectual."
-msgstr "All content, design, logos, text, graphics and interfaces of StreamSync are the exclusive property of the platform or its licensors, and are protected by intellectual property laws."
+msgstr ""
+"All content, design, logos, text, graphics and interfaces of StreamSync are "
+"the exclusive property of the platform or its licensors, and are protected "
+"by intellectual property laws."
 
 #: Templates/footer_legal/terms_use.html:32
 msgid "Limitación de Responsabilidad"
@@ -210,7 +323,11 @@ msgid ""
 "daño (incluidos, entre otros, daños por pérdida de datos o beneficios, o "
 "debido a la interrupción del negocio) que surjan del uso o la incapacidad de "
 "usar el servicio."
-msgstr "In no case shall StreamSync or its suppliers be liable for any damages (including, without limitation, damages for loss of data or profit, or due to business interruption) arising out of the use or inability to use the service."
+msgstr ""
+"In no case shall StreamSync or its suppliers be liable for any damages "
+"(including, without limitation, damages for loss of data or profit, or due "
+"to business interruption) arising out of the use or inability to use the "
+"service."
 
 #: Templates/footer_legal/terms_use.html:37
 msgid "Modificaciones"
@@ -221,69 +338,88 @@ msgid ""
 "StreamSync puede revisar estos términos de uso para su sitio web en "
 "cualquier momento sin previo aviso. Al usar este sitio web, usted acepta "
 "estar sujeto a la versión actual de estos Términos y Condiciones de Uso."
-msgstr "StreamSync may revise these terms of use for its website at any time without prior notice. By using this website, you agree to be bound by the current version of these Terms and Conditions of Use."
+msgstr ""
+"StreamSync may revise these terms of use for its website at any time without "
+"prior notice. By using this website, you agree to be bound by the current "
+"version of these Terms and Conditions of Use."
 
-#: Templates/home/home.html:22 Templates/home/home.html:86
+#: Templates/home/home.html:47
 msgid "Genre"
 msgstr "Genre"
 
-#: Templates/home/home.html:24 Templates/home/home.html:36
-#: Templates/home/home.html:48
+#: Templates/home/home.html:49 Templates/home/home.html:59
+#: Templates/home/home.html:69 Templates/home/home.html:81
 msgid "All"
 msgstr "All"
 
-#: Templates/home/home.html:34 Templates/home/home.html:87
+#: Templates/home/home.html:57 Templates/part/card.html:26
+#: users/templates/users/parts/editar_cartellera.html:58
 msgid "Director"
 msgstr "Director"
 
-#: Templates/home/home.html:46
+#: Templates/home/home.html:67
 msgid "Age Rating"
 msgstr "Age Rating"
 
-#: Templates/home/home.html:58
+#: Templates/home/home.html:79
+msgid "Platform"
+msgstr "Platform"
+
+#: Templates/home/home.html:91
 msgid "Filter / Search"
 msgstr "Filter / Search"
 
-#: Templates/home/home.html:59
+#: Templates/home/home.html:92
 msgid "Clear filters"
 msgstr "Clear filters"
 
-#: Templates/home/home.html:76
-msgid "Results"
+#: Templates/home/home.html:105
+#, fuzzy
+#| msgid "Results"
+msgid "Results for"
 msgstr "Results"
 
-#: Templates/home/home.html:86 Templates/home/home.html:87
-#: Templates/home/home.html:91 Templates/home/home.html:93
-msgid "N/A"
-msgstr "N/A"
+#: Templates/home/home.html:107
+msgid "Catálogo completo"
+msgstr "Full Catalog"
 
-#: Templates/home/home.html:103
-msgid "No movies found matching those filters."
-msgstr "No movies found matching those filters."
+#: Templates/home/home.html:115
+msgid "Cargando contenido..."
+msgstr "Loading content..."
 
-#: Templates/home/home.html:111
+#: Templates/home/home.html:141 Templates/home/includes/result_fragment.html:5
+msgid "No se han encontrado resultados."
+msgstr "No results found."
+
+#: Templates/home/home.html:153
+msgid "Error al cargar los datos."
+msgstr "Error loading data."
+
+#: Templates/home/home_parts/paginator.html:6
 msgid "primera"
-msgstr ""
+msgstr "first"
 
-#: Templates/home/home.html:114 Templates/home/home.html:116
+#: Templates/home/home_parts/paginator.html:9
+#: Templates/home/home_parts/paginator.html:11
 msgid "anterior"
-msgstr ""
+msgstr "previous"
 
-#: Templates/home/home.html:121
-msgid "Pàgina"
-msgstr ""
+#: Templates/home/home_parts/paginator.html:16
+msgid "Página"
+msgstr "Page"
 
-#: Templates/home/home.html:123
+#: Templates/home/home_parts/paginator.html:18
 msgid "de"
-msgstr ""
+msgstr "of"
 
-#: Templates/home/home.html:128 Templates/home/home.html:129
-msgid "següent"
-msgstr ""
+#: Templates/home/home_parts/paginator.html:23
+#: Templates/home/home_parts/paginator.html:24
+msgid "siguiente"
+msgstr "next"
 
-#: Templates/home/home.html:132
+#: Templates/home/home_parts/paginator.html:27
 msgid "última"
-msgstr ""
+msgstr "last"
 
 #: Templates/identify/login.html:12 Templates/identify/login.html:36
 msgid "Sign In"
@@ -309,7 +445,7 @@ msgstr "New to Streamflix?"
 msgid "Sign up now"
 msgstr "Sign up now"
 
-#: Templates/identify/register.html:12 Templates/identify/register.html:92
+#: Templates/identify/register.html:12 Templates/identify/register.html:114
 msgid "Create Account"
 msgstr "Create Account"
 
@@ -318,7 +454,7 @@ msgid "Join millions of viewers worldwide"
 msgstr "Join millions of viewers worldwide"
 
 #: Templates/identify/register.html:23
-#: users/templates/users/profile/profile.html:21
+#: users/templates/users/profile/user_profile.html:21
 #, fuzzy
 #| msgid "Username o Email"
 msgid "Username"
@@ -348,41 +484,185 @@ msgstr "One number"
 msgid "Confirm password"
 msgstr "Confirm password"
 
-#: Templates/identify/register.html:85
+#: Templates/identify/register.html:83 web_app/forms.py:45
+msgid "Select your platforms"
+msgstr "Select your platforms"
+
+#: Templates/identify/register.html:107
 msgid "I accept the"
-msgstr ""
+msgstr "I accept the"
 
-#: Templates/identify/register.html:85
+#: Templates/identify/register.html:107
 msgid "terms and conditions of use"
-msgstr ""
+msgstr "terms and conditions of use"
 
-#: Templates/identify/register.html:97
+#: Templates/identify/register.html:119
 msgid "Already have an account?"
 msgstr "Already have an account?"
 
-#: Templates/identify/register.html:97
+#: Templates/identify/register.html:119
 msgid "Sign in"
 msgstr "Sign in"
 
-#: Templates/identify/register.html:144
+#: Templates/identify/register.html:166
 msgid "Weak password"
 msgstr "Weak password"
 
-#: Templates/identify/register.html:148
+#: Templates/identify/register.html:170
 msgid "Medium password"
 msgstr "Medium password"
 
-#: Templates/identify/register.html:152
+#: Templates/identify/register.html:174
 msgid "Strong password"
 msgstr "Strong password"
 
-#: users/templates/users/parts/followed.html:40
-msgid "No followed movies or series yet."
+#: Templates/part/card.html:25
+#: users/templates/users/parts/editar_cartellera.html:54
+msgid "Género"
+msgstr "Genre"
+
+#: Templates/part/card.html:43
+msgid "Disponible en"
+msgstr "Available on"
+
+#: users/templates/users/parts/create_user.html:69
+msgid "Registrar Nuevo Miembro"
+msgstr "Register New Member"
+
+#: users/templates/users/parts/create_user.html:107
+msgid "Asignar plataformas de gestión"
+msgstr "Assign management platforms"
+
+#: users/templates/users/parts/create_user.html:132
+msgid "Crear Usuario y Enviar Email"
+msgstr "Create User and Send Email"
+
+#: users/templates/users/parts/create_user.html:135
+#: users/templates/users/parts/editar_cartellera.html:82
+#: users/templates/users/parts/users_table.html:140
+msgid "Cancelar"
+msgstr "Cancel"
+
+#: users/templates/users/parts/editar_cartellera.html:14
+msgid "Editar Cartelera"
+msgstr "Edit Billboard"
+
+#: users/templates/users/parts/editar_cartellera.html:18
+msgid "Volver"
+msgstr "Back"
+
+#: users/templates/users/parts/editar_cartellera.html:25
+msgid "Póster Actual"
+msgstr "Current Poster"
+
+#: users/templates/users/parts/editar_cartellera.html:31
+msgid "Sin póster"
+msgstr "No poster"
+
+#: users/templates/users/parts/editar_cartellera.html:38
+#, fuzzy
+#| msgid "Información que Recopilamos"
+msgid "Información del Contenido"
+msgstr "Information We Collect"
+
+#: users/templates/users/parts/editar_cartellera.html:42
+#: users/templates/users/parts/gestion_cartelleres.html:59
+msgid "Título"
+msgstr "Title"
+
+#: users/templates/users/parts/editar_cartellera.html:46
+#: users/templates/users/parts/gestion_cartelleres.html:61
+msgid "Año"
+msgstr "Year"
+
+#: users/templates/users/parts/editar_cartellera.html:50
+#: users/templates/users/parts/gestion_cartelleres.html:60
+#, fuzzy
+#| msgid "Platform"
+msgid "Plataforma"
+msgstr "Platform"
+
+#: users/templates/users/parts/editar_cartellera.html:68
+msgid "URL del Póster"
+msgstr "Poster URL"
+
+#: users/templates/users/parts/editar_cartellera.html:74
+msgid ""
+"Introduce una URL válida de una imagen de póster. Deja el campo vacío para "
+"eliminar el póster."
 msgstr ""
 
-#: users/templates/users/parts/history.html:26
-msgid "No movies in history yet."
+#: users/templates/users/parts/editar_cartellera.html:79
+msgid "Guardar Cambios"
+msgstr "Save Changes"
+
+#: users/templates/users/parts/editar_cartellera.html:89
+#, fuzzy
+#| msgid "Última actualización"
+msgid "Previsualización"
+msgstr "Last update"
+
+#: users/templates/users/parts/editar_cartellera.html:91
+msgid ""
+"Escribe una URL de póster y haz clic en 'Guardar Cambios' para verlo "
+"actualizado"
 msgstr ""
+
+#: users/templates/users/parts/editar_cartellera.html:105
+msgid "Escribe una URL de póster para ver la previsualización"
+msgstr "Write a poster URL to see the preview"
+
+#: users/templates/users/parts/followed.html:22
+msgid "No followed movies or series yet."
+msgstr "No followed movies or series yet."
+
+#: users/templates/users/parts/gestion_cartelleres.html:15
+msgid "Editar Carteleras"
+msgstr "Edit Billboards"
+
+#: users/templates/users/parts/gestion_cartelleres.html:16
+msgid "Revisa y modifica las carteleras (posters) de cada contenido"
+msgstr "Review and modify the billboards (posters) of each content"
+
+#: users/templates/users/parts/gestion_cartelleres.html:25
+msgid "Todas las Plataformas"
+msgstr "All Platforms"
+
+
+
+#: users/templates/users/parts/gestion_cartelleres.html:45
+#, fuzzy
+#| msgid "Filter / Search"
+msgid "Filtrar"
+msgstr "Filter / Search"
+
+#: users/templates/users/parts/gestion_cartelleres.html:48
+msgid "Limpiar"
+msgstr "Clear"
+
+#: users/templates/users/parts/gestion_cartelleres.html:58
+msgid "Póster"
+msgstr "Poster"
+
+#: users/templates/users/parts/gestion_cartelleres.html:62
+msgid "Poster Path"
+msgstr "Poster Path"
+
+#: users/templates/users/parts/gestion_cartelleres.html:91
+msgid "Editar cartelera"
+msgstr "Edit billboard"
+
+#: users/templates/users/parts/gestion_cartelleres.html:92
+msgid "Editar"
+msgstr "Edit"
+
+#: users/templates/users/parts/gestion_cartelleres.html:100
+msgid "No se han encontrado contenidos con estos criterios."
+msgstr "No content found with these criteria."
+
+#: users/templates/users/parts/history.html:16
+msgid "No movies in history yet."
+msgstr "No movies in history yet."
 
 #: users/templates/users/parts/subscription.html:18
 #, fuzzy
@@ -392,7 +672,7 @@ msgstr "Subscriptions"
 
 #: users/templates/users/parts/subscription.html:19
 msgid "Select the platforms you are subscribed to"
-msgstr ""
+msgstr "Select the platforms you are subscribed to"
 
 #: users/templates/users/parts/subscription.html:54
 #: users/templates/users/parts/subscription.html:98
@@ -404,7 +684,7 @@ msgstr "Subscriptions"
 #: users/templates/users/parts/subscription.html:57
 #: users/templates/users/parts/subscription.html:102
 msgid "Add"
-msgstr ""
+msgstr "Add"
 
 #: users/templates/users/parts/subscription.html:74
 #, fuzzy
@@ -414,58 +694,151 @@ msgstr "Subscriptions"
 
 #: users/templates/users/parts/subscription.html:81
 msgid "No platforms available at the moment."
-msgstr ""
+msgstr "No platforms available at the moment."
 
-#: users/templates/users/profile/profile.html:26
-msgid "Name"
-msgstr ""
+#: users/templates/users/parts/users_table.html:35
+#, fuzzy
+#| msgid "Aceptación de los Términos"
+msgid "Gestión de Usuarios"
+msgstr "Acceptance of Terms"
 
-#: users/templates/users/profile/profile.html:31
-msgid "Last name"
-msgstr ""
+#: users/templates/users/parts/users_table.html:36
+msgid "Control de acceso y roles de la plataforma"
+msgstr "Access control and platform roles"
 
-#: users/templates/users/profile/profile.html:36
+#: users/templates/users/parts/users_table.html:39
+msgid "Añadir Usuario"
+msgstr "Add User"
+
+#: users/templates/users/parts/users_table.html:48
+msgid "Todos los Roles"
+msgstr "All Roles"
+
+#: users/templates/users/parts/users_table.html:56
+msgid "Aplicar Filtro"
+msgstr "Apply Filter"
+
+#: users/templates/users/parts/users_table.html:62
+msgid "Buscar por nombre o email..."
+msgstr "Search by name or email..."
+
+#: users/templates/users/parts/users_table.html:71
+msgid "Usuario"
+msgstr "User"
+
+#: users/templates/users/parts/users_table.html:72
+#: users/templates/users/profile/user_profile.html:36
 msgid "Email"
-msgstr ""
+msgstr "Email"
 
-#: users/templates/users/profile/profile.html:41
+#: users/templates/users/parts/users_table.html:73
+msgid "Rol"
+msgstr "Role"
+
+#: users/templates/users/parts/users_table.html:100
+msgid "Guardar"
+msgstr "Save"
+
+#: users/templates/users/parts/users_table.html:104
+msgid "Eliminar usuario"
+msgstr "Delete user"
+
+#: users/templates/users/parts/users_table.html:114
+msgid "No se han encontrado usuarios con estos criterios."
+msgstr "No users found with these criteria."
+
+#: users/templates/users/parts/users_table.html:130
+#, fuzzy
+#| msgid "Limitación de Responsabilidad"
+msgid "Confirmación de Seguridad"
+msgstr "Limitation of Liability"
+
+#: users/templates/users/parts/users_table.html:131
+msgid "Su sesión activa será destruida de inmediato para propagar el cambio."
+msgstr "Your active session will be destroyed immediately to propagate the change."
+
+#: users/templates/users/parts/users_table.html:141
+#, fuzzy
+#| msgid "Confirm password"
+msgid "Confirmar Acceso"
+msgstr "Confirm password"
+
+#: users/templates/users/profile/user_profile.html:26
+msgid "Name"
+msgstr "Name"
+
+#: users/templates/users/profile/user_profile.html:31
+msgid "Last name"
+msgstr "Last name"
+
+#: users/templates/users/profile/user_profile.html:41
 msgid "Avatar"
-msgstr ""
+msgstr "Avatar"
 
-#: users/templates/users/profile/profile.html:46
+#: users/templates/users/profile/user_profile.html:46
 msgid "Biography"
-msgstr ""
+msgstr "Biography"
 
-#: users/templates/users/profile/profile.html:51
-#: users/templates/users/settings/user_settings.html:33
+#: users/templates/users/profile/user_profile.html:51
+#: users/templates/users/settings/user_settings.html:34
 #, fuzzy
 #| msgid "Syndication"
 msgid "Location"
 msgstr "Syndication"
 
-#: users/templates/users/profile/profile.html:55
+#: users/templates/users/profile/user_profile.html:55
 msgid "Save changes"
-msgstr ""
+msgstr "Save changes"
 
-#: users/templates/users/settings/user_settings.html:12
+#: users/templates/users/settings/user_settings.html:13
 msgid "Bio"
-msgstr ""
+msgstr "Bio"
 
-#: users/templates/users/settings/user_settings.html:17
+#: users/templates/users/settings/user_settings.html:18
 msgid "Write a few words about you"
-msgstr ""
+msgstr "Write a few words about you"
 
-#: users/templates/users/settings/user_settings.html:23
+#: users/templates/users/settings/user_settings.html:24
 msgid "Member since"
-msgstr ""
+msgstr "Member since"
 
-#: users/templates/users/settings/user_settings.html:28
+#: users/templates/users/settings/user_settings.html:29
 msgid "Last access"
-msgstr ""
+msgstr "Last access"
 
-#: users/templates/users/settings/user_settings.html:38
+#: users/templates/users/settings/user_settings.html:39
 msgid "Add your location"
-msgstr ""
+msgstr "Add your location"
+
+#: users/templates/users/types/staff_admin.html:9
+msgid "Usuarios"
+msgstr "Users"
+
+#: users/templates/users/types/staff_admin.html:13
+msgid "Carteleras"
+msgstr "Billboards"
+
+#: users/templates/users/types/user_admin.html:12
+msgid "Overview"
+msgstr "Overview"
+
+#: users/templates/users/types/user_admin.html:16
+#, fuzzy
+#| msgid "Genre"
+msgid "Genres"
+msgstr "Genre"
+
+#: users/templates/users/types/user_admin.html:20
+#, fuzzy
+#| msgid "Age Rating"
+msgid "Age Ratings"
+msgstr "Age Rating"
+
+#: users/templates/users/types/user_admin.html:24
+#, fuzzy
+#| msgid "Director"
+msgid "Directors"
+msgstr "Director"
 
 #: users/templates/users/types/user_client.html:10
 msgid "Profile"
@@ -481,15 +854,27 @@ msgstr "Subscriptions"
 
 #: users/templates/users/types/user_client.html:22
 msgid "Followed"
-msgstr ""
+msgstr "Followed"
 
-#: web_app/forms.py:33
+#: web_app/forms.py:37
 msgid "I accept the terms and conditions of use"
 msgstr "I accept the terms and conditions of use"
 
-#: web_app/forms.py:34
+#: web_app/forms.py:38
 msgid "You must accept the terms and conditions to continue."
 msgstr "You must accept the terms and conditions to continue."
+
+#~ msgid "N/A"
+#~ msgstr "N/A"
+
+#~ msgid "No content found matching those filters."
+#~ msgstr "No content found matching those filters."
+
+#~ msgid "Available on"
+#~ msgstr "Available on"
+
+#~ msgid "No movies found matching those filters."
+#~ msgstr "No movies found matching those filters."
 
 #, fuzzy
 #~| msgid "Terms of Use"

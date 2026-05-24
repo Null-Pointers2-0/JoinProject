@@ -3,47 +3,54 @@
 {% load i18n %}
 
 {% block content_user_setings %}
-<div class="row">
+    {% if user.type == 'Consumer' %}
+        <div class="row">
 
-    <!-- Columna izquierda: sidebar con glass cards -->
-    <div class="col-md-3 col-lg-2 profile-sidebar">
+            <!-- Columna izquierda: sidebar con glass cards -->
+            <div class="col-md-3 col-lg-2 profile-sidebar">
 
-        <div class="glass-card">
-            <div class="glass-card-label">{% trans "Bio" %}</div>
-            <p>
-                {% if user.bio %}
-                    {{ user.bio }}
-                {% else %}
-                    {% trans "Write a few words about you" %}
-                {% endif %}
-            </p>
+                <div class="glass-card">
+                    <div class="glass-card-label">{% trans "Bio" %}</div>
+                    <p>
+                        {% if user.bio %}
+                            {{ user.bio }}
+                        {% else %}
+                            {% trans "Write a few words about you" %}
+                        {% endif %}
+                    </p>
+                </div>
+
+                <div class="glass-card">
+                    <div class="glass-card-label">{% trans "Member since" %}</div>
+                    <p>{{ user.date_joined|date:"d/m/Y" }}</p>
+                </div>
+
+                <div class="glass-card">
+                    <div class="glass-card-label">{% trans "Last access" %}</div>
+                    <p>{{ user.last_login|date:"d/m/Y" }}</p>
+                </div>
+
+                <div class="glass-card">
+                    <div class="glass-card-label">{% trans "Location" %}</div>
+                    <p>
+                        {% if user.location %}
+                            {{ user.location }}
+                        {% else %}
+                            {% trans "Add your location" %}
+                        {% endif %}
+                    </p>
+                </div>
+
         </div>
-
-        <div class="glass-card">
-            <div class="glass-card-label">{% trans "Member since" %}</div>
-            <p>{{ user.date_joined|date:"d/m/Y" }}</p>
-        </div>
-
-        <div class="glass-card">
-            <div class="glass-card-label">{% trans "Last access" %}</div>
-            <p>{{ user.last_login|date:"d/m/Y" }}</p>
-        </div>
-
-        <div class="glass-card">
-            <div class="glass-card-label">{% trans "Location" %}</div>
-            <p>
-                {% if user.location %}
-                    {{ user.location }}
-                {% else %}
-                    {% trans "Add your location" %}
-                {% endif %}
-            </p>
-        </div>
-
-    </div>
+        
+    {% endif %}
 
     <!-- Columna derecha: contenido principal -->
+    {% if user.type == 'Consumer' %}
     <div class="col-md-9 col-lg-10">
+    {% else %}
+    <div>
+    {% endif %}
         {% block user_content %}{% endblock %}
     </div>
 

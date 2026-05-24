@@ -28,6 +28,11 @@ body {
     z-index: -1;
 }
 
+.hidden-link {
+    text-decoration: none;
+    color: inherit;
+}
+
 /* Header / Navbar */
 .header {
     display: flex;
