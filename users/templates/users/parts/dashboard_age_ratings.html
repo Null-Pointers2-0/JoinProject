@@ -7,7 +7,7 @@
         <div class="col-md-8 mb-4">
             <div class="card shadow-sm border-0">
                 <div class="card-header bg-info text-white py-3">
-                    <h5 class="card-title mb-0"><i class="fas fa-user-shield"></i> Age Rating Distribution</h5>
+                    <h5 class="card-title mb-0"><i class="fas fa-user-shield"></i> Views by Age Rating</h5>
                 </div>
                 <div class="card-body p-4">
                     <div style="height: 400px; position: relative;">
@@ -27,7 +27,7 @@
                             <thead class="table-light">
                                 <tr>
                                     <th class="ps-3">Rating</th>
-                                    <th class="text-end pe-3">Views</th>
+                                    <th class="text-end pe-3">Visualizations</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -54,7 +54,7 @@ document.addEventListener('DOMContentLoaded', function() {
         data: {
             labels: {{ age_stats.labels|safe }},
             datasets: [{
-                label: 'Views',
+                label: 'Visualizations',
                 data: {{ age_stats.values|safe }},
                 backgroundColor: '#3498db',
                 borderRadius: 5
