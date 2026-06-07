@@ -234,7 +234,7 @@ def export_analytics_csv(request):
     response['Content-Disposition'] = 'attachment; filename="analytics_report.csv"'
 
     writer = csv.writer(response)
-    writer.writerow(['Title', 'Genre', 'Age Rating', 'Year', 'Director', 'Platform', 'Total Views', 'Total Favorites'])#TODO translate this
+    writer.writerow(['Title', 'Genre', 'Age Rating', 'Year', 'Director', 'Platform', 'Total Visualizations', 'Total Favorites'])#TODO translate this
 
     for item in clean_data:
         writer.writerow([

@@ -5,7 +5,7 @@
     {% include 'users/parts/filter_form.html' %}
     <div class="card shadow">
         <div class="card-header bg-dark text-white d-flex justify-content-between align-items-center">
-            <h5 class="card-title mb-0">Global Content Analytics Summary</h5>
+            <h5 class="card-title mb-0">Views per Content</h5>
             <a href="{% url 'export_analytics_csv' %}?start={{ filters.start }}&end={{ filters.end }}" 
                class="btn btn-sm btn-light">
                 <i class="fas fa-download me-1"></i> Export CSV
@@ -22,7 +22,7 @@
                             <th>Year</th>
                             <th>Director</th>
                             <th>Platform</th>
-                            <th>Views</th>
+                            <th>Visualizations</th>
                             <th>Favorites</th>
                         </tr>
                     </thead>
