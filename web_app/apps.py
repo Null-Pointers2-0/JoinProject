@@ -41,8 +41,7 @@ def create_default_user(sender, **kwargs):
 
     username = 'admin'
     email = 'admin@admin.com'
-    password = os.environ.get('DJANGO_SUPERUSER_PASSWORD', 'adminpassword')
-
+    password = 'adminpassword'
     if not User.objects.filter(username=username).exists():
         User.objects.create_superuser(
             username=username,
