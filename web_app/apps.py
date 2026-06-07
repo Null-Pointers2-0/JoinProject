@@ -42,7 +42,6 @@ def create_default_user(sender, **kwargs):
     username = 'admin'
     email = 'admin@admin.com'
     password = 'adminpassword'
-
     if not User.objects.filter(username=username).exists():
         User.objects.create_superuser(
             username=username,
