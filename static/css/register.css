@@ -162,6 +162,7 @@
 .platform-icon {
     cursor: pointer;
     transition: all 0.2s ease;
+    flex: 0 1 auto;
 }
 
 .platform-icon-content {

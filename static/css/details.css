@@ -276,6 +276,38 @@
 @media (max-width: 900px) {
     .details-wrapper {
         grid-template-columns: 1fr;
+        padding: 1rem;
+    }
+
+    .details-sidebar {
+        padding: 1.5rem;
+        gap: 1.5rem;
+    }
+
+    .main-title {
+        font-size: 26px;
+    }
+
+    .synopsis-text {
+        font-size: 15px;
+    }
+
+    .section-title {
+        font-size: 16px;
+    }
+}
+
+@media (max-width: 480px) {
+    .details-wrapper {
+        padding: 0.5rem;
+    }
+
+    .details-sidebar {
+        padding: 1rem;
+    }
+
+    .main-title {
+        font-size: 22px;
     }
 }
 
