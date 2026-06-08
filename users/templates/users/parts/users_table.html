@@ -25,6 +25,25 @@
             background: rgba(11, 12, 16, 0.85); z-index: 9999;
             align-items: center; justify-content: center; backdrop-filter: blur(6px);
         }
+
+        /* Responsive Admin Fixes */
+        @media (max-width: 768px) {
+            .filter-section {
+                flex-direction: column !important;
+                align-items: stretch !important;
+            }
+            .filter-form, .search-group {
+                width: 100% !important;
+                justify-content: center !important;
+            }
+            .search-group input {
+                width: 100% !important;
+            }
+            .table-responsive {
+                overflow-x: auto;
+                -webkit-overflow-scrolling: touch;
+            }
+        }
     </style>
 {% endblock %}
 

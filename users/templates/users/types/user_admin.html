@@ -4,6 +4,17 @@
 {% block content_admin %}
     <!-- Chart.js CDN -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        @media (max-width: 768px) {
+            .chart-container {
+                height: 300px !important;
+            }
+            .filter-form {
+                flex-direction: column !important;
+                align-items: stretch !important;
+            }
+        }
+    </style>
 
     <!-- Tabs -->
     <ul class="nav nav-tabs">
