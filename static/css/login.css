@@ -196,7 +196,16 @@ body {
 }
 
 /* Responsive - Global */
-@media (max-width: 500px) {
+@media (max-width: 768px) {
+    .login-card {
+        padding: 40px;
+    }
+}
+
+@media (max-width: 480px) {
+    .login-card {
+        padding: 24px;
+    }
     .header {
         padding: 20px;
     }

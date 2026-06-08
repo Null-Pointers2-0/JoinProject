@@ -208,19 +208,22 @@
 }
 
 /* Responsive - Register */
-@media (max-width: 500px) {
+@media (max-width: 768px) {
     .register-card {
-        padding: 40px 24px;
+        padding: 40px;
     }
+}
 
+@media (max-width: 480px) {
+    .register-card {
+        padding: 24px;
+    }
     .register-card h1 {
         font-size: 28px;
     }
-
     .platform-icons {
         gap: 8px;
     }
-
     .platform-icon-content {
         padding: 12px 16px;
     }
