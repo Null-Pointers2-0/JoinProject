@@ -240,6 +240,7 @@ def terms_use(request):
 def privacy_policy(request):
     return render(request, 'footer_legal/privacy_policy.html')
 
+@login_required
 def register_platform_click(request):
     if request.method == 'POST':
         try:
@@ -247,20 +248,18 @@ def register_platform_click(request):
             contingut_id = data.get('contingut_id')
             api_id = data.get('api_id')
 
-            contingut = get_object_or_404(Contingut, id=contingut_id)
-            api = get_object_or_404(API, id=api_id)
-
-            user = request.user if request.user.is_authenticated else None
-            Visualitzacio.objects.create(
-                user=user,
-                contingut=contingut,
-                api=api
+            # MAGIA DE DJANGO: Si existe, actualiza la fecha. Si no, lo crea.
+            vis, created = Visualitzacio.objects.update_or_create(
+                user=request.user,
+                contingut_id=contingut_id,
+                api_id=api_id,
+                defaults={'data_visualitzacio': timezone.now()}
             )
 
-            total_clicks = Visualitzacio.objects.filter(contingut=contingut, api=api).count()
-
-            return JsonResponse({'status': 'success', 'total_clicks': total_clicks})
-
+            return JsonResponse({
+                'status': 'success',
+                'message': 'Historial actualizado correctamente'
+            })
         except Exception as e:
             return JsonResponse({'status': 'error', 'message': str(e)}, status=400)
 
