@@ -1,20 +1,91 @@
 {% extends 'users/types/user_client.html' %}
 {% load i18n %}
 {% load static %}
+
 {% block extra_css %}
 {{ block.super }}
     <link rel="stylesheet" href="{% static 'users/css/history.css' %}">
 {% endblock %}
 
 {% block parts_content %}
-<div class="row mt-3">
-    {% for movie in movies %}
-        {% include 'part/cardlite.html' with movie=movie %}
-    {% empty %}
-    <div class="history-empty">
-        <div class="history-empty-icon">◻</div>
-        <p>{% trans "No movies in history yet." %}</p>
+<div class="history-container mt-3">
+    <div class="glass-card mb-4 p-3 d-flex flex-wrap gap-3 align-items-center justify-content-between">
+        <form method="GET" class="d-flex flex-wrap gap-3 align-items-center m-0 w-100">
+            <div class="d-flex align-items-center gap-2">
+                <i class="bi bi-funnel-fill text-neon"></i>
+                <span class="text-white-50 small fw-bold">{% trans "Filtres:" %}</span>
+            </div>
+
+            <select name="platform" class="filter-select" onchange="this.form.submit()">
+                <option value="">{% trans "Totes les plataformes" %}</option>
+                {% for p in platforms %}
+                    <option value="{{ p.id }}" {% if selected_platform == p.id|stringformat:"s" %}selected{% endif %}>
+                        {{ p.name|default:p.port }}
+                    </option>
+                {% endfor %}
+            </select>
+
+            <select name="date" class="filter-select" onchange="this.form.submit()">
+                <option value="">{% trans "Tot el temps" %}</option>
+                <option value="today" {% if selected_date == 'today' %}selected{% endif %}>{% trans "Avui" %}</option>
+                <option value="week" {% if selected_date == 'week' %}selected{% endif %}>{% trans "Aquesta setmana" %}</option>
+                <option value="month" {% if selected_date == 'month' %}selected{% endif %}>{% trans "Aquest mes" %}</option>
+            </select>
+
+            {% if selected_platform or selected_date %}
+                <a href="{% url 'history' %}" class="btn-ghost ms-auto" style="text-decoration: none; padding: 5px 10px; font-size: 0.8rem;">
+                    {% trans "Netejar filtres" %}
+                </a>
+            {% endif %}
+        </form>
     </div>
-    {% endfor %}
+
+    {% if grouped_history %}
+        {% for group_name, items in grouped_history.items %}
+            <div class="history-group mb-4">
+                <h4 class="history-group-title">{{ group_name }}</h4>
+                <div class="history-list">
+                    {% for vis in items %}
+                        <div class="history-item-card glass-card d-flex align-items-center gap-3 p-2 mb-2">
+                            <div class="history-poster-container">
+                                {% if vis.contingut.poster_path %}
+                                    <img src="{{ vis.contingut.poster_path }}" alt="{{ vis.contingut.titol }}" class="history-poster">
+                                {% else %}
+                                    <div class="history-poster-placeholder">{{ vis.contingut.titol|first|upper }}</div>
+                                {% endif %}
+                            </div>
+
+                            <div class="history-info flex-grow-1">
+                                <h5 class="history-title mb-1">{{ vis.contingut.titol }}</h5>
+                                <div class="history-meta d-flex flex-wrap gap-2 align-items-center">
+                                    <span class="badge-neon type-badge">{{ vis.content_type }}</span>
+                                    <span class="badge-ghost platform-badge">
+                                        <i class="bi bi-display me-1"></i>{{ vis.api.name|default:vis.api.port }}
+                                    </span>
+                                    <span class="history-time text-muted small ms-auto">
+                                        <i class="bi bi-clock me-1"></i>{{ vis.data_visualitzacio|date:"d M Y, H:i" }}
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        {% endfor %}
+
+        {% if page_obj.paginator.num_pages > 1 %}
+            <div class="mt-4">
+                {% include 'paginator.html' with items=page_obj %}
+            </div>
+        {% endif %}
+    {% else %}
+        <div class="history-empty glass-card p-5 mt-4">
+            <div class="history-empty-icon">📺</div>
+            <p>{% trans "No s'han trobat visualitzacions amb aquests criteris." %}</p>
+            {% if selected_platform or selected_date %}
+                <a href="{% url 'history' %}" class="btn-neon mt-3" style="text-decoration: none;">{% trans "Tornar a veure-ho tot" %}</a>
+            {% endif %}
+        </div>
+    {% endif %}
 </div>
 {% endblock %}
