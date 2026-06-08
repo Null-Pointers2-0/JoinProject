@@ -9,6 +9,7 @@ from django.contrib.auth.decorators import login_required, user_passes_test
 from django.utils.crypto import get_random_string
 from django.contrib.sessions.models import Session
 from django.utils import timezone
+from datetime import timedelta
 import json
 
 import gettext
@@ -85,12 +86,71 @@ def user_profile(request):
 @login_required(login_url='login')
 @user_passes_test(is_consumer)
 def history(request):
-    # OPTIMIZACIÓN: Buscamos en el modelo real de visualizaciones y hacemos Eager Loading
-    visualizaciones = Visualitzacio.objects.filter(user=request.user).select_related(
-        'contingut__movie', 'contingut__series'
-    ).prefetch_related('contingut__apis').order_by('-data_visualitzacio')
-    
-    return render(request, 'users/parts/history.html', {'visualizaciones': visualizaciones})
+    user = request.user
+    visualizaciones = Visualitzacio.objects.filter(user=user).select_related(
+        'contingut__movie', 'contingut__series', 'api'
+    ).order_by('-data_visualitzacio')
+
+    platform_id = request.GET.get('platform')
+    if platform_id:
+        visualizaciones = visualizaciones.filter(api_id=platform_id)
+
+    date_filter = request.GET.get('date')
+    now = timezone.now()
+    if date_filter == 'today':
+        visualizaciones = visualizaciones.filter(data_visualitzacio__date=now.date())
+    elif date_filter == 'week':
+        visualizaciones = visualizaciones.filter(data_visualitzacio__gte=now - timedelta(days=7))
+    elif date_filter == 'month':
+        visualizaciones = visualizaciones.filter(data_visualitzacio__gte=now - timedelta(days=30))
+
+    paginator = Paginator(visualizaciones, 20)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
+    grouped_history = {
+        'Avui': [],
+        'Aquesta setmana': [],
+        'Aquest mes': [],
+        'Més antic': []
+    }
+
+    today = now.date()
+    week_ago = (now - timedelta(days=7)).date()
+    month_ago = (now - timedelta(days=30)).date()
+
+    for vis in page_obj:
+        vis_date = vis.data_visualitzacio.date()
+
+        if hasattr(vis.contingut, 'movie'):
+            vis.content_type = 'Movie'
+        elif hasattr(vis.contingut, 'series'):
+            vis.content_type = 'Series'
+        else:
+            vis.content_type = 'Desconegut'
+
+        if vis_date == today:
+            grouped_history['Avui'].append(vis)
+        elif vis_date >= week_ago:
+            grouped_history['Aquesta setmana'].append(vis)
+        elif vis_date >= month_ago:
+            grouped_history['Aquest mes'].append(vis)
+        else:
+            grouped_history['Més antic'].append(vis)
+
+    grouped_history = {k: v for k, v in grouped_history.items() if v}
+
+    platforms = API.objects.all()
+
+    context = {
+        'page_obj': page_obj,
+        'grouped_history': grouped_history,
+        'platforms': platforms,
+        'selected_platform': platform_id,
+        'selected_date': date_filter,
+    }
+
+    return render(request, 'users/parts/history.html', context)
 
 @login_required(login_url='login')
 @user_passes_test(is_consumer)
