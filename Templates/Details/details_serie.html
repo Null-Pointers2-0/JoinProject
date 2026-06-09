@@ -18,3 +18,26 @@
 {% endblock %}
 
 {% block favorite_url %}{% url 'toggle_series_favorite' content.id %}{% endblock %}
+
+{% block extra_main_content %}
+<div class="recommendations-section" style="margin: 30px 0;">
+    <h3 class="section-title">{% trans "También te puede gustar..." %}</h3>
+    <div class="recommendations-grid" style="display: flex; gap: 15px; overflow-x: auto; padding-bottom: 10px;">
+        {% for rec in recommendations %}
+            <a href="{% url 'series_detail' rec.id %}" style="text-decoration: none; color: white; min-width: 140px;">
+                {% if rec.poster_path %}
+                    <img src="{{ rec.poster_path }}" alt="{{ rec.title }}" style="width: 140px; height: 210px; object-fit: cover; border-radius: 8px;">
+                {% else %}
+                    <div style="width: 140px; height: 210px; background: rgba(255,255,255,0.05); border-radius: 8px; display: flex; align-items: center; justify-content: center; text-align: center; padding: 10px;">
+                        {{ rec.title }}
+                    </div>
+                {% endif %}
+                <p style="font-size: 0.9rem; margin-top: 8px; font-weight: bold; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{ rec.title }}</p>
+            </a>
+        {% empty %}
+            <!-- Mensaje de Fallback -->
+            <p style="color: rgba(255,255,255,0.5);">{% trans "No hay recomendaciones disponibles." %}</p>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
