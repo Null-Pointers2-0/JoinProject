@@ -101,6 +101,51 @@
             {% endfor %}
         </div>
 
+                <div class="form-group">
+            <select name="gender" id="id_gender" required>
+                <option value="">{% trans "Select gender" %}</option>
+                {% for value, label in form.gender.field.choices %}
+                    <option value="{{ value }}">{{ label }}</option>
+                {% endfor %}
+            </select>
+            {% for error in form.gender.errors %}
+            <small style="color: #e50914; font-size: 12px;">{{ error }}</small>
+            {% endfor %}
+        </div>
+
+        <div class="form-group">
+            <select name="age_range" id="id_age_range" required>
+                <option value="">{% trans "Select age range" %}</option>
+                {% for value, label in form.age_range.field.choices %}
+                    <option value="{{ value }}">{{ label }}</option>
+                {% endfor %}
+            </select>
+            {% for error in form.age_range.errors %}
+            <small style="color: #e50914; font-size: 12px;">{{ error }}</small>
+            {% endfor %}
+        </div>
+
+        <div class="form-group">
+            <select name="province" id="id_province" required>
+                <option value="">{% trans "Select province" %}</option>
+                {% for province in provinces %}
+                    <option value="{{ province.id }}">{{ province.name }}</option>
+                {% endfor %}
+            </select>
+            {% for error in form.province.errors %}
+            <small style="color: #e50914; font-size: 12px;">{{ error }}</small>
+            {% endfor %}
+        </div>
+
+        <div class="form-group">
+            <select name="municipality" id="id_municipality" required disabled>
+                <option value="">{% trans "First select a province" %}</option>
+            </select>
+            {% for error in form.municipality.errors %}
+            <small style="color: #e50914; font-size: 12px;">{{ error }}</small>
+            {% endfor %}
+        </div>
+
         <div class="checkbox-group">
             <input type="checkbox" name="terms_accepted" id="id_terms_accepted" required>
             <label for="id_terms_accepted">
@@ -201,6 +246,31 @@
             checkbox.checked = !checkbox.checked;
             icon.classList.toggle('selected', checkbox.checked);
         });
+    });
+
+    document.getElementById('id_province').addEventListener('change', function() {
+        const provinceId = this.value;
+        const municipalitySelect = document.getElementById('id_municipality');
+        municipalitySelect.innerHTML = '<option value="">{% filter escapejs %}{% trans "Loading..." %}{% endfilter %}</option>';
+        municipalitySelect.disabled = true;
+
+        if (!provinceId) {
+            municipalitySelect.innerHTML = '<option value="">{% filter escapejs %}{% trans "First select a province" %}{% endfilter %}</option>';
+            return;
+        }
+
+        fetch('/api/municipalities/' + provinceId + '/')
+            .then(response => response.json())
+            .then(municipalities => {
+                municipalitySelect.innerHTML = '<option value="">{% filter escapejs %}{% trans "Select municipality" %}{% endfilter %}</option>';
+                municipalities.forEach(m => {
+                    municipalitySelect.innerHTML += '<option value="' + m.id + '">' + m.name + '</option>';
+                });
+                municipalitySelect.disabled = false;
+            })
+            .catch(() => {
+                municipalitySelect.innerHTML = '<option value="">{% filter escapejs %}{% trans "Error loading municipalities" %}{% endfilter %}</option>';
+            });
     });
 
     /* document.getElementById('registerForm').addEventListener('submit', function (e) {

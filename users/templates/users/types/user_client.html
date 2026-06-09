@@ -29,12 +29,34 @@
         </div>
 
         <div class="glass-card">
+            <div class="glass-card-label">{% trans "Gender" %}</div>
+            <p>
+                {% if user.gender %}
+                    {{ user.get_gender_display }}
+                {% else %}
+                    {% trans "Not specified" %}
+                {% endif %}
+            </p>
+        </div>
+
+        <div class="glass-card">
+            <div class="glass-card-label">{% trans "Age range" %}</div>
+            <p>
+                {% if user.age_range %}
+                    {{ user.get_age_range_display }}
+                {% else %}
+                    {% trans "Not specified" %}
+                {% endif %}
+            </p>
+        </div>
+
+        <div class="glass-card">
             <div class="glass-card-label">{% trans "Location" %}</div>
             <p>
-                {% if user.location %}
-                    {{ user.location }}
+                {% if user.municipality %}
+                    {{ user.municipality.name }} ({{ user.municipality.province.name }})
                 {% else %}
-                    {% trans "Add your location" %}
+                    {% trans "Not specified" %}
                 {% endif %}
             </p>
         </div>
