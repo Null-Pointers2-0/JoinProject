@@ -27,6 +27,8 @@ urlpatterns = [
     path('terms-use/', views.terms_use, name='terms_use'),
     path('privacy-policy/', views.privacy_policy, name='privacy_policy'),
 
+    path('api/municipalities/<int:province_id>/', views.municipalities_by_province, name='municipalities_api'),
+
     #path('user/profile', views.profile, name='profile'),
     #path('user/history', views.history, name='history'),
 

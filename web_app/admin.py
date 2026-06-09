@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.utils.safestring import mark_safe
-from .models import SyncLog, API, Contingut, Movie, Series, Director, Genre, AgeRating, CustomUser, UserProfile, Valoracio, Preferits, RoleAuditLog
+from .models import SyncLog, API, Contingut, Movie, Series, Director, Genre, AgeRating, CustomUser, UserProfile, Valoracio, Preferits, RoleAuditLog, Province, Municipality
 
 
 @admin.register(API)
@@ -137,3 +137,14 @@ class RoleAuditLogAdmin(admin.ModelAdmin):
     list_filter = ('timestamp', 'old_role', 'new_role')
     search_fields = ('admin__username', 'affected_user__username')
     readonly_fields = ('admin', 'affected_user', 'old_role', 'new_role', 'timestamp')
+
+@admin.register(Province)
+class ProvinceAdmin(admin.ModelAdmin):
+    list_display = ('ine_code', 'name')
+    search_fields = ('name',)
+
+@admin.register(Municipality)
+class MunicipalityAdmin(admin.ModelAdmin):
+    list_display = ('ine_code', 'name', 'province')
+    list_filter = ('province',)
+    search_fields = ('name',)
