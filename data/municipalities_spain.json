@@ -1,0 +1,865 @@
+[
+  {
+    "ine_code": "01",
+    "name": "Álava",
+    "municipalities": [
+      {"ine_code": "01001", "name": "Alegría-Dulantzi"},
+      {"ine_code": "01007", "name": "Gasteiz"},
+      {"ine_code": "01059", "name": "Laudio"},
+      {"ine_code": "01025", "name": "Amurrio"},
+      {"ine_code": "01049", "name": "Llodio"}
+    ]
+  },
+  {
+    "ine_code": "02",
+    "name": "Albacete",
+    "municipalities": [
+      {"ine_code": "02003", "name": "Albacete"},
+      {"ine_code": "02024", "name": "Almansa"},
+      {"ine_code": "02016", "name": "Hellín"},
+      {"ine_code": "02035", "name": "Villarrobledo"},
+      {"ine_code": "02029", "name": "La Roda"}
+    ]
+  },
+  {
+    "ine_code": "03",
+    "name": "Alicante",
+    "municipalities": [
+      {"ine_code": "03014", "name": "Alicante"},
+      {"ine_code": "03066", "name": "Elche"},
+      {"ine_code": "03031", "name": "Benidorm"},
+      {"ine_code": "03069", "name": "Elda"},
+      {"ine_code": "03088", "name": "Orihuela"},
+      {"ine_code": "03119", "name": "Torrevieja"},
+      {"ine_code": "03148", "name": "Villajoyosa"}
+    ]
+  },
+  {
+    "ine_code": "04",
+    "name": "Almería",
+    "municipalities": [
+      {"ine_code": "04013", "name": "Almería"},
+      {"ine_code": "04034", "name": "El Ejido"},
+      {"ine_code": "04065", "name": "Níjar"},
+      {"ine_code": "04069", "name": "Roquetas de Mar"}
+    ]
+  },
+  {
+    "ine_code": "05",
+    "name": "Ávila",
+    "municipalities": [
+      {"ine_code": "05019", "name": "Ávila"},
+      {"ine_code": "05028", "name": "Arenas de San Pedro"},
+      {"ine_code": "05023", "name": "Arévalo"},
+      {"ine_code": "05143", "name": "Piedrahíta"}
+    ]
+  },
+  {
+    "ine_code": "06",
+    "name": "Badajoz",
+    "municipalities": [
+      {"ine_code": "06015", "name": "Badajoz"},
+      {"ine_code": "06010", "name": "Almendralejo"},
+      {"ine_code": "06044", "name": "Don Benito"},
+      {"ine_code": "06055", "name": "Mérida"},
+      {"ine_code": "06159", "name": "Zafra"}
+    ]
+  },
+  {
+    "ine_code": "07",
+    "name": "Balearic Islands",
+    "municipalities": [
+      {"ine_code": "07022", "name": "Palma"},
+      {"ine_code": "07001", "name": "Alcúdia"},
+      {"ine_code": "07005", "name": "Calvià"},
+      {"ine_code": "07011", "name": "Ibiza"},
+      {"ine_code": "07040", "name": "Maó"},
+      {"ine_code": "07043", "name": "Manacor"}
+    ]
+  },
+  {
+    "ine_code": "08",
+    "name": "Barcelona",
+    "municipalities": [
+      {"ine_code": "08019", "name": "Barcelona"},
+      {"ine_code": "08025", "name": "Badalona"},
+      {"ine_code": "08034", "name": "Cornellà de Llobregat"},
+      {"ine_code": "08038", "name": "Esplugues de Llobregat"},
+      {"ine_code": "08042", "name": "Gavà"},
+      {"ine_code": "08045", "name": "Granollers"},
+      {"ine_code": "08056", "name": "L'Hospitalet de Llobregat"},
+      {"ine_code": "08059", "name": "Igualada"},
+      {"ine_code": "08063", "name": "Mataró"},
+      {"ine_code": "08069", "name": "Mollet del Vallès"},
+      {"ine_code": "08071", "name": "Montcada i Reixac"},
+      {"ine_code": "08101", "name": "El Prat de Llobregat"},
+      {"ine_code": "08118", "name": "Rubí"},
+      {"ine_code": "08120", "name": "Sabadell"},
+      {"ine_code": "08128", "name": "Sant Boi de Llobregat"},
+      {"ine_code": "08133", "name": "Sant Cugat del Vallès"},
+      {"ine_code": "08136", "name": "Sant Feliu de Llobregat"},
+      {"ine_code": "08140", "name": "Sant Joan Despí"},
+      {"ine_code": "08150", "name": "Sant Vicenç dels Horts"},
+      {"ine_code": "08160", "name": "Santa Coloma de Gramenet"},
+      {"ine_code": "08184", "name": "Terrassa"},
+      {"ine_code": "08200", "name": "Vic"},
+      {"ine_code": "08203", "name": "Viladecans"},
+      {"ine_code": "08204", "name": "Vilanova i la Geltrú"},
+      {"ine_code": "08207", "name": "Cerdanyola del Vallès"}
+    ]
+  },
+  {
+    "ine_code": "09",
+    "name": "Burgos",
+    "municipalities": [
+      {"ine_code": "09059", "name": "Burgos"},
+      {"ine_code": "09028", "name": "Aranda de Duero"},
+      {"ine_code": "09071", "name": "Briviesca"},
+      {"ine_code": "09340", "name": "Villarcayo"}
+    ]
+  },
+  {
+    "ine_code": "10",
+    "name": "Cáceres",
+    "municipalities": [
+      {"ine_code": "10037", "name": "Cáceres"},
+      {"ine_code": "10016", "name": "Coria"},
+      {"ine_code": "10089", "name": "Plasencia"},
+      {"ine_code": "10165", "name": "Trujillo"},
+      {"ine_code": "10200", "name": "Navalmoral de la Mata"}
+    ]
+  },
+  {
+    "ine_code": "11",
+    "name": "Cádiz",
+    "municipalities": [
+      {"ine_code": "11012", "name": "Cádiz"},
+      {"ine_code": "11001", "name": "Algeciras"},
+      {"ine_code": "11004", "name": "Barbate"},
+      {"ine_code": "11008", "name": "Chiclana de la Frontera"},
+      {"ine_code": "11015", "name": "El Puerto de Santa María"},
+      {"ine_code": "11020", "name": "Jerez de la Frontera"},
+      {"ine_code": "11022", "name": "La Línea de la Concepción"},
+      {"ine_code": "11024", "name": "Rota"},
+      {"ine_code": "11031", "name": "San Fernando"},
+      {"ine_code": "11033", "name": "Sanlúcar de Barrameda"}
+    ]
+  },
+  {
+    "ine_code": "12",
+    "name": "Castellón",
+    "municipalities": [
+      {"ine_code": "12040", "name": "Castellón de la Plana"},
+      {"ine_code": "12001", "name": "Almassora"},
+      {"ine_code": "12005", "name": "Benicarló"},
+      {"ine_code": "12028", "name": "Borriana"},
+      {"ine_code": "12055", "name": "Onda"},
+      {"ine_code": "12100", "name": "Vila-real"},
+      {"ine_code": "12101", "name": "Vinaròs"}
+    ]
+  },
+  {
+    "ine_code": "13",
+    "name": "Ciudad Real",
+    "municipalities": [
+      {"ine_code": "13034", "name": "Ciudad Real"},
+      {"ine_code": "13016", "name": "Alcázar de San Juan"},
+      {"ine_code": "13020", "name": "Bolaños de Calatrava"},
+      {"ine_code": "13038", "name": "Daimiel"},
+      {"ine_code": "13053", "name": "Manzanares"},
+      {"ine_code": "13069", "name": "Puertollano"},
+      {"ine_code": "13074", "name": "Socuéllamos"},
+      {"ine_code": "13079", "name": "Tomelloso"},
+      {"ine_code": "13082", "name": "Valdepeñas"}
+    ]
+  },
+  {
+    "ine_code": "14",
+    "name": "Córdoba",
+    "municipalities": [
+      {"ine_code": "14021", "name": "Córdoba"},
+      {"ine_code": "14007", "name": "Baena"},
+      {"ine_code": "14010", "name": "Cabra"},
+      {"ine_code": "14017", "name": "La Carlota"},
+      {"ine_code": "14023", "name": "Lucena"},
+      {"ine_code": "14024", "name": "Montilla"},
+      {"ine_code": "14027", "name": "Montoro"},
+      {"ine_code": "14042", "name": "Puente Genil"},
+      {"ine_code": "14056", "name": "Priego de Córdoba"}
+    ]
+  },
+  {
+    "ine_code": "15",
+    "name": "A Coruña",
+    "municipalities": [
+      {"ine_code": "15030", "name": "A Coruña"},
+      {"ine_code": "15007", "name": "Arteixo"},
+      {"ine_code": "15008", "name": "Betanzos"},
+      {"ine_code": "15018", "name": "Carballo"},
+      {"ine_code": "15019", "name": "Cariño"},
+      {"ine_code": "15029", "name": "Culleredo"},
+      {"ine_code": "15031", "name": "Ferrol"},
+      {"ine_code": "15036", "name": "Narón"},
+      {"ine_code": "15038", "name": "Oleiros"},
+      {"ine_code": "15044", "name": "Ribeira"},
+      {"ine_code": "15049", "name": "Santiago de Compostela"},
+      {"ine_code": "15058", "name": "Teo"},
+      {"ine_code": "15065", "name": "Oza-Cesuras"}
+    ]
+  },
+  {
+    "ine_code": "16",
+    "name": "Cuenca",
+    "municipalities": [
+      {"ine_code": "16078", "name": "Cuenca"},
+      {"ine_code": "16016", "name": "Las Pedroñeras"},
+      {"ine_code": "16030", "name": "Mota del Cuervo"},
+      {"ine_code": "16054", "name": "San Clemente"},
+      {"ine_code": "16085", "name": "Tarancon"}
+    ]
+  },
+  {
+    "ine_code": "17",
+    "name": "Girona",
+    "municipalities": [
+      {"ine_code": "17079", "name": "Girona"},
+      {"ine_code": "17001", "name": "Blanes"},
+      {"ine_code": "17015", "name": "Banyoles"},
+      {"ine_code": "17027", "name": "Figueres"},
+      {"ine_code": "17038", "name": "Lloret de Mar"},
+      {"ine_code": "17042", "name": "Olot"},
+      {"ine_code": "17049", "name": "Palafrugell"},
+      {"ine_code": "17053", "name": "Palamós"},
+      {"ine_code": "17057", "name": "Puigcerdà"},
+      {"ine_code": "17066", "name": "Roses"},
+      {"ine_code": "17088", "name": "Salt"},
+      {"ine_code": "17134", "name": "Sant Feliu de Guíxols"},
+      {"ine_code": "17200", "name": "Santa Coloma de Farners"}
+    ]
+  },
+  {
+    "ine_code": "18",
+    "name": "Granada",
+    "municipalities": [
+      {"ine_code": "18087", "name": "Granada"},
+      {"ine_code": "18006", "name": "Albolote"},
+      {"ine_code": "18015", "name": "Almuñécar"},
+      {"ine_code": "18020", "name": "Armilla"},
+      {"ine_code": "18029", "name": "Baza"},
+      {"ine_code": "18033", "name": "La Zubia"},
+      {"ine_code": "18076", "name": "Guadix"},
+      {"ine_code": "18091", "name": "Huescar"},
+      {"ine_code": "18126", "name": "Loja"},
+      {"ine_code": "18144", "name": "Maracena"},
+      {"ine_code": "18152", "name": "Motril"},
+      {"ine_code": "18199", "name": "Santa Fe"},
+      {"ine_code": "18224", "name": "Ogíjares"}
+    ]
+  },
+  {
+    "ine_code": "19",
+    "name": "Guadalajara",
+    "municipalities": [
+      {"ine_code": "19130", "name": "Guadalajara"},
+      {"ine_code": "19003", "name": "Azuqueca de Henares"},
+      {"ine_code": "19024", "name": "Cabanillas del Campo"},
+      {"ine_code": "19251", "name": "El Casar"},
+      {"ine_code": "19229", "name": "Sigüenza"},
+      {"ine_code": "19045", "name": "Marchamalo"},
+      {"ine_code": "19088", "name": "Torrejón del Rey"}
+    ]
+  },
+  {
+    "ine_code": "20",
+    "name": "Gipuzkoa",
+    "municipalities": [
+      {"ine_code": "20069", "name": "Donostia / San Sebastián"},
+      {"ine_code": "20017", "name": "Andoain"},
+      {"ine_code": "20024", "name": "Arrasate / Mondragón"},
+      {"ine_code": "20036", "name": "Eibar"},
+      {"ine_code": "20054", "name": "Errenteria"},
+      {"ine_code": "20065", "name": "Hondarribia"},
+      {"ine_code": "20067", "name": "Irun"},
+      {"ine_code": "20071", "name": "Lasarte-Oria"},
+      {"ine_code": "20076", "name": "Oñati"},
+      {"ine_code": "20063", "name": "Pasaia"},
+      {"ine_code": "20078", "name": "Zarautz"}
+    ]
+  },
+  {
+    "ine_code": "21",
+    "name": "Huelva",
+    "municipalities": [
+      {"ine_code": "21041", "name": "Huelva"},
+      {"ine_code": "21002", "name": "Aljaraque"},
+      {"ine_code": "21005", "name": "Almonte"},
+      {"ine_code": "21026", "name": "Bollullos Par del Condado"},
+      {"ine_code": "21032", "name": "Cartaya"},
+      {"ine_code": "21043", "name": "Isla Cristina"},
+      {"ine_code": "21055", "name": "Lepe"},
+      {"ine_code": "21056", "name": "Moguer"},
+      {"ine_code": "21071", "name": "Punta Umbría"},
+      {"ine_code": "21077", "name": "San Juan del Puerto"}
+    ]
+  },
+  {
+    "ine_code": "22",
+    "name": "Huesca",
+    "municipalities": [
+      {"ine_code": "22125", "name": "Huesca"},
+      {"ine_code": "22014", "name": "Barbastro"},
+      {"ine_code": "22017", "name": "Binefar"},
+      {"ine_code": "22053", "name": "Fraga"},
+      {"ine_code": "22097", "name": "Jaca"},
+      {"ine_code": "22205", "name": "Monzón"},
+      {"ine_code": "22225", "name": "Sabiñánigo"}
+    ]
+  },
+  {
+    "ine_code": "23",
+    "name": "Jaén",
+    "municipalities": [
+      {"ine_code": "23050", "name": "Jaén"},
+      {"ine_code": "23006", "name": "Alcalá la Real"},
+      {"ine_code": "23008", "name": "Andújar"},
+      {"ine_code": "23009", "name": "Arjona"},
+      {"ine_code": "23016", "name": "Baeza"},
+      {"ine_code": "23019", "name": "Bailén"},
+      {"ine_code": "23030", "name": "La Carolina"},
+      {"ine_code": "23039", "name": "Linares"},
+      {"ine_code": "23044", "name": "Martos"},
+      {"ine_code": "23047", "name": "Mengíbar"},
+      {"ine_code": "23056", "name": "Torredonjimeno"},
+      {"ine_code": "23060", "name": "Úbeda"},
+      {"ine_code": "23069", "name": "Villacarrillo"}
+    ]
+  },
+  {
+    "ine_code": "24",
+    "name": "León",
+    "municipalities": [
+      {"ine_code": "24089", "name": "León"},
+      {"ine_code": "24009", "name": "Astorga"},
+      {"ine_code": "24020", "name": "Bembibre"},
+      {"ine_code": "24023", "name": "La Bañeza"},
+      {"ine_code": "24035", "name": "Cistierna"},
+      {"ine_code": "24044", "name": "Ponferrada"},
+      {"ine_code": "24108", "name": "San Andrés del Rabanedo"},
+      {"ine_code": "24154", "name": "Villaquilambre"},
+      {"ine_code": "24151", "name": "Valencia de Don Juan"}
+    ]
+  },
+  {
+    "ine_code": "25",
+    "name": "Lleida",
+    "municipalities": [
+      {"ine_code": "25120", "name": "Lleida"},
+      {"ine_code": "25007", "name": "Alcarràs"},
+      {"ine_code": "25010", "name": "Alfarràs"},
+      {"ine_code": "25025", "name": "Balaguer"},
+      {"ine_code": "25038", "name": "Cervera"},
+      {"ine_code": "25045", "name": "Les Borges Blanques"},
+      {"ine_code": "25073", "name": "Mollerussa"},
+      {"ine_code": "25084", "name": "La Seu d'Urgell"},
+      {"ine_code": "25117", "name": "Solsona"},
+      {"ine_code": "25134", "name": "Tàrrega"},
+      {"ine_code": "25209", "name": "Vielha e Mijaran"}
+    ]
+  },
+  {
+    "ine_code": "26",
+    "name": "La Rioja",
+    "municipalities": [
+      {"ine_code": "26089", "name": "Logroño"},
+      {"ine_code": "26007", "name": "Alfaro"},
+      {"ine_code": "26012", "name": "Arnedo"},
+      {"ine_code": "26021", "name": "Calahorra"},
+      {"ine_code": "26056", "name": "Haro"},
+      {"ine_code": "26059", "name": "Lardero"},
+      {"ine_code": "26063", "name": "Nájera"},
+      {"ine_code": "26079", "name": "Santo Domingo de la Calzada"}
+    ]
+  },
+  {
+    "ine_code": "27",
+    "name": "Lugo",
+    "municipalities": [
+      {"ine_code": "27028", "name": "Lugo"},
+      {"ine_code": "27009", "name": "Burela"},
+      {"ine_code": "27010", "name": "Castro de Rei"},
+      {"ine_code": "27015", "name": "Cervo"},
+      {"ine_code": "27018", "name": "Chantada"},
+      {"ine_code": "27020", "name": "A Fonsagrada"},
+      {"ine_code": "27023", "name": "Guitiriz"},
+      {"ine_code": "27027", "name": "Monforte de Lemos"},
+      {"ine_code": "27029", "name": "Palas de Rei"},
+      {"ine_code": "27035", "name": "Ribadeo"},
+      {"ine_code": "27038", "name": "Sarria"},
+      {"ine_code": "27040", "name": "Vilalba"},
+      {"ine_code": "27041", "name": "Viveiro"}
+    ]
+  },
+  {
+    "ine_code": "28",
+    "name": "Madrid",
+    "municipalities": [
+      {"ine_code": "28079", "name": "Madrid"},
+      {"ine_code": "28002", "name": "Alcalá de Henares"},
+      {"ine_code": "28005", "name": "Alcobendas"},
+      {"ine_code": "28006", "name": "Alcorcón"},
+      {"ine_code": "28007", "name": "Algete"},
+      {"ine_code": "28013", "name": "Aranjuez"},
+      {"ine_code": "28014", "name": "Arganda del Rey"},
+      {"ine_code": "28016", "name": "Boadilla del Monte"},
+      {"ine_code": "28021", "name": "Collado Villalba"},
+      {"ine_code": "28023", "name": "Coslada"},
+      {"ine_code": "28025", "name": "El Escorial"},
+      {"ine_code": "28026", "name": "Fuenlabrada"},
+      {"ine_code": "28029", "name": "Getafe"},
+      {"ine_code": "28030", "name": "Guadarrama"},
+      {"ine_code": "28031", "name": "Humanes de Madrid"},
+      {"ine_code": "28034", "name": "Las Rozas de Madrid"},
+      {"ine_code": "28035", "name": "Leganés"},
+      {"ine_code": "28040", "name": "Móstoles"},
+      {"ine_code": "28046", "name": "Parla"},
+      {"ine_code": "28047", "name": "Pinto"},
+      {"ine_code": "28049", "name": "Pozuelo de Alarcón"},
+      {"ine_code": "28052", "name": "Rivas-Vaciamadrid"},
+      {"ine_code": "28053", "name": "San Fernando de Henares"},
+      {"ine_code": "28056", "name": "San Sebastián de los Reyes"},
+      {"ine_code": "28065", "name": "Torrejón de Ardoz"},
+      {"ine_code": "28067", "name": "Tres Cantos"},
+      {"ine_code": "28070", "name": "Valdemoro"},
+      {"ine_code": "28078", "name": "Majadahonda"}
+    ]
+  },
+  {
+    "ine_code": "29",
+    "name": "Málaga",
+    "municipalities": [
+      {"ine_code": "29067", "name": "Málaga"},
+      {"ine_code": "29003", "name": "Alhaurín de la Torre"},
+      {"ine_code": "29004", "name": "Alhaurín el Grande"},
+      {"ine_code": "29013", "name": "Antequera"},
+      {"ine_code": "29018", "name": "Benalmádena"},
+      {"ine_code": "29020", "name": "Cártama"},
+      {"ine_code": "29024", "name": "Coín"},
+      {"ine_code": "29028", "name": "Estepona"},
+      {"ine_code": "29030", "name": "Fuengirola"},
+      {"ine_code": "29033", "name": "Marbella"},
+      {"ine_code": "29041", "name": "Mijas"},
+      {"ine_code": "29051", "name": "Rincón de la Victoria"},
+      {"ine_code": "29055", "name": "Ronda"},
+      {"ine_code": "29059", "name": "Torremolinos"},
+      {"ine_code": "29062", "name": "Vélez-Málaga"}
+    ]
+  },
+  {
+    "ine_code": "30",
+    "name": "Murcia",
+    "municipalities": [
+      {"ine_code": "30030", "name": "Murcia"},
+      {"ine_code": "30012", "name": "Alcantarilla"},
+      {"ine_code": "30014", "name": "Alhama de Murcia"},
+      {"ine_code": "30019", "name": "Cieza"},
+      {"ine_code": "30022", "name": "Jumilla"},
+      {"ine_code": "30024", "name": "Lorca"},
+      {"ine_code": "30027", "name": "Molina de Segura"},
+      {"ine_code": "30028", "name": "San Javier"},
+      {"ine_code": "30033", "name": "Torre-Pacheco"},
+      {"ine_code": "30035", "name": "Totana"},
+      {"ine_code": "30041", "name": "Yecla"},
+      {"ine_code": "30042", "name": "Las Torres de Cotillas"},
+      {"ine_code": "30044", "name": "San Pedro del Pinatar"}
+    ]
+  },
+  {
+    "ine_code": "31",
+    "name": "Navarre",
+    "municipalities": [
+      {"ine_code": "31201", "name": "Pamplona"},
+      {"ine_code": "31041", "name": "Barañáin"},
+      {"ine_code": "31047", "name": "Burlada"},
+      {"ine_code": "31061", "name": "Egüés"},
+      {"ine_code": "31083", "name": "Estella-Lizarra"},
+      {"ine_code": "31154", "name": "Tafalla"},
+      {"ine_code": "31159", "name": "Tudela"},
+      {"ine_code": "31170", "name": "Villava"},
+      {"ine_code": "31251", "name": "Zizur Mayor"}
+    ]
+  },
+  {
+    "ine_code": "32",
+    "name": "Ourense",
+    "municipalities": [
+      {"ine_code": "32054", "name": "Ourense"},
+      {"ine_code": "32001", "name": "Allariz"},
+      {"ine_code": "32008", "name": "Barbadás"},
+      {"ine_code": "32009", "name": "O Barco de Valdeorras"},
+      {"ine_code": "32013", "name": "O Carballiño"},
+      {"ine_code": "32018", "name": "Celanova"},
+      {"ine_code": "32028", "name": "Xinzo de Limia"},
+      {"ine_code": "32044", "name": "Nogueira de Ramuín"},
+      {"ine_code": "32046", "name": "O Pereiro de Aguiar"},
+      {"ine_code": "32050", "name": "A Pobra de Trives"},
+      {"ine_code": "32055", "name": "Ribadavia"},
+      {"ine_code": "32059", "name": "Rubiá"},
+      {"ine_code": "32067", "name": "Verín"},
+      {"ine_code": "32068", "name": "Viana do Bolo"},
+      {"ine_code": "32072", "name": "Xinzo de Limia"}
+    ]
+  },
+  {
+    "ine_code": "33",
+    "name": "Asturias",
+    "municipalities": [
+      {"ine_code": "33044", "name": "Oviedo"},
+      {"ine_code": "33005", "name": "Avilés"},
+      {"ine_code": "33010", "name": "Cangas del Narcea"},
+      {"ine_code": "33012", "name": "Carreño"},
+      {"ine_code": "33014", "name": "Castrillón"},
+      {"ine_code": "33016", "name": "Corvera de Asturias"},
+      {"ine_code": "33019", "name": "Gijón"},
+      {"ine_code": "33022", "name": "Grado"},
+      {"ine_code": "33024", "name": "Langreo"},
+      {"ine_code": "33026", "name": "Laviana"},
+      {"ine_code": "33028", "name": "Llanera"},
+      {"ine_code": "33032", "name": "Mieres"},
+      {"ine_code": "33034", "name": "Navia"},
+      {"ine_code": "33037", "name": "Pravia"},
+      {"ine_code": "33041", "name": "Ribadesella"},
+      {"ine_code": "33046", "name": "San Martín del Rey Aurelio"},
+      {"ine_code": "33052", "name": "Siero"},
+      {"ine_code": "33059", "name": "Tineo"},
+      {"ine_code": "33061", "name": "Valdés"},
+      {"ine_code": "33065", "name": "Villaviciosa"}
+    ]
+  },
+  {
+    "ine_code": "34",
+    "name": "Palencia",
+    "municipalities": [
+      {"ine_code": "34120", "name": "Palencia"},
+      {"ine_code": "34004", "name": "Ampudia"},
+      {"ine_code": "34019", "name": "Carrión de los Condes"},
+      {"ine_code": "34023", "name": "Cervera de Pisuerga"},
+      {"ine_code": "34027", "name": "Guardo"},
+      {"ine_code": "34046", "name": "Venta de Baños"},
+      {"ine_code": "34048", "name": "Villamuriel de Cerrato"}
+    ]
+  },
+  {
+    "ine_code": "35",
+    "name": "Las Palmas",
+    "municipalities": [
+      {"ine_code": "35016", "name": "Las Palmas de Gran Canaria"},
+      {"ine_code": "35001", "name": "Arucas"},
+      {"ine_code": "35004", "name": "Arrecife"},
+      {"ine_code": "35006", "name": "Ingenio"},
+      {"ine_code": "35011", "name": "San Bartolomé de Tirajana"},
+      {"ine_code": "35013", "name": "Santa Lucía de Tirajana"},
+      {"ine_code": "35017", "name": "Telde"},
+      {"ine_code": "35020", "name": "Yaiza"},
+      {"ine_code": "35021", "name": "Agüimes"},
+      {"ine_code": "35022", "name": "Teguise"},
+      {"ine_code": "35023", "name": "Puerto del Rosario"}
+    ]
+  },
+  {
+    "ine_code": "36",
+    "name": "Pontevedra",
+    "municipalities": [
+      {"ine_code": "36057", "name": "Pontevedra"},
+      {"ine_code": "36002", "name": "Baiona"},
+      {"ine_code": "36007", "name": "Cambados"},
+      {"ine_code": "36010", "name": "Cangas"},
+      {"ine_code": "36017", "name": "A Estrada"},
+      {"ine_code": "36021", "name": "O Grove"},
+      {"ine_code": "36022", "name": "A Guarda"},
+      {"ine_code": "36024", "name": "Lalín"},
+      {"ine_code": "36026", "name": "Marín"},
+      {"ine_code": "36029", "name": "Moaña"},
+      {"ine_code": "36033", "name": "Mos"},
+      {"ine_code": "36035", "name": "Nigrán"},
+      {"ine_code": "36038", "name": "Poio"},
+      {"ine_code": "36040", "name": "Ponteareas"},
+      {"ine_code": "36042", "name": "O Porriño"},
+      {"ine_code": "36044", "name": "Redondela"},
+      {"ine_code": "36050", "name": "Sanxenxo"},
+      {"ine_code": "36054", "name": "Tui"},
+      {"ine_code": "36056", "name": "Vigo"},
+      {"ine_code": "36058", "name": "Vilaboa"},
+      {"ine_code": "36060", "name": "Vilagarcía de Arousa"},
+      {"ine_code": "36061", "name": "Vilanova de Arousa"}
+    ]
+  },
+  {
+    "ine_code": "37",
+    "name": "Salamanca",
+    "municipalities": [
+      {"ine_code": "37274", "name": "Salamanca"},
+      {"ine_code": "37007", "name": "Alba de Tormes"},
+      {"ine_code": "37022", "name": "Béjar"},
+      {"ine_code": "37039", "name": "Carbajosa de la Sagrada"},
+      {"ine_code": "37069", "name": "Ciudad Rodrigo"},
+      {"ine_code": "37160", "name": "Peñaranda de Bracamonte"},
+      {"ine_code": "37233", "name": "Santa Marta de Tormes"}
+    ]
+  },
+  {
+    "ine_code": "38",
+    "name": "Santa Cruz de Tenerife",
+    "municipalities": [
+      {"ine_code": "38038", "name": "Santa Cruz de Tenerife"},
+      {"ine_code": "38001", "name": "Adeje"},
+      {"ine_code": "38004", "name": "Arona"},
+      {"ine_code": "38006", "name": "Candelaria"},
+      {"ine_code": "38012", "name": "Granadilla de Abona"},
+      {"ine_code": "38017", "name": "Icod de los Vinos"},
+      {"ine_code": "38018", "name": "San Cristóbal de La Laguna"},
+      {"ine_code": "38020", "name": "La Orotava"},
+      {"ine_code": "38023", "name": "Puerto de la Cruz"},
+      {"ine_code": "38027", "name": "Santa Cruz de la Palma"},
+      {"ine_code": "38030", "name": "Tacoronte"}
+    ]
+  },
+  {
+    "ine_code": "39",
+    "name": "Cantabria",
+    "municipalities": [
+      {"ine_code": "39075", "name": "Santander"},
+      {"ine_code": "39008", "name": "El Astillero"},
+      {"ine_code": "39012", "name": "Cabezón de la Sal"},
+      {"ine_code": "39016", "name": "Camargo"},
+      {"ine_code": "39020", "name": "Castro Urdiales"},
+      {"ine_code": "39022", "name": "Comillas"},
+      {"ine_code": "39032", "name": "Laredo"},
+      {"ine_code": "39044", "name": "Noja"},
+      {"ine_code": "39049", "name": "Piélagos"},
+      {"ine_code": "39056", "name": "Reinosa"},
+      {"ine_code": "39070", "name": "Santa Cruz de Bezana"},
+      {"ine_code": "39072", "name": "Santillana del Mar"},
+      {"ine_code": "39076", "name": "Santoña"},
+      {"ine_code": "39083", "name": "Torrelavega"}
+    ]
+  },
+  {
+    "ine_code": "40",
+    "name": "Segovia",
+    "municipalities": [
+      {"ine_code": "40194", "name": "Segovia"},
+      {"ine_code": "40002", "name": "Ayllón"},
+      {"ine_code": "40014", "name": "Carbonero el Mayor"},
+      {"ine_code": "40018", "name": "Cuéllar"},
+      {"ine_code": "40032", "name": "El Espinar"},
+      {"ine_code": "40038", "name": "La Lastrilla"},
+      {"ine_code": "40086", "name": "Real Sitio de San Ildefonso"}
+    ]
+  },
+  {
+    "ine_code": "41",
+    "name": "Seville",
+    "municipalities": [
+      {"ine_code": "41091", "name": "Seville"},
+      {"ine_code": "41002", "name": "Alcalá de Guadaíra"},
+      {"ine_code": "41006", "name": "Camas"},
+      {"ine_code": "41010", "name": "Dos Hermanas"},
+      {"ine_code": "41011", "name": "Écija"},
+      {"ine_code": "41019", "name": "Lebrija"},
+      {"ine_code": "41021", "name": "Mairena del Aljarafe"},
+      {"ine_code": "41022", "name": "Mairena del Alcor"},
+      {"ine_code": "41051", "name": "La Rinconada"},
+      {"ine_code": "41037", "name": "Utrera"},
+      {"ine_code": "41035", "name": "Tomares"}
+    ]
+  },
+  {
+    "ine_code": "42",
+    "name": "Soria",
+    "municipalities": [
+      {"ine_code": "42173", "name": "Soria"},
+      {"ine_code": "42006", "name": "Almazán"},
+      {"ine_code": "42020", "name": "El Burgo de Osma"},
+      {"ine_code": "42071", "name": "Golmayo"},
+      {"ine_code": "42080", "name": "Medinaceli"}
+    ]
+  },
+  {
+    "ine_code": "43",
+    "name": "Tarragona",
+    "municipalities": [
+      {"ine_code": "43148", "name": "Tarragona"},
+      {"ine_code": "43006", "name": "L'Ampolla"},
+      {"ine_code": "43007", "name": "Amposta"},
+      {"ine_code": "43017", "name": "Calafell"},
+      {"ine_code": "43019", "name": "Cambrils"},
+      {"ine_code": "43023", "name": "Cunit"},
+      {"ine_code": "43040", "name": "El Vendrell"},
+      {"ine_code": "43057", "name": "Reus"},
+      {"ine_code": "43062", "name": "Salou"},
+      {"ine_code": "43063", "name": "Sant Carles de la Ràpita"},
+      {"ine_code": "43070", "name": "Torredembarra"},
+      {"ine_code": "43071", "name": "Valls"},
+      {"ine_code": "43073", "name": "Vila-seca"}
+    ]
+  },
+  {
+    "ine_code": "44",
+    "name": "Teruel",
+    "municipalities": [
+      {"ine_code": "44216", "name": "Teruel"},
+      {"ine_code": "44006", "name": "Albarracín"},
+      {"ine_code": "44017", "name": "Alcorisa"},
+      {"ine_code": "44054", "name": "Calamocha"},
+      {"ine_code": "44060", "name": "Cella"}
+    ]
+  },
+  {
+    "ine_code": "45",
+    "name": "Toledo",
+    "municipalities": [
+      {"ine_code": "45168", "name": "Toledo"},
+      {"ine_code": "45008", "name": "Consuegra"},
+      {"ine_code": "45018", "name": "Illescas"},
+      {"ine_code": "45021", "name": "Madridejos"},
+      {"ine_code": "45031", "name": "Mora"},
+      {"ine_code": "45042", "name": "Ocaña"},
+      {"ine_code": "45063", "name": "Quintanar de la Orden"},
+      {"ine_code": "45082", "name": "Seseña"},
+      {"ine_code": "45086", "name": "Talavera de la Reina"},
+      {"ine_code": "45092", "name": "Torrijos"},
+      {"ine_code": "45104", "name": "Villacañas"},
+      {"ine_code": "45122", "name": "Yuncos"}
+    ]
+  },
+  {
+    "ine_code": "46",
+    "name": "Valencia",
+    "municipalities": [
+      {"ine_code": "46250", "name": "Valencia"},
+      {"ine_code": "46001", "name": "Alaquàs"},
+      {"ine_code": "46002", "name": "Alboraia"},
+      {"ine_code": "46006", "name": "Alfafar"},
+      {"ine_code": "46011", "name": "Algemesí"},
+      {"ine_code": "46014", "name": "Almàssera"},
+      {"ine_code": "46027", "name": "Benaguasil"},
+      {"ine_code": "46034", "name": "Benifaió"},
+      {"ine_code": "46050", "name": "Burjassot"},
+      {"ine_code": "46054", "name": "Carcaixent"},
+      {"ine_code": "46056", "name": "Carlet"},
+      {"ine_code": "46066", "name": "Catarroja"},
+      {"ine_code": "46077", "name": "Cullera"},
+      {"ine_code": "46080", "name": "L'Eliana"},
+      {"ine_code": "46094", "name": "Gandia"},
+      {"ine_code": "46100", "name": "Godella"},
+      {"ine_code": "46111", "name": "Llíria"},
+      {"ine_code": "46119", "name": "Manises"},
+      {"ine_code": "46122", "name": "Massalavés"},
+      {"ine_code": "46125", "name": "Massanassa"},
+      {"ine_code": "46129", "name": "Mislata"},
+      {"ine_code": "46139", "name": "Oliva"},
+      {"ine_code": "46142", "name": "Ontinyent"},
+      {"ine_code": "46144", "name": "Paiporta"},
+      {"ine_code": "46147", "name": "Paterna"},
+      {"ine_code": "46150", "name": "Picanya"},
+      {"ine_code": "46151", "name": "Picassent"},
+      {"ine_code": "46155", "name": "La Pobla de Vallbona"},
+      {"ine_code": "46164", "name": "Quart de Poblet"},
+      {"ine_code": "46168", "name": "Rafelbunyol"},
+      {"ine_code": "46172", "name": "Riba-roja de Túria"},
+      {"ine_code": "46178", "name": "Sagunt"},
+      {"ine_code": "46182", "name": "Sedaví"},
+      {"ine_code": "46194", "name": "Sueca"},
+      {"ine_code": "46196", "name": "Tavernes Blanques"},
+      {"ine_code": "46197", "name": "Tavernes de la Valldigna"},
+      {"ine_code": "46203", "name": "Torrent"},
+      {"ine_code": "46209", "name": "Valencia"},
+      {"ine_code": "46220", "name": "Xàtiva"},
+      {"ine_code": "46223", "name": "Xirivella"}
+    ]
+  },
+  {
+    "ine_code": "47",
+    "name": "Valladolid",
+    "municipalities": [
+      {"ine_code": "47186", "name": "Valladolid"},
+      {"ine_code": "47003", "name": "Arroyo de la Encomienda"},
+      {"ine_code": "47017", "name": "La Cistérniga"},
+      {"ine_code": "47023", "name": "Laguna de Duero"},
+      {"ine_code": "47028", "name": "Medina del Campo"},
+      {"ine_code": "47044", "name": "Peñafiel"},
+      {"ine_code": "47060", "name": "Simancas"},
+      {"ine_code": "47061", "name": "Tordesillas"},
+      {"ine_code": "47075", "name": "Tudela de Duero"}
+    ]
+  },
+  {
+    "ine_code": "48",
+    "name": "Biscay",
+    "municipalities": [
+      {"ine_code": "48020", "name": "Bilbao"},
+      {"ine_code": "48001", "name": "Abadiño"},
+      {"ine_code": "48002", "name": "Amorebieta-Etxano"},
+      {"ine_code": "48004", "name": "Arrigorriaga"},
+      {"ine_code": "48005", "name": "Barakaldo"},
+      {"ine_code": "48006", "name": "Basauri"},
+      {"ine_code": "48010", "name": "Durango"},
+      {"ine_code": "48011", "name": "Erandio"},
+      {"ine_code": "48013", "name": "Galdakao"},
+      {"ine_code": "48014", "name": "Gernika-Lumo"},
+      {"ine_code": "48015", "name": "Getxo"},
+      {"ine_code": "48018", "name": "Leioa"},
+      {"ine_code": "48021", "name": "Muskiz"},
+      {"ine_code": "48023", "name": "Portugalete"},
+      {"ine_code": "48024", "name": "Santurtzi"},
+      {"ine_code": "48025", "name": "Sestao"},
+      {"ine_code": "48026", "name": "Sopela"},
+      {"ine_code": "48027", "name": "Trapagaran"},
+      {"ine_code": "48028", "name": "Zornotza"}
+    ]
+  },
+  {
+    "ine_code": "49",
+    "name": "Zamora",
+    "municipalities": [
+      {"ine_code": "49175", "name": "Zamora"},
+      {"ine_code": "49005", "name": "Benavente"},
+      {"ine_code": "49009", "name": "Fuentesaúco"},
+      {"ine_code": "49012", "name": "Puebla de Sanabria"},
+      {"ine_code": "49014", "name": "Toro"}
+    ]
+  },
+  {
+    "ine_code": "50",
+    "name": "Zaragoza",
+    "municipalities": [
+      {"ine_code": "50297", "name": "Zaragoza"},
+      {"ine_code": "50001", "name": "Alagón"},
+      {"ine_code": "50006", "name": "Calatayud"},
+      {"ine_code": "50007", "name": "Caspe"},
+      {"ine_code": "50009", "name": "Ejea de los Caballeros"},
+      {"ine_code": "50010", "name": "Épila"},
+      {"ine_code": "50012", "name": "Jaulín"},
+      {"ine_code": "50013", "name": "La Almunia de Doña Godina"},
+      {"ine_code": "50014", "name": "La Muela"},
+      {"ine_code": "50020", "name": "Puebla de Alfindén"},
+      {"ine_code": "50024", "name": "Tarazona"},
+      {"ine_code": "50026", "name": "Utebo"},
+      {"ine_code": "50028", "name": "Zuera"}
+    ]
+  },
+  {
+    "ine_code": "51",
+    "name": "Ceuta",
+    "municipalities": [
+      {"ine_code": "51001", "name": "Ceuta"}
+    ]
+  },
+  {
+    "ine_code": "52",
+    "name": "Melilla",
+    "municipalities": [
+      {"ine_code": "52001", "name": "Melilla"}
+    ]
+  }
+]
