@@ -173,3 +173,98 @@ def get_director_top_list(start_date=None, end_date=None, platform_ids=None):
         'labels': [d.name for d in data],
         'values': [d.total_views for d in data]
     }
+
+def _base_view_filters(start_date=None, end_date=None, platform_ids=None):
+    filters = Q()
+    if start_date and end_date:
+        filters &= Q(data_visualitzacio__range=(start_date, end_date))
+    elif end_date:
+        filters &= Q(data_visualitzacio__lte=end_date)
+    if platform_ids:
+        filters &= Q(api_id__in=platform_ids)
+    return filters
+
+def get_views_by_gender(start_date=None, end_date=None, platform_ids=None):
+    filters = _base_view_filters(start_date, end_date, platform_ids)
+    data = (
+        Visualitzacio.objects.filter(filters)
+        .exclude(user__gender__isnull=True)
+        .values('user__gender')
+        .annotate(total=Count('id'))
+        .order_by('-total')
+    )
+    return {
+        'labels': [d['user__gender'] for d in data],
+        'values': [d['total'] for d in data],
+    }
+
+def get_views_by_age_range(start_date=None, end_date=None, platform_ids=None):
+    filters = _base_view_filters(start_date, end_date, platform_ids)
+    data = (
+        Visualitzacio.objects.filter(filters)
+        .exclude(user__age_range__isnull=True)
+        .values('user__age_range')
+        .annotate(total=Count('id'))
+        .order_by('-total')
+    )
+    return {
+        'labels': [d['user__age_range'] for d in data],
+        'values': [d['total'] for d in data],
+    }
+
+def get_views_by_province(start_date=None, end_date=None, platform_ids=None):
+    filters = _base_view_filters(start_date, end_date, platform_ids)
+    data = (
+        Visualitzacio.objects.filter(filters)
+        .exclude(user__municipality__province__name__isnull=True)
+        .values('user__municipality__province__name')
+        .annotate(total=Count('id'))
+        .order_by('-total')
+    )
+    labels = [d['user__municipality__province__name'] for d in data[:10]]
+    values = [d['total'] for d in data[:10]]
+
+    if len(data) > 10:
+        others = sum(d['total'] for d in data[10:])
+        labels.append('Others')
+        values.append(others)
+
+    return {'labels': labels, 'values': values}
+
+def get_views_by_gender_age(start_date=None, end_date=None, platform_ids=None):
+    filters = _base_view_filters(start_date, end_date, platform_ids)
+    data = (
+        Visualitzacio.objects.filter(filters)
+        .exclude(user__gender__isnull=True)
+        .exclude(user__age_range__isnull=True)
+        .values('user__gender', 'user__age_range')
+        .annotate(total=Count('id'))
+        .order_by('user__gender', 'user__age_range')
+    )
+
+    age_order = ['<18', '18-30', '31-50', '>50']
+    gender_order = ['Male', 'Female', 'Non-binary', 'Other']
+
+    matrix = {}
+    for d in data:
+        g = d['user__gender']
+        a = d['user__age_range']
+        if g not in matrix:
+            matrix[g] = {}
+        matrix[g][a] = d['total']
+
+    datasets = []
+    colors = ['#3498db', '#e74c3c', '#2ecc71', '#f39c12']
+    for i, age in enumerate(age_order):
+        vals = [matrix.get(g, {}).get(age, 0) for g in gender_order if g in matrix]
+        datasets.append({
+            'label': age,
+            'data': vals,
+            'backgroundColor': colors[i % len(colors)],
+        })
+
+    present_genders = [g for g in gender_order if g in matrix]
+    return {
+        'labels': present_genders,
+        'datasets': datasets,
+    }
