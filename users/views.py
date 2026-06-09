@@ -29,6 +29,10 @@ from .services import (
     get_genre_distribution,
     get_age_rating_distribution,
     get_director_top_list,
+    get_views_by_gender,
+    get_views_by_age_range,
+    get_views_by_province,
+    get_views_by_gender_age,
     PII_COLUMNS,
     validate_gdpr_compliance,
 )
@@ -286,14 +290,17 @@ def crear_usuario_admin(request):
 def export_analytics_csv(request):
     start_date = request.GET.get('start')
     end_date = request.GET.get('end')
-    report_type = request.GET.get('type', 'internal') 
+    report_type = request.GET.get('type', 'internal')
+
+    if start_date == 'None': start_date = None
+    if end_date == 'None': end_date = None 
     
     platform_ids = get_active_platform_ids(request.user)
 
     raw_data = get_content_analytics(
         start_date=start_date,
         end_date=end_date,
-        plataform_id=platform_ids # Ahora pasamos una lista de IDs segura
+        platform_ids=platform_ids
     )
 
     is_b2b = (report_type == 'b2b')
@@ -393,6 +400,110 @@ def admin_dashboard_directors(request):
         'director_stats': director_stats,
         'filters': {'start': start_date, 'end': end_date},
         'platforms': API.objects.all()
+    })
+
+@login_required(login_url='login')
+@user_passes_test(is_admin_or_staff)
+def admin_dashboard_demographics(request):
+    start_date = request.GET.get('start')
+    end_date = request.GET.get('end')
+    platform_ids = get_active_platform_ids(request.user)
+
+    gender_stats = get_views_by_gender(start_date, end_date, platform_ids)
+    age_stats = get_views_by_age_range(start_date, end_date, platform_ids)
+    province_stats = get_views_by_province(start_date, end_date, platform_ids)
+    cross_stats = get_views_by_gender_age(start_date, end_date, platform_ids)
+
+    gender_table = list(zip(gender_stats['labels'], gender_stats['values']))
+    age_table = list(zip(age_stats['labels'], age_stats['values']))
+    province_table = list(zip(province_stats['labels'], province_stats['values']))
+
+    return render(request, 'users/parts/dashboard_demographics.html', {
+        'gender_stats': gender_stats,
+        'age_stats': age_stats,
+        'province_stats': province_stats,
+        'cross_stats': cross_stats,
+        'gender_table': gender_table,
+        'age_table': age_table,
+        'province_table': province_table,
+        'filters': {'start': start_date, 'end': end_date},
+        'platforms': API.objects.all(),
+    })
+
+@login_required(login_url='login')
+@user_passes_test(is_admin_or_staff)
+def admin_dashboard_views_by_gender(request):
+    start_date = request.GET.get('start')
+    end_date = request.GET.get('end')
+    platform_ids = get_active_platform_ids(request.user)
+
+    gender_stats = get_views_by_gender(start_date, end_date, platform_ids)
+    gender_table = list(zip(gender_stats['labels'], gender_stats['values']))
+
+    return render(request, 'users/parts/dashboard_views_by_gender.html', {
+        'gender_stats': gender_stats,
+        'gender_table': gender_table,
+        'filters': {'start': start_date, 'end': end_date},
+        'platforms': API.objects.all(),
+    })
+
+@login_required(login_url='login')
+@user_passes_test(is_admin_or_staff)
+def admin_dashboard_views_by_age(request):
+    start_date = request.GET.get('start')
+    end_date = request.GET.get('end')
+    platform_ids = get_active_platform_ids(request.user)
+
+    age_stats = get_views_by_age_range(start_date, end_date, platform_ids)
+    age_table = list(zip(age_stats['labels'], age_stats['values']))
+
+    return render(request, 'users/parts/dashboard_views_by_age.html', {
+        'age_stats': age_stats,
+        'age_table': age_table,
+        'filters': {'start': start_date, 'end': end_date},
+        'platforms': API.objects.all(),
+    })
+
+@login_required(login_url='login')
+@user_passes_test(is_admin_or_staff)
+def admin_dashboard_views_by_province(request):
+    start_date = request.GET.get('start')
+    end_date = request.GET.get('end')
+    platform_ids = get_active_platform_ids(request.user)
+
+    province_stats = get_views_by_province(start_date, end_date, platform_ids)
+    province_table = list(zip(province_stats['labels'], province_stats['values']))
+
+    return render(request, 'users/parts/dashboard_views_by_province.html', {
+        'province_stats': province_stats,
+        'province_table': province_table,
+        'filters': {'start': start_date, 'end': end_date},
+        'platforms': API.objects.all(),
+    })
+
+@login_required(login_url='login')
+@user_passes_test(is_admin_or_staff)
+def admin_dashboard_cross_tab(request):
+    start_date = request.GET.get('start')
+    end_date = request.GET.get('end')
+    platform_ids = get_active_platform_ids(request.user)
+
+    cross_stats = get_views_by_gender_age(start_date, end_date, platform_ids)
+
+    cross_table_headers = [d['label'] for d in cross_stats['datasets']]
+    cross_table_rows = []
+    for i, label in enumerate(cross_stats['labels']):
+        row = [label]
+        for dataset in cross_stats['datasets']:
+            row.append(dataset['data'][i] if i < len(dataset['data']) else 0)
+        cross_table_rows.append(row)
+
+    return render(request, 'users/parts/dashboard_cross_tab.html', {
+        'cross_stats': cross_stats,
+        'cross_table_headers': cross_table_headers,
+        'cross_table_rows': cross_table_rows,
+        'filters': {'start': start_date, 'end': end_date},
+        'platforms': API.objects.all(),
     })
 
 @user_passes_test(lambda u: u.is_superuser)
