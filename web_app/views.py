@@ -161,6 +161,7 @@ def series_detail(request, pk):
         'reviews': reviews,
         'avg_rating': review_stats['avg_rating'],
         'total_reviews': review_stats['total_reviews'],
+        'recommendations': series.get_similar_by_genre(limit=4)
     })
 
 
