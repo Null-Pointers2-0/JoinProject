@@ -23,4 +23,9 @@ urlpatterns = [
     path('admin/dashboard/genres/', views.admin_dashboard_genres, name='admin_dashboard_genres'),
     path('admin/dashboard/age-ratings/', views.admin_dashboard_age_ratings, name='admin_dashboard_age_ratings'),
     path('admin/dashboard/directors/', views.admin_dashboard_directors, name='admin_dashboard_directors'),
+    path('admin/dashboard/demographics/', views.admin_dashboard_demographics, name='admin_dashboard_demographics'),
+    path('admin/dashboard/demographics/gender/', views.admin_dashboard_views_by_gender, name='admin_dashboard_views_by_gender'),
+    path('admin/dashboard/demographics/age/', views.admin_dashboard_views_by_age, name='admin_dashboard_views_by_age'),
+    path('admin/dashboard/demographics/province/', views.admin_dashboard_views_by_province, name='admin_dashboard_views_by_province'),
+    path('admin/dashboard/demographics/cross-tab/', views.admin_dashboard_cross_tab, name='admin_dashboard_cross_tab'),
 ]
