@@ -22,7 +22,7 @@ gettext.textdomain('app')
 _ = gettext.gettext
 
 from web_app.forms import CustomUserChangeForm, CustomUserAdminCreationForm
-from web_app.models import CustomUser, Movie, Series, UserProfile, API, Visualitzacio, UserType, RoleAuditLog
+from web_app.models import CustomUser, Movie, Series, UserProfile, API, Visualitzacio, UserType, RoleAuditLog, Province, Municipality
 from .services import (
     get_content_analytics, 
     format_analytics_for_csv,
@@ -81,7 +81,16 @@ def user_profile(request):
     else:
         form = CustomUserChangeForm(instance=request.user)
 
-    return render(request, 'users/profile/user_profile.html', {'form': form})
+    current_province_id = None
+    if request.user.municipality:
+        current_province_id = request.user.municipality.province_id
+
+    return render(request, 'users/profile/user_profile.html', {
+        'form': form,
+        'provinces': Province.objects.all(),
+        'current_province_id': current_province_id,
+        'current_municipality_id': request.user.municipality_id,
+    })
 
 @login_required(login_url='login')
 @user_passes_test(is_consumer)
