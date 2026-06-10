@@ -22,6 +22,7 @@ class AdminRedirectMiddleware:
                 'update_user_role',
                 'gestion_cartelleres',
                 'editar_cartellera',
+                'system_logs',
                 ]
             
             if current_url_name not in exempt_url_names and not request.path.startswith('/static/'):
