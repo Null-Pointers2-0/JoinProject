@@ -4,7 +4,7 @@ from django.utils.crypto import get_random_string
 from django.shortcuts import render, redirect, get_object_or_404
 from web_app.forms import CustomUserAdminCreationForm, CustomUserCreationForm
 from web_app.models import AgeRating, API, CustomUser, Director, Genre, Movie, UserProfile, Series, Contingut, \
-    AgeRating, Valoracio, Visualitzacio
+    AgeRating, Valoracio, Visualitzacio, SyncLog
 from web_app import utils
 import json
 from itertools import chain
@@ -266,3 +266,16 @@ def register_platform_click(request):
 
     return JsonResponse({'status': 'error', 'message': 'Método no permitido'}, status=405)
 
+
+@user_passes_test(lambda u: u.is_superuser)
+def system_logs(request):
+    if not request.user.is_authenticated:
+        return redirect('login')
+
+    logs = SyncLog.objects.all().order_by('-start_time')
+    paginator = Paginator(logs, 20)
+    page_obj = paginator.get_page(request.GET.get('page', 1))
+
+    return render(request, 'users/parts/system_logs.html', {
+        'logs': page_obj
+    })
