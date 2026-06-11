@@ -1,5 +1,6 @@
 from django.urls import path
 from . import views
+from web_app.views import system_logs
 
 urlpatterns = [
     # Staff Admin URLs
@@ -10,7 +11,7 @@ urlpatterns = [
     path('api/update-role/', views.update_user_role, name='update_user_role'),
     path('staff-admin/cartelleres/', views.gestion_cartelleres, name='gestion_cartelleres'),
     path('staff-admin/cartelleres/editar/<int:contingut_id>/', views.editar_cartellera, name='editar_cartellera'),
-
+    path('staff-admin/logs/', system_logs, name='system_logs'),
     # User URLs
     path('profile/', views.user_profile, name='user_profile'),
     path('history/', views.history, name='history'),

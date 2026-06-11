@@ -275,3 +275,16 @@ def register_platform_click(request):
 def municipalities_by_province(request, province_id):
     municipalities = Municipality.objects.filter(province_id=province_id).values('id', 'name')
     return JsonResponse(list(municipalities), safe=False)
+
+@user_passes_test(lambda u: u.is_superuser)
+def system_logs(request):
+    if not request.user.is_authenticated:
+        return redirect('login')
+
+    logs = SyncLog.objects.all().order_by('-start_time')
+    paginator = Paginator(logs, 20)
+    page_obj = paginator.get_page(request.GET.get('page', 1))
+
+    return render(request, 'users/parts/system_logs.html', {
+        'logs': page_obj
+    })

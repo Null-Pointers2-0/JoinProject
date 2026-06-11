@@ -600,3 +600,4 @@ def editar_cartellera(request, contingut_id):
     return render(request, 'users/parts/editar_cartellera.html', {
         'contingut': contingut,
     })
+
