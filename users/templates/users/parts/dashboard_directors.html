@@ -7,7 +7,7 @@
         <div class="col-md-8 mb-4">
             <div class="card shadow-sm border-0">
                 <div class="card-header bg-warning text-dark py-3">
-                    <h5 class="card-title mb-0"><i class="fas fa-user-tie"></i> Top Directors</h5>
+                    <h5 class="card-title mb-0"><i class="fas fa-user-tie"></i> Top Directors by Views</h5>
                 </div>
                 <div class="card-body p-4">
                     <div style="height: 400px; position: relative;">
@@ -27,7 +27,7 @@
                             <thead class="table-light">
                                 <tr>
                                     <th class="ps-3">Director</th>
-                                    <th class="text-end pe-3">Views</th>
+                                    <th class="text-end pe-3">Visualizations</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -54,7 +54,7 @@ document.addEventListener('DOMContentLoaded', function() {
         data: {
             labels: {{ director_stats.labels|safe }},
             datasets: [{
-                label: 'Views',
+                label: 'Visualizations',
                 data: {{ director_stats.values|safe }},
                 backgroundColor: '#2c3e50',
                 borderRadius: 5

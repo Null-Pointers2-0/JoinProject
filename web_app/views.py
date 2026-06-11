@@ -3,8 +3,14 @@ from django.conf import settings
 from django.utils.crypto import get_random_string
 from django.shortcuts import render, redirect, get_object_or_404
 from web_app.forms import CustomUserAdminCreationForm, CustomUserCreationForm
-from web_app.models import AgeRating, API, CustomUser, Director, Genre, Movie, UserProfile, Series, Contingut, \
-    AgeRating, Valoracio, Visualitzacio
+from web_app.models import (
+    API, Director, Genre, AgeRating, Contingut,
+    Movie, Series, CustomUser, UserProfile,
+    Preferits, Valoracio, Visualitzacio, SyncLog,
+    RoleAuditLog,
+    Province, Municipality,
+)
+
 from web_app import utils
 import json
 from itertools import chain
@@ -89,7 +95,7 @@ def register_view(request):
             user.subscriptions.set(platforms)
         login(request, user)
         return redirect('home')
-    return render(request, 'identify/register.html', {'form': form})
+    return render(request, 'identify/register.html', {'form': form, 'provinces': Province.objects.all()})
 
 @login_required(login_url='login')
 def redirect_by_role(request):
@@ -161,6 +167,7 @@ def series_detail(request, pk):
         'reviews': reviews,
         'avg_rating': review_stats['avg_rating'],
         'total_reviews': review_stats['total_reviews'],
+        'recommendations': series.get_similar_by_genre(limit=4)
     })
 
 
@@ -240,6 +247,7 @@ def terms_use(request):
 def privacy_policy(request):
     return render(request, 'footer_legal/privacy_policy.html')
 
+@login_required
 def register_platform_click(request):
     if request.method == 'POST':
         try:
@@ -247,22 +255,36 @@ def register_platform_click(request):
             contingut_id = data.get('contingut_id')
             api_id = data.get('api_id')
 
-            contingut = get_object_or_404(Contingut, id=contingut_id)
-            api = get_object_or_404(API, id=api_id)
-
-            user = request.user if request.user.is_authenticated else None
-            Visualitzacio.objects.create(
-                user=user,
-                contingut=contingut,
-                api=api
+            # MAGIA DE DJANGO: Si existe, actualiza la fecha. Si no, lo crea.
+            vis, created = Visualitzacio.objects.update_or_create(
+                user=request.user,
+                contingut_id=contingut_id,  
+                api_id=api_id,
+                defaults={'data_visualitzacio': timezone.now()}
             )
 
-            total_clicks = Visualitzacio.objects.filter(contingut=contingut, api=api).count()
-
-            return JsonResponse({'status': 'success', 'total_clicks': total_clicks})
-
+            return JsonResponse({
+                'status': 'success',
+                'message': 'Historial actualizado correctamente'
+            })
         except Exception as e:
             return JsonResponse({'status': 'error', 'message': str(e)}, status=400)
 
     return JsonResponse({'status': 'error', 'message': 'Método no permitido'}, status=405)
 
+def municipalities_by_province(request, province_id):
+    municipalities = Municipality.objects.filter(province_id=province_id).values('id', 'name')
+    return JsonResponse(list(municipalities), safe=False)
+
+@user_passes_test(lambda u: u.is_superuser)
+def system_logs(request):
+    if not request.user.is_authenticated:
+        return redirect('login')
+
+    logs = SyncLog.objects.all().order_by('-start_time')
+    paginator = Paginator(logs, 20)
+    page_obj = paginator.get_page(request.GET.get('page', 1))
+
+    return render(request, 'users/parts/system_logs.html', {
+        'logs': page_obj
+    })

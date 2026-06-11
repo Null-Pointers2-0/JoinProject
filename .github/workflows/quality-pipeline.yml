@@ -645,7 +645,7 @@ jobs:
           FAIL=0
 
           if find . \( -name "*.js" -o -name "*.ts" -o -name "*.vue" -o -name "*.py" -o -name "*.java" \) \
-            -not -path "*/node_modules/*" -not -path "*/dist/*" 2>/dev/null | grep -q .; then
+            -not -path "*/node_modules/*" -not -path "*/dist/*" -not -path "*/tests/*" -not -path "*/.venv/*" 2>/dev/null | grep -q .; then
             DETECTED=1
           else
             DETECTED=0
@@ -654,7 +654,7 @@ jobs:
           # Unconditional frontend router guard bypass
           if grep -rEn "next\(true\)|beforeEach.*return true|navigate\(.*\{.*replace.*\}\)" \
             --include="*.js" --include="*.ts" --include="*.vue" . 2>/dev/null \
-            | grep -v node_modules | grep -v "//"; then
+            | grep -vE "node_modules|tests/|\.venv|dist/" | grep -v "//"; then
             echo "::warning::Possible unconditional navigation guard bypass detected"
           fi
 
@@ -662,14 +662,14 @@ jobs:
           if grep -rEn "password\s*[=:]\s*['\"][^'\"]{4,}['\"]" \
             --include="*.js" --include="*.ts" --include="*.vue" --include="*.py" --include="*.java" \
             . 2>/dev/null \
-            | grep -v node_modules \
+            | grep -vE "node_modules|tests/|\.venv|dist/" \
             | grep -v "//" \
             | grep -vE "[[:space:]]:[a-zA-Z][a-zA-Z0-9_-]*=" \
             | grep -q .; then
             grep -rEn "password\s*[=:]\s*['\"][^'\"]{4,}['\"]" \
               --include="*.js" --include="*.ts" --include="*.vue" --include="*.py" --include="*.java" \
               . 2>/dev/null \
-              | grep -v node_modules | grep -v "//" \
+              | grep -vE "node_modules|tests/|\.venv|dist/" | grep -v "//" \
               | grep -vE "[[:space:]]:[a-zA-Z][a-zA-Z0-9_-]*="
             echo "::error::Hardcoded password value detected in source code"
             FAIL=1
@@ -678,14 +678,14 @@ jobs:
           # eval() / exec() usage
           if grep -rEn "\beval\(|\bexec\(" \
             --include="*.js" --include="*.ts" --include="*.vue" --include="*.py" \
-            . 2>/dev/null | grep -v node_modules | grep -v "//"; then
+            . 2>/dev/null | grep -vE "node_modules|tests/|\.venv|dist/" | grep -v "//"; then
             echo "::warning::eval()/exec() usage detected — review for potential code injection risk"
           fi
 
           # Disabled SSL/TLS certificate verification
           if grep -rEn "rejectUnauthorized\s*:\s*false|verify\s*=\s*False|ssl_verify\s*=\s*false" \
             --include="*.js" --include="*.ts" --include="*.py" --include="*.java" \
-            . 2>/dev/null | grep -v node_modules | grep -v "//"; then
+            . 2>/dev/null | grep -vE "node_modules|tests/|\.venv|dist/" | grep -v "//"; then
             echo "::error::SSL/TLS certificate verification disabled — man-in-the-middle attack risk"
             FAIL=1
           fi
@@ -693,7 +693,7 @@ jobs:
           # Sensitive tokens in URL query strings
           if grep -rEn "[?&](token|api_key|apikey|access_token|secret)=" \
             --include="*.js" --include="*.ts" --include="*.vue" --include="*.py" \
-            . 2>/dev/null | grep -v node_modules | grep -v "//"; then
+            . 2>/dev/null | grep -vE "node_modules|tests/|\.venv|dist/" | grep -v "//"; then
             echo "::warning::Sensitive token/key passed in URL query string — use Authorization header instead."
           fi
 

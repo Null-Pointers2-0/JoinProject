@@ -9,6 +9,7 @@ from django.contrib.auth.decorators import login_required, user_passes_test
 from django.utils.crypto import get_random_string
 from django.contrib.sessions.models import Session
 from django.utils import timezone
+from datetime import timedelta
 import json
 
 import gettext
@@ -21,13 +22,17 @@ gettext.textdomain('app')
 _ = gettext.gettext
 
 from web_app.forms import CustomUserChangeForm, CustomUserAdminCreationForm
-from web_app.models import CustomUser, Movie, Series, UserProfile, API, Visualitzacio, UserType, RoleAuditLog
+from web_app.models import CustomUser, Movie, Series, UserProfile, API, Visualitzacio, UserType, RoleAuditLog, Province, Municipality
 from .services import (
     get_content_analytics, 
     format_analytics_for_csv,
     get_genre_distribution,
     get_age_rating_distribution,
     get_director_top_list,
+    get_views_by_gender,
+    get_views_by_age_range,
+    get_views_by_province,
+    get_views_by_gender_age,
     PII_COLUMNS,
     validate_gdpr_compliance,
 )
@@ -80,17 +85,85 @@ def user_profile(request):
     else:
         form = CustomUserChangeForm(instance=request.user)
 
-    return render(request, 'users/profile/user_profile.html', {'form': form})
+    current_province_id = None
+    if request.user.municipality:
+        current_province_id = request.user.municipality.province_id
+
+    return render(request, 'users/profile/user_profile.html', {
+        'form': form,
+        'provinces': Province.objects.all(),
+        'current_province_id': current_province_id,
+        'current_municipality_id': request.user.municipality_id,
+    })
 
 @login_required(login_url='login')
 @user_passes_test(is_consumer)
 def history(request):
-    # OPTIMIZACIÓN: Buscamos en el modelo real de visualizaciones y hacemos Eager Loading
-    visualizaciones = Visualitzacio.objects.filter(user=request.user).select_related(
-        'contingut__movie', 'contingut__series'
-    ).prefetch_related('contingut__apis').order_by('-data_visualitzacio')
-    
-    return render(request, 'users/parts/history.html', {'visualizaciones': visualizaciones})
+    user = request.user
+    visualizaciones = Visualitzacio.objects.filter(user=user).select_related(
+        'contingut__movie', 'contingut__series', 'api'
+    ).order_by('-data_visualitzacio')
+
+    platform_id = request.GET.get('platform')
+    if platform_id:
+        visualizaciones = visualizaciones.filter(api_id=platform_id)
+
+    date_filter = request.GET.get('date')
+    now = timezone.now()
+    if date_filter == 'today':
+        visualizaciones = visualizaciones.filter(data_visualitzacio__date=now.date())
+    elif date_filter == 'week':
+        visualizaciones = visualizaciones.filter(data_visualitzacio__gte=now - timedelta(days=7))
+    elif date_filter == 'month':
+        visualizaciones = visualizaciones.filter(data_visualitzacio__gte=now - timedelta(days=30))
+
+    paginator = Paginator(visualizaciones, 20)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
+    grouped_history = {
+        'Avui': [],
+        'Aquesta setmana': [],
+        'Aquest mes': [],
+        'Més antic': []
+    }
+
+    today = now.date()
+    week_ago = (now - timedelta(days=7)).date()
+    month_ago = (now - timedelta(days=30)).date()
+
+    for vis in page_obj:
+        vis_date = vis.data_visualitzacio.date()
+
+        if hasattr(vis.contingut, 'movie'):
+            vis.content_type = 'Movie'
+        elif hasattr(vis.contingut, 'series'):
+            vis.content_type = 'Series'
+        else:
+            vis.content_type = 'Desconegut'
+
+        if vis_date == today:
+            grouped_history['Avui'].append(vis)
+        elif vis_date >= week_ago:
+            grouped_history['Aquesta setmana'].append(vis)
+        elif vis_date >= month_ago:
+            grouped_history['Aquest mes'].append(vis)
+        else:
+            grouped_history['Més antic'].append(vis)
+
+    grouped_history = {k: v for k, v in grouped_history.items() if v}
+
+    platforms = API.objects.all()
+
+    context = {
+        'page_obj': page_obj,
+        'grouped_history': grouped_history,
+        'platforms': platforms,
+        'selected_platform': platform_id,
+        'selected_date': date_filter,
+    }
+
+    return render(request, 'users/parts/history.html', context)
 
 @login_required(login_url='login')
 @user_passes_test(is_consumer)
@@ -217,14 +290,17 @@ def crear_usuario_admin(request):
 def export_analytics_csv(request):
     start_date = request.GET.get('start')
     end_date = request.GET.get('end')
-    report_type = request.GET.get('type', 'internal') 
+    report_type = request.GET.get('type', 'internal')
+
+    if start_date == 'None': start_date = None
+    if end_date == 'None': end_date = None 
     
     platform_ids = get_active_platform_ids(request.user)
 
     raw_data = get_content_analytics(
         start_date=start_date,
         end_date=end_date,
-        plataform_id=platform_ids # Ahora pasamos una lista de IDs segura
+        platform_ids=platform_ids
     )
 
     is_b2b = (report_type == 'b2b')
@@ -234,7 +310,7 @@ def export_analytics_csv(request):
     response['Content-Disposition'] = 'attachment; filename="analytics_report.csv"'
 
     writer = csv.writer(response)
-    writer.writerow(['Title', 'Genre', 'Age Rating', 'Year', 'Director', 'Platform', 'Total Views', 'Total Favorites'])#TODO translate this
+    writer.writerow(['Title', 'Genre', 'Age Rating', 'Year', 'Director', 'Platform', 'Total Visualizations', 'Total Favorites'])#TODO translate this
 
     for item in clean_data:
         writer.writerow([
@@ -324,6 +400,110 @@ def admin_dashboard_directors(request):
         'director_stats': director_stats,
         'filters': {'start': start_date, 'end': end_date},
         'platforms': API.objects.all()
+    })
+
+@login_required(login_url='login')
+@user_passes_test(is_admin_or_staff)
+def admin_dashboard_demographics(request):
+    start_date = request.GET.get('start')
+    end_date = request.GET.get('end')
+    platform_ids = get_active_platform_ids(request.user)
+
+    gender_stats = get_views_by_gender(start_date, end_date, platform_ids)
+    age_stats = get_views_by_age_range(start_date, end_date, platform_ids)
+    province_stats = get_views_by_province(start_date, end_date, platform_ids)
+    cross_stats = get_views_by_gender_age(start_date, end_date, platform_ids)
+
+    gender_table = list(zip(gender_stats['labels'], gender_stats['values']))
+    age_table = list(zip(age_stats['labels'], age_stats['values']))
+    province_table = list(zip(province_stats['labels'], province_stats['values']))
+
+    return render(request, 'users/parts/dashboard_demographics.html', {
+        'gender_stats': gender_stats,
+        'age_stats': age_stats,
+        'province_stats': province_stats,
+        'cross_stats': cross_stats,
+        'gender_table': gender_table,
+        'age_table': age_table,
+        'province_table': province_table,
+        'filters': {'start': start_date, 'end': end_date},
+        'platforms': API.objects.all(),
+    })
+
+@login_required(login_url='login')
+@user_passes_test(is_admin_or_staff)
+def admin_dashboard_views_by_gender(request):
+    start_date = request.GET.get('start')
+    end_date = request.GET.get('end')
+    platform_ids = get_active_platform_ids(request.user)
+
+    gender_stats = get_views_by_gender(start_date, end_date, platform_ids)
+    gender_table = list(zip(gender_stats['labels'], gender_stats['values']))
+
+    return render(request, 'users/parts/dashboard_views_by_gender.html', {
+        'gender_stats': gender_stats,
+        'gender_table': gender_table,
+        'filters': {'start': start_date, 'end': end_date},
+        'platforms': API.objects.all(),
+    })
+
+@login_required(login_url='login')
+@user_passes_test(is_admin_or_staff)
+def admin_dashboard_views_by_age(request):
+    start_date = request.GET.get('start')
+    end_date = request.GET.get('end')
+    platform_ids = get_active_platform_ids(request.user)
+
+    age_stats = get_views_by_age_range(start_date, end_date, platform_ids)
+    age_table = list(zip(age_stats['labels'], age_stats['values']))
+
+    return render(request, 'users/parts/dashboard_views_by_age.html', {
+        'age_stats': age_stats,
+        'age_table': age_table,
+        'filters': {'start': start_date, 'end': end_date},
+        'platforms': API.objects.all(),
+    })
+
+@login_required(login_url='login')
+@user_passes_test(is_admin_or_staff)
+def admin_dashboard_views_by_province(request):
+    start_date = request.GET.get('start')
+    end_date = request.GET.get('end')
+    platform_ids = get_active_platform_ids(request.user)
+
+    province_stats = get_views_by_province(start_date, end_date, platform_ids)
+    province_table = list(zip(province_stats['labels'], province_stats['values']))
+
+    return render(request, 'users/parts/dashboard_views_by_province.html', {
+        'province_stats': province_stats,
+        'province_table': province_table,
+        'filters': {'start': start_date, 'end': end_date},
+        'platforms': API.objects.all(),
+    })
+
+@login_required(login_url='login')
+@user_passes_test(is_admin_or_staff)
+def admin_dashboard_cross_tab(request):
+    start_date = request.GET.get('start')
+    end_date = request.GET.get('end')
+    platform_ids = get_active_platform_ids(request.user)
+
+    cross_stats = get_views_by_gender_age(start_date, end_date, platform_ids)
+
+    cross_table_headers = [d['label'] for d in cross_stats['datasets']]
+    cross_table_rows = []
+    for i, label in enumerate(cross_stats['labels']):
+        row = [label]
+        for dataset in cross_stats['datasets']:
+            row.append(dataset['data'][i] if i < len(dataset['data']) else 0)
+        cross_table_rows.append(row)
+
+    return render(request, 'users/parts/dashboard_cross_tab.html', {
+        'cross_stats': cross_stats,
+        'cross_table_headers': cross_table_headers,
+        'cross_table_rows': cross_table_rows,
+        'filters': {'start': start_date, 'end': end_date},
+        'platforms': API.objects.all(),
     })
 
 @user_passes_test(lambda u: u.is_superuser)
@@ -420,3 +600,4 @@ def editar_cartellera(request, contingut_id):
     return render(request, 'users/parts/editar_cartellera.html', {
         'contingut': contingut,
     })
+

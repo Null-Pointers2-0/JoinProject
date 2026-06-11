@@ -9,6 +9,44 @@ class UserType(models.TextChoices):
     ADMIN = 'Admin', 'Admin'
     CONSUMER = 'Consumer', 'Consumer'
 
+
+class Gender(models.TextChoices):
+    MALE = 'Male', 'Male'
+    FEMALE = 'Female', 'Female'
+    NON_BINARY = 'Non-binary', 'Non-binary'
+    OTHER = 'Other', 'Other'
+
+class AgeRange(models.TextChoices):
+    UNDER_18 = '<18', 'Under 18'
+    BETWEEN_18_30 = '18-30', '18-30'
+    BETWEEN_31_50 = '31-50', '31-50'
+    OVER_50 = '>50', 'Over 50'
+
+class Province(models.Model):
+    ine_code = models.CharField(max_length=2, unique=True)
+    name = models.CharField(max_length=255)
+
+    class Meta:
+        verbose_name = 'Provincia'
+        verbose_name_plural = 'Provincias'
+        ordering = ['name']
+    def __str__(self):
+        return self.name
+    
+class Municipality(models.Model):
+    ine_code = models.CharField(max_length=5, unique=True)
+    name = models.CharField(max_length=255)
+    province = models.ForeignKey(Province, on_delete=models.CASCADE, related_name='municipalities')
+
+    class Meta:
+        verbose_name = 'Municipio'
+        verbose_name_plural = 'Municipios'
+        ordering = ['name']
+
+    def __str__(self):
+        return self.name
+
+
 class API(models.Model):
     port = models.IntegerField(unique=True)
     name = models.CharField(max_length=100, blank=True, default='')
@@ -130,7 +168,7 @@ class Movie(models.Model):
 
         return Movie.objects.filter(
             contingut__genere=self.contingut.genere
-        ).exclude(id=self.id).order_by('?')[:limit]
+        ).exclude(id=self.id).distinct().order_by('?')[:limit]
 
 class Series(models.Model):
     contingut = models.OneToOneField(Contingut, on_delete=models.CASCADE, related_name='series')
@@ -187,6 +225,14 @@ class Series(models.Model):
     def poster_path(self):
         return self.contingut.poster_path
 
+    def get_similar_by_genre(self, limit=4):
+        if not self.contingut.genere:
+            return Series.objects.none()
+
+        return Series.objects.filter(
+            contingut__genere=self.contingut.genere
+        ).exclude(id=self.id).distinct().order_by('?')[:limit]
+
 
 class CustomUser(AbstractUser):
     """
@@ -195,10 +241,28 @@ class CustomUser(AbstractUser):
     """
     avatar = models.ImageField(upload_to='avatars/', null=True, blank=True)
     bio = models.TextField(blank=True, null=True)
-    location = models.CharField(max_length=255, blank=True, null=True)
     type = models.CharField(
         choices=UserType.choices,
         default=UserType.CONSUMER,
+    )
+    gender = models.CharField(
+        choices=Gender.choices,
+        max_length=50,
+        blank=True,
+        null=True
+    )
+    age_range = models.CharField(
+        choices=AgeRange.choices,
+        max_length=10,
+        blank=True,
+        null=True
+    )
+    municipality = models.ForeignKey(
+        Municipality, 
+        on_delete=models.SET_NULL, 
+        blank=True, 
+        null=True, 
+        related_name='users'
     )
     subscriptions = models.ManyToManyField('API', blank=True, related_name='subscribed_users')
 

@@ -1,4 +1,4 @@
-{% extends 'users/settings/user_settings.html' %}
+{% extends 'users/base_profile.html' %}
 {% load i18n %}
 
 {% block content_admin %}
@@ -22,6 +22,10 @@
         <li class="nav-item">
             <a class="nav-link {% if request.resolver_match.url_name == 'admin_dashboard_directors' %}active{% endif %}"
                href="{% url 'admin_dashboard_directors' %}">{% trans 'Directors' %}</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link {% if '/demographics/' in request.path %}active{% endif %}"
+               href="{% url 'admin_dashboard_demographics' %}">{% trans 'Demographics' %}</a>
         </li>
     </ul>
 

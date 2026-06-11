@@ -1,5 +1,6 @@
 from django.urls import path
 from . import views
+from web_app.views import system_logs
 
 urlpatterns = [
     # Staff Admin URLs
@@ -10,7 +11,7 @@ urlpatterns = [
     path('api/update-role/', views.update_user_role, name='update_user_role'),
     path('staff-admin/cartelleres/', views.gestion_cartelleres, name='gestion_cartelleres'),
     path('staff-admin/cartelleres/editar/<int:contingut_id>/', views.editar_cartellera, name='editar_cartellera'),
-
+    path('staff-admin/logs/', system_logs, name='system_logs'),
     # User URLs
     path('profile/', views.user_profile, name='user_profile'),
     path('history/', views.history, name='history'),
@@ -23,4 +24,9 @@ urlpatterns = [
     path('admin/dashboard/genres/', views.admin_dashboard_genres, name='admin_dashboard_genres'),
     path('admin/dashboard/age-ratings/', views.admin_dashboard_age_ratings, name='admin_dashboard_age_ratings'),
     path('admin/dashboard/directors/', views.admin_dashboard_directors, name='admin_dashboard_directors'),
+    path('admin/dashboard/demographics/', views.admin_dashboard_demographics, name='admin_dashboard_demographics'),
+    path('admin/dashboard/demographics/gender/', views.admin_dashboard_views_by_gender, name='admin_dashboard_views_by_gender'),
+    path('admin/dashboard/demographics/age/', views.admin_dashboard_views_by_age, name='admin_dashboard_views_by_age'),
+    path('admin/dashboard/demographics/province/', views.admin_dashboard_views_by_province, name='admin_dashboard_views_by_province'),
+    path('admin/dashboard/demographics/cross-tab/', views.admin_dashboard_cross_tab, name='admin_dashboard_cross_tab'),
 ]

@@ -1,4 +1,4 @@
-{% extends 'users/settings/user_settings.html' %}
+{% extends 'users/base_profile.html' %}
 {% load i18n %}
 
 {% block content_staff_admin %}
@@ -12,9 +12,13 @@
             <a class="nav-link {% if request.resolver_match.url_name == 'gestion_cartelleres' or request.resolver_match.url_name == 'editar_cartellera' %}active{% endif %}"
                href="{% url 'gestion_cartelleres' %}"><i class="bi bi-images me-1"></i>{% trans 'Carteleras' %}</a>
         </li>
+        <li class="nav-item">
+            <a class="nav-link {% if request.resolver_match.url_name == 'system_logs' %}active{% endif %}"
+               href="{% url 'system_logs' %}"><i class="bi bi-terminal-fill me-1"></i>{% trans 'Logs del Sistema' %}</a>
+        </li>
     </ul>
 
-    <div class="tab-content-area">
+    <div class="tab-content-area mt-3">
         {% block staff_admin_content %}{% endblock %}
     </div>
 

@@ -1,13 +1,33 @@
 {% extends 'users/types/user_admin.html' %}
+{% load i18n %}
 
 {% block parts_content %}
 <div class="container-fluid mt-4">
     {% include 'users/parts/filter_form.html' %}
+
+    <ul class="nav nav-pills mb-4">
+        <li class="nav-item">
+            <a class="nav-link" href="{% url 'admin_dashboard_demographics' %}">{% trans 'Overview' %}</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="{% url 'admin_dashboard_views_by_gender' %}">{% trans 'By Gender' %}</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link active" href="{% url 'admin_dashboard_views_by_age' %}">{% trans 'By Age' %}</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="{% url 'admin_dashboard_views_by_province' %}">{% trans 'By Province' %}</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="{% url 'admin_dashboard_cross_tab' %}">{% trans 'Gender x Age' %}</a>
+        </li>
+    </ul>
+
     <div class="row">
         <div class="col-md-8 mb-4">
             <div class="card shadow-sm border-0">
-                <div class="card-header bg-info text-white py-3">
-                    <h5 class="card-title mb-0"><i class="fas fa-user-shield"></i> Views by Age Rating</h5>
+                <div class="card-header bg-success text-white py-3">
+                    <h5 class="card-title mb-0"><i class="fas fa-calendar-alt me-2"></i> {% trans 'Views by Age Range' %}</h5>
                 </div>
                 <div class="card-body p-4">
                     <div style="height: 400px; position: relative;">
@@ -19,19 +39,19 @@
         <div class="col-md-4 mb-4">
             <div class="card shadow-sm border-0">
                 <div class="card-header bg-light py-3">
-                    <h5 class="card-title mb-0">Age Rating Table</h5>
+                    <h5 class="card-title mb-0">{% trans 'Age Range Data' %}</h5>
                 </div>
                 <div class="card-body p-0">
                     <div class="table-responsive">
                         <table class="table table-hover mb-0">
                             <thead class="table-light">
                                 <tr>
-                                    <th class="ps-3">Rating</th>
-                                    <th class="text-end pe-3">Visualizations</th>
+                                    <th class="ps-3">{% trans 'Age Range' %}</th>
+                                    <th class="text-end pe-3">{% trans 'Views' %}</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                {% for label, value in age_stats.items %}
+                                {% for label, value in age_table %}
                                 <tr>
                                     <td class="ps-3">{{ label }}</td>
                                     <td class="text-end pe-3 fw-bold">{{ value }}</td>
@@ -48,30 +68,13 @@
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    const ctx = document.getElementById('ageChart').getContext('2d');
-    new Chart(ctx, {
+    new Chart(document.getElementById('ageChart').getContext('2d'), {
         type: 'bar',
         data: {
             labels: {{ age_stats.labels|safe }},
-            datasets: [{
-                label: 'Visualizations',
-                data: {{ age_stats.values|safe }},
-                backgroundColor: '#3498db',
-                borderRadius: 5
-            }]
+            datasets: [{ data: {{ age_stats.values|safe }}, backgroundColor: '#2ecc71', borderRadius: 4 }]
         },
-        options: {
-            indexAxis: 'y',
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: {
-                legend: { display: false }
-            },
-            scales: {
-                x: { beginAtZero: true, grid: { display: false } },
-                y: { grid: { display: false } }
-            }
-        }
+        options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true, ticks: { stepSize: 1 } } } }
     });
 });
 </script>

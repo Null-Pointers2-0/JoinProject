@@ -1,0 +1,44 @@
+{% load i18n %}
+
+<nav aria-label="Page navigation">
+    <ul class="pagination justify-content-center mb-0 custom-pagination">
+        {% if items.has_previous %}
+            <li class="page-item">
+                <a class="page-link text-white-50 bg-transparent border-secondary" href="?page=1{% if request.GET.platform %}&platform={{ request.GET.platform }}{% endif %}{% if request.GET.date %}&date={{ request.GET.date }}{% endif %}" aria-label="{% trans 'Primera' %}">
+                    <span aria-hidden="true">&laquo;&laquo;</span>
+                </a>
+            </li>
+            <li class="page-item">
+                <a class="page-link text-white-50 bg-transparent border-secondary" href="?page={{ items.previous_page_number }}{% if request.GET.platform %}&platform={{ request.GET.platform }}{% endif %}{% if request.GET.date %}&date={{ request.GET.date }}{% endif %}" aria-label="{% trans 'Anterior' %}">
+                    <span aria-hidden="true">&laquo;</span>
+                </a>
+            </li>
+        {% endif %}
+
+        <li class="page-item active" aria-current="page">
+            <span class="page-link text-neon bg-dark border-secondary" style="border-color: var(--neon-cyan) !important;">
+                {% trans "Pàgina" %} {{ items.number }} {% trans "de" %} {{ items.paginator.num_pages }}
+            </span>
+        </li>
+
+        {% if items.has_next %}
+            <li class="page-item">
+                <a class="page-link text-white-50 bg-transparent border-secondary" href="?page={{ items.next_page_number }}{% if request.GET.platform %}&platform={{ request.GET.platform }}{% endif %}{% if request.GET.date %}&date={{ request.GET.date }}{% endif %}" aria-label="{% trans 'Següent' %}">
+                    <span aria-hidden="true">&raquo;</span>
+                </a>
+            </li>
+            <li class="page-item">
+                <a class="page-link text-white-50 bg-transparent border-secondary" href="?page={{ items.paginator.num_pages }}{% if request.GET.platform %}&platform={{ request.GET.platform }}{% endif %}{% if request.GET.date %}&date={{ request.GET.date }}{% endif %}" aria-label="{% trans 'Última' %}">
+                    <span aria-hidden="true">&raquo;&raquo;</span>
+                </a>
+            </li>
+        {% endif %}
+    </ul>
+</nav>
+
+<style>
+    .custom-pagination .page-link:hover {
+        background-color: rgba(102, 252, 241, 0.1) !important;
+        color: var(--neon-cyan) !important;
+    }
+</style>

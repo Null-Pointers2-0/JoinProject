@@ -22,6 +22,7 @@ class AdminRedirectMiddleware:
                 'update_user_role',
                 'gestion_cartelleres',
                 'editar_cartellera',
+                'system_logs',
                 ]
             
             if current_url_name not in exempt_url_names and not request.path.startswith('/static/'):
@@ -41,8 +42,12 @@ class AdminRedirectMiddleware:
                 'export_analytics_csv',
                 'logout',
                 'update_user_role',
-                ]
-            
+                'admin_dashboard_demographics',
+                'admin_dashboard_views_by_gender',
+                'admin_dashboard_views_by_age',
+                'admin_dashboard_views_by_province',
+                'admin_dashboard_cross_tab',
+            ]
             if current_url_name not in exempt_url_names and not request.path.startswith('/static/'):
                 return redirect(reverse('admin_dashboard'))
         return self.get_response(request)
