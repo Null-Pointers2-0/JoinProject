@@ -1,0 +1,78 @@
+{% extends 'users/types/staff_admin.html' %}
+{% load i18n %}
+
+{% block staff_admin_content %}
+<div class="container-fluid mt-4">
+    <div class="row mb-4 align-items-center">
+        <div class="col">
+            <h2 class="h3 mb-0 text-white" style="font-family: 'Syne', sans-serif;">{% trans "Logs de Sincronización" %}</h2>
+            <p class="text-muted small">{% trans "Registro histórico del Scheduler con las APIs externas." %}</p>
+        </div>
+    </div>
+
+    <div class="glass-card overflow-hidden">
+        <div class="table-responsive">
+            <table class="table table-dark table-hover mb-0 align-middle custom-table">
+                <thead>
+                    <tr>
+                        <th scope="col">{% trans "Fecha de Inicio" %}</th>
+                        <th scope="col">{% trans "Fecha Fin" %}</th>
+                        <th scope="col">{% trans "Estado" %}</th>
+                        <th scope="col">{% trans "Resumen" %}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for log in logs %}
+                    <tr>
+                        <td class="text-white-50">
+                            <i class="bi bi-clock-history me-2"></i>{{ log.start_time|date:"d M Y, H:i:s" }}
+                        </td>
+                        <td class="text-white-50">
+                            {% if log.end_time %}
+                                {{ log.end_time|date:"d M Y, H:i:s" }}
+                            {% else %}
+                                <span class="text-muted">{% trans "En curso..." %}</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if log.status == 'SUCCESS' %}
+                                <span class="badge bg-success bg-opacity-25 text-success border border-success border-opacity-25 px-2 py-1 rounded-pill">
+                                    <i class="bi bi-check-circle me-1"></i> Éxito
+                                </span>
+                            {% elif log.status == 'ERROR' %}
+                                <span class="badge bg-danger bg-opacity-25 text-danger border border-danger border-opacity-25 px-2 py-1 rounded-pill">
+                                    <i class="bi bi-exclamation-triangle me-1"></i> Error
+                                </span>
+                            {% else %}
+                                <span class="badge bg-warning bg-opacity-25 text-warning border border-warning border-opacity-25 px-2 py-1 rounded-pill">
+                                    <i class="bi bi-arrow-repeat me-1"></i> {{ log.status }}
+                                </span>
+                            {% endif %}
+                        </td>
+                        <td class="text-white-50 small">
+                            {% if log.summary %}
+                                {{ log.summary|truncatechars:80 }}
+                            {% else %}
+                                <span class="text-muted">-</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="4" class="text-center py-4 text-muted">
+                            {% trans "Todavía no hay ningún registro de sincronización." %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    {% if logs.has_other_pages %}
+    <div class="mt-4">
+        {% include 'paginator.html' with items=logs %}
+    </div>
+    {% endif %}
+</div>
+{% endblock %}
