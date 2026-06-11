@@ -3,8 +3,14 @@ from django.conf import settings
 from django.utils.crypto import get_random_string
 from django.shortcuts import render, redirect, get_object_or_404
 from web_app.forms import CustomUserAdminCreationForm, CustomUserCreationForm
-from web_app.models import AgeRating, API, CustomUser, Director, Genre, Movie, UserProfile, Series, Contingut, \
-    AgeRating, Valoracio, Visualitzacio, SyncLog
+from web_app.models import (
+    API, Director, Genre, AgeRating, Contingut,
+    Movie, Series, CustomUser, UserProfile,
+    Preferits, Valoracio, Visualitzacio, SyncLog,
+    RoleAuditLog,
+    Province, Municipality,
+)
+
 from web_app import utils
 import json
 from itertools import chain
@@ -89,7 +95,7 @@ def register_view(request):
             user.subscriptions.set(platforms)
         login(request, user)
         return redirect('home')
-    return render(request, 'identify/register.html', {'form': form})
+    return render(request, 'identify/register.html', {'form': form, 'provinces': Province.objects.all()})
 
 @login_required(login_url='login')
 def redirect_by_role(request):
@@ -252,7 +258,7 @@ def register_platform_click(request):
             # MAGIA DE DJANGO: Si existe, actualiza la fecha. Si no, lo crea.
             vis, created = Visualitzacio.objects.update_or_create(
                 user=request.user,
-                contingut_id=contingut_id,
+                contingut_id=contingut_id,  
                 api_id=api_id,
                 defaults={'data_visualitzacio': timezone.now()}
             )
@@ -266,6 +272,9 @@ def register_platform_click(request):
 
     return JsonResponse({'status': 'error', 'message': 'Método no permitido'}, status=405)
 
+def municipalities_by_province(request, province_id):
+    municipalities = Municipality.objects.filter(province_id=province_id).values('id', 'name')
+    return JsonResponse(list(municipalities), safe=False)
 
 @user_passes_test(lambda u: u.is_superuser)
 def system_logs(request):

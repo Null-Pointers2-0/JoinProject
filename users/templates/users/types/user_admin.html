@@ -23,6 +23,10 @@
             <a class="nav-link {% if request.resolver_match.url_name == 'admin_dashboard_directors' %}active{% endif %}"
                href="{% url 'admin_dashboard_directors' %}">{% trans 'Directors' %}</a>
         </li>
+        <li class="nav-item">
+            <a class="nav-link {% if '/demographics/' in request.path %}active{% endif %}"
+               href="{% url 'admin_dashboard_demographics' %}">{% trans 'Demographics' %}</a>
+        </li>
     </ul>
 
     <!-- Contenido de la tab activa -->

@@ -4,7 +4,7 @@ from django.contrib.auth.forms import UserChangeForm, UserCreationForm
 from django.core.exceptions import ValidationError
 from django.core.validators import MaxLengthValidator
 
-from .models import CustomUser, API, UserType
+from .models import CustomUser, API, UserType, Gender, AgeRange, Province, Municipality
 
 class CustomUserCreationForm(forms.ModelForm):
     """
@@ -45,9 +45,29 @@ class CustomUserCreationForm(forms.ModelForm):
         label=_("Select your platforms")
     )
 
+    gender = forms.ChoiceField(
+        choices=Gender.choices,
+        label=_("Gender"),
+        required=True,
+    )
+
+    age_range = forms.ChoiceField(
+        choices=AgeRange.choices,
+        label=_("Age Range"),
+        required=True,
+    )
+
+    province = forms.ModelChoiceField(
+        queryset=Province.objects.all(),
+        label=_("Province"),
+        required=True,
+    )
+        
+
     class Meta:
         model = CustomUser
-        fields = ('username', 'email', 'password', 'password2', 'platforms')
+        fields = ('username', 'email', 'password', 'password2', 'platforms',
+                  'gender', 'age_range', 'province', 'municipality')
 
     def clean_password2(self):
         """
@@ -59,19 +79,71 @@ class CustomUserCreationForm(forms.ModelForm):
         if password is not None and password != password2:
             raise forms.ValidationError("Las contraseñas no coinciden")
         return password2
+    
+    def clean(self):
+        cleaned_data = super().clean()
+        province = cleaned_data.get('province')
+        municipality_id = self.data.get('municipality')
+
+        if province and municipality_id:
+            try:
+                municipality = Municipality.objects.get(id=municipality_id, province=province)
+                cleaned_data['municipality'] = municipality
+            except Municipality.DoesNotExist:
+                self.add_error('municipality', _("The selected municipality does not belong to the selected province."))
+        elif province:
+            self.add_error('municipality', _("You must select a municipality."))
+
+        return cleaned_data
+
 
     def save(self, commit=True):
         user = super().save(commit=False)
         user.set_password(self.cleaned_data['password'])
+        user.gender = self.cleaned_data.get('gender')
+        user.age_range = self.cleaned_data.get('age_range')
+        user.municipality = self.cleaned_data.get('municipality')
+
         if commit:
             user.save()
         return user
     
 class CustomUserChangeForm(UserChangeForm):
+    province = forms.ModelChoiceField(
+        queryset=Province.objects.all(),
+        label=_("Province"),
+        required=False,
+    )
+
     class Meta:
         model = CustomUser
-        fields = ['username', 'first_name', 'last_name', 'email', 'avatar', 'bio', 'location', 'type']
+        fields = [
+            'username', 'first_name', 'last_name', 'email', 'avatar', 'bio',
+            'type', 'gender', 'age_range', 'municipality',
+        ]
         help_texts = {field: '' for field in fields}
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        if self.instance and self.instance.municipality:
+            self.fields['province'].initial = self.instance.municipality.province
+            self.fields['province'].widget.attrs['data-current-province'] = self.instance.municipality.province_id
+
+    def clean(self):
+        cleaned_data = super().clean()
+        province = cleaned_data.get('province')
+        municipality_id = self.data.get('municipality')
+
+        if province and municipality_id:
+            try:
+                municipality = Municipality.objects.get(id=municipality_id, province=province)
+                cleaned_data['municipality'] = municipality
+            except Municipality.DoesNotExist:
+                self.add_error('municipality', _("The selected municipality does not belong to the selected province."))
+        elif province:
+            self.add_error('municipality', _("You must select a municipality."))
+
+        return cleaned_data
 
     def clean_avatar(self):
         """

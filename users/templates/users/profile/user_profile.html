@@ -48,11 +48,71 @@
     </div>
 
     <div class="form-group mb-3">
-        <label>{% trans 'Location' %}</label>
-        {{ form.location }}
+        <label>{% trans 'Gender' %}</label>
+        {{ form.gender }}
+    </div>
+
+    <div class="form-group mb-3">
+        <label>{% trans 'Age range' %}</label>
+        {{ form.age_range }}
+    </div>
+
+    <div class="form-group mb-3">
+        <label>{% trans 'Province' %}</label>
+        <select name="province" id="id_province" class="form-control">
+            <option value="">{% trans 'Select province' %}</option>
+            {% for province in provinces %}
+                <option value="{{ province.id }}" {% if province.id == current_province_id %}selected{% endif %}>{{ province.name }}</option>
+            {% endfor %}
+        </select>
+    </div>
+
+    <div class="form-group mb-3">
+        <label>{% trans 'Municipality' %}</label>
+        <select name="municipality" id="id_municipality" class="form-control" {% if not current_province_id %}disabled{% endif %}>
+            <option value="">{% trans 'Select municipality' %}</option>
+        </select>
     </div>
 
     <button type="submit" class="submit-btn">{% trans 'Save changes' %}</button>
 </form>
+
+<script>
+    const currentMunicipalityId = {{ current_municipality_id|default:'null' }};
+    const currentProvinceId = {{ current_province_id|default:'null' }};
+
+    function loadMunicipalities(provinceId, selectedMunicipalityId) {
+        const municipalitySelect = document.getElementById('id_municipality');
+        municipalitySelect.innerHTML = '<option value="">{% filter escapejs %}{% trans "Loading..." %}{% endfilter %}</option>';
+        municipalitySelect.disabled = true;
+
+        if (!provinceId) {
+            municipalitySelect.innerHTML = '<option value="">{% filter escapejs %}{% trans "Select a province first" %}{% endfilter %}</option>';
+            return;
+        }
+
+        fetch('/api/municipalities/' + provinceId + '/')
+            .then(response => response.json())
+            .then(municipalities => {
+                municipalitySelect.innerHTML = '<option value="">{% filter escapejs %}{% trans "Select municipality" %}{% endfilter %}</option>';
+                municipalities.forEach(m => {
+                    const selected = m.id === selectedMunicipalityId ? 'selected' : '';
+                    municipalitySelect.innerHTML += '<option value="' + m.id + '" ' + selected + '>' + m.name + '</option>';
+                });
+                municipalitySelect.disabled = false;
+            })
+            .catch(() => {
+                municipalitySelect.innerHTML = '<option value="">{% filter escapejs %}{% trans "Error loading municipalities" %}{% endfilter %}</option>';
+            });
+    }
+
+    document.getElementById('id_province').addEventListener('change', function() {
+        loadMunicipalities(this.value, null);
+    });
+
+    if (currentProvinceId) {
+        loadMunicipalities(currentProvinceId, currentMunicipalityId);
+    }
+</script>
 
 {% endblock %}
